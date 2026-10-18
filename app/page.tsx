@@ -1,24 +1,37 @@
-import { content, isConcept } from "@/lib/content/load";
+import Link from "next/link";
+import { PrimaryCta } from "@/components/layout/cta-link";
+import { BuildingNote } from "@/components/layout/page-intro";
+import { content } from "@/lib/content/load";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { formatDate } from "@/lib/utils/format";
 
-// placeholder: proves the deploy, the content pipeline and the concept disclosure.
-// Replaced by the real home page later.
-const { business } = content;
+export const metadata = pageMetadata("/");
 
+// Hero copy: CONTENT §2 (variant A). The full home (FR-HOME-01 – 12) ships later.
 export default function Home() {
   return (
     <>
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center gap-6 px-6 py-24">
-        {isConcept && (
-          <p className="w-fit rounded-full border border-border px-3 py-1 text-sm text-muted-foreground">
-            {business.disclosures.badge}
+      <section className="container-page pt-12 pb-16 lg:pt-20 lg:pb-24">
+        <div className="flex max-w-3xl flex-col gap-6">
+          <p className="eyebrow">Phoenix · Mesa · Chandler</p>
+          <h1>Phoenix will pay you to lose your lawn.</h1>
+          <p className="text-lead">
+            Draw your lawn on a satellite map, see your city rebate, and preview your yard as a desert garden,
+            all in about a minute. We handle the design, the paperwork and the swap.
           </p>
-        )}
-        <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">{business.tagline}</h1>
-        <p className="max-w-prose text-lg text-pretty text-muted-foreground">{business.oneLiner}</p>
-      </main>
-      <footer className="mx-auto w-full max-w-3xl px-6 py-8 text-sm text-muted-foreground">
-        {isConcept && <p>{business.disclosures.footer}</p>}
-      </footer>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
+            <PrimaryCta />
+            <Link href="/visualize" className="font-semibold link">
+              Preview my yard
+            </Link>
+          </div>
+          <p className="text-sm text-ink-muted">
+            Rebate rules from official city pages · last checked{" "}
+            <time dateTime={content.rebates.lastReviewed}>{formatDate(content.rebates.lastReviewed)}</time>
+          </p>
+        </div>
+      </section>
+      <BuildingNote />
     </>
   );
 }
