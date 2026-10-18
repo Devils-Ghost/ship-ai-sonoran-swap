@@ -1,4 +1,12 @@
 {
-  "generatedAt": "2026-10-18T01:55:30.266Z",
-  "entries": []
+  "generatedAt": "2026-10-18T02:20:00.907Z",
+  "entries": [
+    {
+      "date": "2026-10-17T18:59:06-07:00",
+      "hash": "c2aa7f1",
+      "title": "Initial implementation of Sonoran Swap",
+      "type": "feat",
+      "scope": null
+    }
+  ]
 }
