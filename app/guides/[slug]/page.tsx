@@ -10,7 +10,6 @@ import { JsonLd } from "@/components/shared/json-ld";
 import { GUIDES } from "@/lib/guides";
 import { articleJsonLd } from "@/lib/seo/json-ld";
 import { dynamicPageMetadata } from "@/lib/seo/metadata";
-import { formatDate } from "@/lib/utils/format";
 
 // Content-only pages: render fully at build. An unlisted param waits for the full render, so
 // notFound() below answers with a real 404 instead of a 200 app shell (Cache Components has no dynamicParams).
@@ -38,7 +37,7 @@ async function readingMinutes(slug: string): Promise<number> {
   return Math.max(1, Math.round(words / 220));
 }
 
-// SRS §6.12 FR-GDE: title, description, updated date, reading time, body, sources, related links, CTA.
+// SRS §6.12 FR-GDE: title, description, reading time, body, sources, related links, CTA.
 export default async function GuidePage({ params }: PageProps<"/guides/[slug]">) {
   const { slug } = await params;
   const guide = GUIDES.find((g) => g.slug === slug);
@@ -58,10 +57,7 @@ export default async function GuidePage({ params }: PageProps<"/guides/[slug]">)
           { label: guide.title, href: `/guides/${guide.slug}` },
         ]}
       >
-        <p className="text-sm text-ink-muted">
-          Updated <time dateTime={guide.updated}>{formatDate(guide.updated, "long")}</time> · {minutes} min
-          read
-        </p>
+        <p className="text-sm text-ink-muted">{minutes} min read</p>
       </PageIntro>
 
       <JsonLd data={articleJsonLd(guide)} />

@@ -4,7 +4,7 @@ import { NotesList } from "@/components/shared/notes-list";
 import type { RebateProgram } from "@/lib/content/schema";
 import { computeRebate } from "@/lib/rebates/engine";
 import { formatRateShort, summarize } from "@/lib/rebates/summary";
-import { formatDate, formatMoney, formatNumber } from "@/lib/utils/format";
+import { formatMoney, formatNumber } from "@/lib/utils/format";
 
 // FR-RBC city page building blocks. Everything renders from the program record and the engine.
 
@@ -202,9 +202,6 @@ export function OfficialSource({ program }: { program: RebateProgram }) {
         <ArrowUpRightIcon className="ml-0.5 inline size-4 align-[-2px]" aria-hidden="true" />
         <span className="sr-only"> (opens in a new tab)</span>
       </a>
-      <span className="block text-sm text-ink-muted">
-        Last checked <time dateTime={program.lastVerified}>{formatDate(program.lastVerified, "long")}</time>
-      </span>
     </p>
   );
 }

@@ -33,9 +33,10 @@ export default function AccessibilityPage() {
 
           <StatementSection title="How we test">
             <p>
-              Every change runs automated accessibility checks (axe) on key pages at phone and desktop widths,
-              plus keyboard tests for the menu, skip link, sliders and forms. A manual screen-reader review is
-              planned before launch.
+              Every change runs automated accessibility checks (axe) on every page at phone and desktop
+              widths, and a keyboard-only test that goes from the home page to a rebate and a booking without
+              a mouse, checking that focus is visible at each step. After moving between pages, keyboard focus
+              starts at the main content. A manual screen-reader review is planned before launch.
             </p>
           </StatementSection>
 

@@ -25,10 +25,10 @@ describe("insights summary (FR-INS-02/04/11)", () => {
   });
 
   it("ranges: hour, start of the Arizona day, launch", () => {
-    const now = new Date("2026-10-17T20:30:00Z");
-    expect(rangeStart("hour", "2026-10-17T16:00:00Z", now)).toBe("2026-10-17T19:30:00.000Z");
-    expect(rangeStart("today", "2026-10-17T16:00:00Z", now)).toBe("2026-10-17T07:00:00.000Z");
-    expect(rangeStart("launch", "2026-10-17T09:00:00-07:00", now)).toBe("2026-10-17T16:00:00.000Z");
+    const now = new Date("2030-03-16T20:30:00Z");
+    expect(rangeStart("hour", "2030-03-16T16:00:00Z", now)).toBe("2030-03-16T19:30:00.000Z");
+    expect(rangeStart("today", "2030-03-16T16:00:00Z", now)).toBe("2030-03-16T07:00:00.000Z");
+    expect(rangeStart("launch", "2030-03-16T09:00:00-07:00", now)).toBe("2030-03-16T16:00:00.000Z");
   });
 
   it("A/B: no winner under 20 sessions per variant, ties within 2 points", () => {

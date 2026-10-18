@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ExpandIcon, ShrinkIcon, WifiOffIcon } from "lucide-react";
 import { renderSVG } from "uqr";
 import { Skeleton } from "@/components/ui/skeleton";
+import { isDemo } from "@/lib/demo/flag";
+import { demoStats } from "@/lib/demo/stats";
 import { useCountUp } from "@/lib/hooks/use-count-up";
 import type { Stats, TickerItem } from "@/lib/stats/summary";
 import { LIVE_CITIES } from "@/lib/stats/summary";
@@ -22,18 +24,6 @@ const CITY_LABEL: Record<(typeof LIVE_CITIES)[number], string> = {
   other: "Other cities",
 };
 
-const time = new Intl.DateTimeFormat("en-US", {
-  hour: "numeric",
-  minute: "2-digit",
-  timeZone: "America/Phoenix",
-});
-const sinceFormat = new Intl.DateTimeFormat("en-US", {
-  weekday: "short",
-  hour: "numeric",
-  minute: "2-digit",
-  timeZone: "America/Phoenix",
-});
-
 function cityName(city: string): string {
   return city in CITY_LABEL
     ? CITY_LABEL[city as keyof typeof CITY_LABEL]
@@ -46,7 +36,16 @@ export function LiveBoard({ qrUrl, host }: { qrUrl: string; host: string }) {
   const [full, setFull] = useState(false);
   const boardRef = useRef<HTMLElement>(null);
 
+  const [demo, setDemo] = useState(false);
+
   useEffect(() => {
+    // Demo mode replays labeled sample numbers instead of polling (NFR-REL-02); never mixed with live data.
+    if (isDemo()) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setDemo(true);
+      setStats(demoStats());
+      return;
+    }
     let alive = true;
     const poll = async () => {
       try {
@@ -93,10 +92,13 @@ export function LiveBoard({ qrUrl, host }: { qrUrl: string; host: string }) {
       <div className="container-page flex flex-col gap-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex flex-col gap-2">
-            <p className="text-sm font-medium tracking-wide text-caliche/70 uppercase">
-              Live from {host}
-              {stats && ` · since ${sinceFormat.format(new Date(stats.since))}`}
-            </p>
+            {demo ? (
+              <p className="w-fit rounded-full bg-warning-bg px-3 py-1 text-sm font-semibold text-warning">
+                Demo replay: sample numbers, not real visits
+              </p>
+            ) : (
+              <p className="text-sm font-medium tracking-wide text-caliche/70 uppercase">Live from {host}</p>
+            )}
             <h1 id="live-title" className="text-caliche">
               Lawns measured on this site, live.
             </h1>
@@ -180,9 +182,6 @@ export function LiveBoard({ qrUrl, host }: { qrUrl: string; host: string }) {
                       key={`${item.kind}-${item.at}`}
                       className="flex gap-3 text-caliche/90 motion-safe:animate-in motion-safe:fade-in"
                     >
-                      <span className="w-16 shrink-0 text-caliche/60 tabular">
-                        {time.format(new Date(item.at))}
-                      </span>
                       <span>{tickerText(item)}</span>
                     </li>
                   ))}

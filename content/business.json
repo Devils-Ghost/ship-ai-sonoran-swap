@@ -27,7 +27,7 @@
   ],
   "disclosures": {
     "badge": "Concept business",
-    "footer": "Sonoran Swap is a concept business built for the Ship AI AZ GTM Hackathon. Rebate information comes from official city pages; eligibility and payment are decided by each city. Not affiliated with any city.",
+    "footer": "Sonoran Swap is a concept business. Rebate information comes from official city pages; eligibility and payment are decided by each city. Not affiliated with any city.",
     "pricing": "Illustrative concept pricing.",
     "booking": "This is a demonstration booking. No one will visit. This shows how booking would work.",
     "ai": "AI concept rendering. Actual results vary.",
@@ -44,6 +44,5 @@
     "body": "Fall is planting season in Phoenix, and plants that go in before the short days of winter have time to settle in. City approval comes first and can take up to three weeks.",
     "sourceUrl": "https://www.kjzz.org/the-show/2024-10-29/gardening-during-one-of-the-hottest-phoenix-octobers-on-record-heres-where-to-start"
   },
-  "sample": { "label": "Sample yard", "city": "phoenix", "sqft": 1200 },
-  "event": { "name": "Ship AI AZ GTM Hackathon", "venue": "Workuity Biltmore", "dates": "Oct 17–18, 2026" }
+  "sample": { "label": "Sample yard", "city": "phoenix", "sqft": 1200 }
 }

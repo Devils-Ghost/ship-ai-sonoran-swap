@@ -14,14 +14,12 @@ test("the Proof drawer opens, shows its tabs, and closes on Escape", async ({ pa
   const drawer = page.getByRole("dialog", { name: "Proof" });
   await expect(drawer).toBeVisible();
   await expect(page).toHaveURL(/#proof$/);
-  for (const tab of ["Timeline", "Quality", "Testing", "How it works", "Limits", "Privacy"]) {
+  for (const tab of ["Quality", "Testing", "How it works", "Limits", "Privacy"]) {
     await expect(drawer.getByRole("tab", { name: tab })).toBeVisible();
   }
-  await expect(drawer.getByText(/dated changes from the project/)).toBeVisible();
-  await drawer.getByRole("tab", { name: "Quality" }).click();
   await expect(drawer.getByRole("table", { name: "Lighthouse reports" })).toBeVisible();
   await drawer.getByRole("tab", { name: "Limits" }).click();
-  await expect(drawer.getByText(/concept business built for a hackathon/)).toBeVisible();
+  await expect(drawer.getByText(/concept business. There is no crew yet/)).toBeVisible();
   await expect(drawer.getByRole("link", { name: /Growth insights/ })).toHaveAttribute("href", "/insights");
 
   const { violations } = await new AxeBuilder({ page }).include("[role=dialog]").analyze();
@@ -31,6 +29,10 @@ test("the Proof drawer opens, shows its tabs, and closes on Escape", async ({ pa
 
   await page.keyboard.press("Escape");
   await expect(drawer).toBeHidden();
+  // Focus goes back to the Proof button (desktop) or the page content (opened from the closed menu).
+  await expect(
+    isMobile ? page.locator("main#main") : page.getByRole("button", { name: /^Proof/ }),
+  ).toBeFocused();
   await expect(page).not.toHaveURL(/#proof/);
 });
 
@@ -41,14 +43,7 @@ test("a #proof link opens the drawer on load", async ({ page }) => {
 
 test("launch notes: sections, testing empty state, and feedback with consent", async ({ page }) => {
   await page.goto("/launch-notes");
-  for (const h of [
-    "What we shipped",
-    "Quality reports",
-    "User testing",
-    "Honest limits",
-    "Build timeline",
-    "Send feedback",
-  ]) {
+  for (const h of ["What we shipped", "Quality reports", "User testing", "Honest limits", "Send feedback"]) {
     await expect(page.getByRole("heading", { level: 2, name: h })).toBeVisible();
   }
   await expect(page.getByText(/No user-test sessions yet/)).toBeVisible();

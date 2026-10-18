@@ -27,12 +27,8 @@ async function main() {
     jsonLdTypes: [...JSON_LD_TYPES].sort(),
     sitemapUrls: indexable.length, // app/sitemap.ts lists exactly the indexable routes
   };
-  const unchanged = Object.entries(report).every(
-    ([k, v]) => JSON.stringify(previous[k]) === JSON.stringify(v),
-  );
   const out = {
     note: previous.note,
-    generatedAt: unchanged && previous.generatedAt ? previous.generatedAt : new Date().toISOString(),
     ...report,
     searchConsole: previous.searchConsole,
   };

@@ -5,7 +5,6 @@ import { z } from "zod";
 
 const nonEmpty = z.string().trim().min(1);
 const httpsUrl = z.url({ protocol: /^https$/ });
-const isoDate = z.iso.date();
 export const PROGRAM_IDS = ["phoenix", "mesa", "chandler", "scottsdale"] as const;
 const programId = z.enum(PROGRAM_IDS);
 const tierId = z.enum(["essentials", "signature", "showcase"]);
@@ -59,7 +58,6 @@ export const businessSchema = z.strictObject({
   }),
   seasonal: z.strictObject({ headline: nonEmpty, body: nonEmpty, sourceUrl: httpsUrl }),
   sample: z.strictObject({ label: nonEmpty, city: programId, sqft: z.number().int().positive() }),
-  event: z.strictObject({ name: nonEmpty, venue: nonEmpty, dates: nonEmpty }),
   // SRS §13.2 lists `social`; the seed has none yet.
   social: z.record(z.string(), httpsUrl).optional(),
 });
@@ -86,7 +84,6 @@ const programBase = {
   howToApply: nonEmpty,
   payment: nonEmpty.nullable(),
   sourceUrl: httpsUrl,
-  lastVerified: isoDate,
   // SRS §13.2 lists `notes[]`; the seed has none yet.
   notes: z.array(nonEmpty).optional(),
 };
@@ -180,7 +177,6 @@ const questionSchema = z.strictObject({
 
 export const rebateProgramsSchema = z
   .strictObject({
-    lastReviewed: isoDate,
     disclaimer: nonEmpty,
     programs: z.array(programSchema).min(1),
     otherCities: z.record(z.string(), nonEmpty),
@@ -277,7 +273,6 @@ export const decisionsSchema = z.strictObject({
   note: z.string().optional(),
   entries: z.array(
     z.strictObject({
-      date: isoDate,
       observation: nonEmpty,
       evidence: nonEmpty,
       change: nonEmpty,
@@ -288,7 +283,6 @@ export const decisionsSchema = z.strictObject({
 
 export const seoReportSchema = z.strictObject({
   note: z.string().optional(),
-  generatedAt: z.iso.datetime({ offset: true }).nullable(),
   routes: z.number().int().nonnegative(),
   withTitle: z.number().int().nonnegative(),
   withDescription: z.number().int().nonnegative(),
@@ -296,10 +290,9 @@ export const seoReportSchema = z.strictObject({
   jsonLdTypes: z.array(nonEmpty),
   sitemapUrls: z.number().int().nonnegative(),
   searchConsole: z.strictObject({
-    submittedAt: isoDate.nullable(),
+    submitted: z.boolean(),
     discoveredPages: z.number().int().nonnegative().nullable(),
     indexedPages: z.number().int().nonnegative().nullable(),
-    checkedAt: isoDate.nullable(),
   }),
 });
 
@@ -310,25 +303,13 @@ export type ProgramId = (typeof PROGRAM_IDS)[number];
 export type Pricing = z.infer<typeof pricingSchema>;
 export type Plants = z.infer<typeof plantsSchema>;
 export type Styles = z.infer<typeof stylesSchema>;
-export const timelineSchema = z.strictObject({
-  generatedAt: z.iso.datetime({ offset: true }),
-  entries: z.array(
-    z.strictObject({
-      date: z.iso.datetime({ offset: true }),
-      hash: z.string().regex(/^[0-9a-f]{7,40}$/),
-      title: nonEmpty,
-      type: z.enum(["feat", "fix", "perf", "content"]),
-      scope: nonEmpty.nullable(),
-    }),
-  ),
-});
 
 const score = z.number().int().min(0).max(100).nullable();
 export const qualitySchema = z.strictObject({
   reports: z.array(
     z.strictObject({
       file: z.string().regex(/^\/reports\/[\w.-]+\.html$/),
-      fetchedAt: z.iso.datetime(),
+      round: z.number().int().positive(),
       formFactor: z.enum(["mobile", "desktop"]),
       host: nonEmpty,
       path: z.string().startsWith("/"),
@@ -341,7 +322,6 @@ export const qualitySchema = z.strictObject({
 
 export type Decisions = z.infer<typeof decisionsSchema>;
 export type Quality = z.infer<typeof qualitySchema>;
-export type Timeline = z.infer<typeof timelineSchema>;
 export type SeoReport = z.infer<typeof seoReportSchema>;
 
 export type Content = {
@@ -352,7 +332,6 @@ export type Content = {
   styles: Styles;
   decisions: Decisions;
   seoReport: SeoReport;
-  timeline: Timeline;
   quality: Quality;
 };
 
@@ -375,7 +354,6 @@ export function validateContent(raw: RawContent): Content {
   const styles = parse("styles.json", stylesSchema, raw.styles);
   const decisions = parse("decisions.json", decisionsSchema, raw.decisions);
   const seoReport = parse("seo-report.json", seoReportSchema, raw.seoReport);
-  const timeline = parse("timeline.json", timelineSchema, raw.timeline);
   const quality = parse("quality.json", qualitySchema, raw.quality);
 
   if (business && rebates) {
@@ -413,11 +391,10 @@ export function validateContent(raw: RawContent): Content {
     !plants ||
     !styles ||
     !decisions ||
-    !timeline ||
     !quality ||
     !seoReport
   ) {
     throw new Error(`Invalid content in content/*.json:\n${problems.map((p) => `  - ${p}`).join("\n")}`);
   }
-  return { business, rebates, pricing, plants, styles, decisions, seoReport, timeline, quality };
+  return { business, rebates, pricing, plants, styles, decisions, seoReport, quality };
 }

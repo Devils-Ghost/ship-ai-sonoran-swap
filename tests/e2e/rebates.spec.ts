@@ -35,7 +35,9 @@ for (const [city, amount, basis] of [
     await expect(page.getByRole("region", { name: "What you must not do" })).toContainText(
       "Don't remove any grass",
     );
-    await expect(page.getByRole("region", { name: "Source" })).toContainText("Last checked October 15, 2026");
+    await expect(page.getByRole("region", { name: "Source" })).toContainText(
+      new RegExp(`City of ${city}`, "i"),
+    );
     await expect(page.getByRole("link", { name: "See my rebate" }).first()).toHaveAttribute(
       "href",
       "/studio",

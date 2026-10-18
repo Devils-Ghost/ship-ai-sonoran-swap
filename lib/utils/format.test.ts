@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDate, formatMoney, formatMoneyRange, formatRate, formatSqft } from "./format";
+import { formatMoney, formatMoneyRange, formatRate, formatSqft } from "./format";
 
 describe("format", () => {
   it("formats whole dollars with separators", () => {
@@ -21,15 +21,5 @@ describe("format", () => {
 
   it("formats square feet", () => {
     expect(formatSqft(1240)).toBe("1,240 sq ft");
-  });
-
-  it("does not shift calendar dates across time zones", () => {
-    expect(formatDate("2026-10-15")).toBe("Oct 15, 2026");
-    expect(formatDate("2026-10-15", "long")).toBe("October 15, 2026");
-  });
-
-  it("shows timestamps in Arizona time", () => {
-    // 03:00 UTC on Oct 16 is still Oct 15 in Phoenix (UTC−7).
-    expect(formatDate("2026-10-16T03:00:00Z")).toBe("Oct 15, 2026");
   });
 });

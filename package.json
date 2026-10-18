@@ -19,10 +19,10 @@
     "validate:content": "tsx scripts/validate-content.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "timeline": "tsx scripts/timeline.ts",
     "seo-report": "tsx scripts/seo-report.ts",
     "quality": "tsx scripts/quality.ts",
     "links": "tsx scripts/links.ts",
+    "shots": "tsx scripts/shots.ts",
     "postinstall": "node scripts/ensure-local-content.mjs"
   },
   "dependencies": {

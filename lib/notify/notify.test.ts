@@ -6,20 +6,20 @@ describe("bookingNotification (FR-NOTIF-01)", () => {
     expect(
       bookingNotification({
         city: "mesa",
-        slotDate: "2026-10-17",
+        slotDate: "2030-03-16",
         slotWindow: "morning",
         sqft: 1520,
         rebateAmount: 2000,
       }).body,
     ).toBe(
-      "SONORAN SWAP DEMO · Yard walk booked · Mesa · 1,520 sq ft · est. rebate $2,000 · Sat Oct 17 Morning",
+      "SONORAN SWAP DEMO · Yard walk booked · Mesa · 1,520 sq ft · est. rebate $2,000 · Sat Mar 16 Morning",
     );
   });
 
   it("leaves out estimate parts when there is none", () => {
     expect(
-      bookingNotification({ city: "phoenix", slotDate: "2026-10-19", slotWindow: "afternoon" }).body,
-    ).toBe("SONORAN SWAP DEMO · Yard walk booked · Phoenix · Mon Oct 19 Afternoon");
+      bookingNotification({ city: "phoenix", slotDate: "2030-03-18", slotWindow: "afternoon" }).body,
+    ).toBe("SONORAN SWAP DEMO · Yard walk booked · Phoenix · Mon Mar 18 Afternoon");
   });
 });
 

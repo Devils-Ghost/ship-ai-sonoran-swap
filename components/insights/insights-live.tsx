@@ -17,15 +17,6 @@ const RANGE_OPTIONS = [
   { value: "hour", label: "Last hour" },
 ] as const;
 
-const sinceFormat = new Intl.DateTimeFormat("en-US", {
-  weekday: "short",
-  month: "short",
-  day: "numeric",
-  hour: "numeric",
-  minute: "2-digit",
-  timeZone: "America/Phoenix",
-});
-
 type State = { kind: "loading" } | { kind: "ok"; data: Insights; stale: boolean } | { kind: "error" };
 
 export function InsightsLive() {
@@ -62,9 +53,7 @@ export function InsightsLive() {
           options={RANGE_OPTIONS}
         />
         <p className="text-sm text-ink-muted" aria-live="polite">
-          {data
-            ? `Live data from this site since ${sinceFormat.format(new Date(data.since))}. Team visits excluded.`
-            : " "}
+          {data ? "Live data from this site. Team visits excluded." : " "}
         </p>
         {state.kind === "ok" && state.stale && (
           <Alert>Couldn&apos;t load insights. Showing last snapshot.</Alert>
@@ -372,13 +361,11 @@ const styleLabel = (s: string) => s.split("-").map(capitalize).join(" ");
 const pathLabel = (p: string) =>
   ({ map: "Map outline", manual: "Typed square footage", sample: "Sample yard" })[p] ?? capitalize(p);
 const SOURCE_LABEL: Record<string, string> = {
-  "qr-pitch": "QR (pitch)",
+  "qr-screen": "QR (on screen)",
   "qr-table": "QR (table card)",
   linkedin: "LinkedIn",
   x: "X",
-  discord: "Discord",
   test: "User tests",
-  submission: "Hackathon submission",
   direct: "Direct",
   other: "Other",
 };

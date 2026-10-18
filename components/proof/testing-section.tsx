@@ -39,10 +39,7 @@ export function TestingSection() {
   const { t } = state;
   if (t.testers === 0)
     return (
-      <p className="text-ink-muted">
-        No user-test sessions yet. Testing happens at the event on Saturday, Oct 17; results appear here as
-        testers finish.
-      </p>
+      <p className="text-ink-muted">No user-test sessions yet. Results appear here as testers finish.</p>
     );
 
   const { a, b } = t.variantResults;

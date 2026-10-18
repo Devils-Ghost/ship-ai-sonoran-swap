@@ -1,77 +1,35 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import dynamic from "next/dynamic";
+import { useRef, useState } from "react";
 import { MenuIcon } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { openProof } from "@/lib/proof/open";
 import type { NavLink } from "@/lib/site";
 
-// SRS §5.2 mobile: menu sheet with 48 px rows; the concept badge and Proof link live inside.
-export function MobileMenu({
-  links,
-  extra,
-  badge,
-}: {
-  links: NavLink[];
-  extra: NavLink[];
-  badge: React.ReactNode;
-}) {
-  const [open, setOpen] = useState(false);
-  const pathname = usePathname();
+// The menu button is plain; the sheet (Radix Dialog) loads on the first tap. Without a Radix Trigger, the
+// sheet hands focus back to this button itself when it closes.
+const MobileMenuSheet = dynamic(() => import("./mobile-menu-sheet"), { ssr: false });
 
+export function MobileMenu(props: { links: NavLink[]; extra: NavLink[]; badge: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const button = useRef<HTMLButtonElement>(null);
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger
+    <>
+      <button
+        ref={button}
+        type="button"
+        onClick={() => {
+          setLoaded(true);
+          setOpen(true);
+        }}
+        aria-haspopup="dialog"
+        aria-expanded={open}
         className="inline-flex size-11 cursor-pointer items-center justify-center rounded-full text-ink hover:bg-sand"
         aria-label="Open menu"
       >
         <MenuIcon className="size-6" aria-hidden="true" />
-      </SheetTrigger>
-      <SheetContent closeLabel="Close menu">
-        <SheetHeader>
-          <SheetTitle>Menu</SheetTitle>
-          <SheetDescription className="sr-only">Site navigation</SheetDescription>
-        </SheetHeader>
-        <nav aria-label="Mobile" className="flex flex-col px-3 pb-6">
-          <ul className="flex flex-col">
-            {[...links, ...extra].map((link) => (
-              <li key={link.href}>
-                {link.href === "#proof" ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setOpen(false);
-                      openProof();
-                    }}
-                    className="flex min-h-12 w-full cursor-pointer items-center rounded-input px-3 text-lg font-medium text-ink hover:bg-sand"
-                  >
-                    {link.label}
-                  </button>
-                ) : (
-                  <Link
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    aria-current={pathname === link.href ? "page" : undefined}
-                    className="flex min-h-12 items-center rounded-input px-3 text-lg font-medium text-ink hover:bg-sand aria-[current=page]:text-terracotta"
-                  >
-                    {link.label}
-                  </Link>
-                )}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-6 px-3">{badge}</div>
-        </nav>
-      </SheetContent>
-    </Sheet>
+      </button>
+      {loaded && <MobileMenuSheet {...props} open={open} setOpen={setOpen} returnFocus={button} />}
+    </>
   );
 }

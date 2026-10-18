@@ -11,6 +11,8 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary: "bg-terracotta text-white hover:bg-terracotta-dark",
+        // The header's always-present CTA: saguaro, so terracotta marks one primary action per viewport (D2).
+        brand: "bg-saguaro text-caliche hover:bg-ink",
         secondary:
           "border-[1.5px] border-saguaro bg-transparent text-saguaro hover:bg-saguaro hover:text-caliche",
         ghost: "bg-transparent text-ink hover:bg-sand",

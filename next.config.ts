@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
     "/api/render": ["./public/samples/*.jpg"],
     "/api/og": ["./assets/og/*.woff"],
   },
+  // C2: AVIF first (about half the bytes of WebP for the hero photos, the home LCP), WebP as fallback.
+  // `qualities` is an allowlist (required since Next 16): 75 is the default, 60 for the full-bleed photos.
+  images: { formats: ["image/avif", "image/webp"], qualities: [60, 75] },
   partialPrefetching: true,
   turbopack: {
     rules: {

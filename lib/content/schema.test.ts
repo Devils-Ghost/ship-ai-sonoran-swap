@@ -6,12 +6,11 @@ import pricing from "@/content/pricing.json";
 import rebates from "@/content/rebate-programs.json";
 import seoReport from "@/content/seo-report.json";
 import quality from "@/content/quality.json";
-import timeline from "@/content/timeline.json";
 import styles from "@/content/styles.json";
 import { validateContent, type RawContent } from "./schema";
 
 const seed = (): RawContent =>
-  structuredClone({ business, rebates, pricing, plants, styles, decisions, seoReport, timeline, quality });
+  structuredClone({ business, rebates, pricing, plants, styles, decisions, seoReport, quality });
 
 type Path = [keyof RawContent, ...(string | number)[]];
 
@@ -49,14 +48,9 @@ describe("validateContent", () => {
     expect(() => validateContent(raw)).toThrow(/rebate-programs\.json: programs\.0/);
   });
 
-  it("requires an https source URL and an ISO lastVerified date", () => {
-    const raw = seedWith(
-      [["rebates", "programs", 1, "sourceUrl"], "http://mesaaz.gov/Xeriscape"],
-      [["rebates", "programs", 1, "lastVerified"], "Oct 15"],
-    );
-    const run = () => validateContent(raw);
-    expect(run).toThrow(/programs\.1\.sourceUrl/);
-    expect(run).toThrow(/programs\.1\.lastVerified/);
+  it("requires an https source URL", () => {
+    const raw = seedWith([["rebates", "programs", 1, "sourceUrl"], "http://mesaaz.gov/Xeriscape"]);
+    expect(() => validateContent(raw)).toThrow(/programs\.1\.sourceUrl/);
   });
 
   it("rejects a Mesa cap that disagrees with its tiers and tree bonus", () => {

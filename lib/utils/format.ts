@@ -31,20 +31,3 @@ export function formatNumber(n: number): string {
 export function formatSqft(sqft: number): string {
   return `${formatNumber(sqft)} sq ft`;
 }
-
-const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
-
-/**
- * "2026-10-15" → "Oct 15, 2026". Date-only strings are calendar dates, so they are formatted in UTC
- * to avoid shifting a day; timestamps are shown in Arizona time (no DST, UTC−7).
- */
-export function formatDate(iso: string, style: "short" | "long" = "short"): string {
-  const dateOnly = ISO_DATE.test(iso);
-  const d = new Date(dateOnly ? `${iso}T12:00:00Z` : iso);
-  return new Intl.DateTimeFormat("en-US", {
-    month: style === "short" ? "short" : "long",
-    day: "numeric",
-    year: "numeric",
-    timeZone: dateOnly ? "UTC" : "America/Phoenix",
-  }).format(d);
-}

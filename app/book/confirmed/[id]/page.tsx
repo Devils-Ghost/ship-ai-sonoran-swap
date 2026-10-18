@@ -48,12 +48,6 @@ function ConfirmationSkeleton() {
   );
 }
 
-const timeFormat = new Intl.DateTimeFormat("en-US", {
-  hour: "numeric",
-  minute: "2-digit",
-  timeZone: "America/Phoenix",
-});
-
 async function Confirmation({ params }: { params: PageProps<"/book/confirmed/[id]">["params"] }) {
   const { id } = await params;
   let booking: BookingSummary | null;
@@ -83,7 +77,7 @@ async function Confirmation({ params }: { params: PageProps<"/book/confirmed/[id
         )}
       </div>
 
-      <NotifyCard notified={booking.notified} at={timeFormat.format(new Date(booking.createdAt))} />
+      <NotifyCard notified={booking.notified} />
 
       {booking.estimate && (
         <section aria-labelledby="estimate-heading" className="flex flex-col gap-2">
@@ -155,7 +149,7 @@ async function Confirmation({ params }: { params: PageProps<"/book/confirmed/[id
 }
 
 /** FR-NOTIF-03: reflects what actually happened to the push. Never claims a delivery that failed. */
-function NotifyCard({ notified, at }: { notified: boolean; at: string }) {
+function NotifyCard({ notified }: { notified: boolean }) {
   const Icon = notified ? BellRingIcon : BellOffIcon;
   return (
     <section
@@ -170,13 +164,11 @@ function NotifyCard({ notified, at }: { notified: boolean; at: string }) {
         aria-hidden="true"
       />
       <div className="flex flex-col gap-1">
-        <p className="font-semibold text-ink">
-          {notified ? `Sent to the crew's phone · ${at}` : "Not delivered"}
-        </p>
+        <p className="font-semibold text-ink">{notified ? "Sent to the crew's phone" : "Not delivered"}</p>
         <p className="text-[0.9375rem] text-ink-muted">
           {notified
             ? "A push notification went to the team's demo phone the moment you booked."
-            : "The push to the team's demo phone didn't go through. Your booking is still saved."}
+            : "No push reached the team's phone for this booking. Your booking is still saved."}
         </p>
       </div>
     </section>

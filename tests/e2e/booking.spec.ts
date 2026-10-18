@@ -18,10 +18,8 @@ test("pick a day and time, book, and land on the confirmation", async ({ page })
   ).toBeVisible();
 
   // Taken windows are disabled and labeled (FR-BOOK-03).
-  const firstOpenDay = page.locator("input[name=day]:not([disabled])").first();
-  await firstOpenDay.check({ force: true });
-  const open = page.locator("input[name=slotWindow]:not([disabled])").first();
-  await open.check({ force: true });
+  await page.locator("label:has(input[name=day]:not([disabled]))").first().click();
+  await page.locator("label:has(input[name=slotWindow]:not([disabled]))").first().click();
   await page.getByLabel("3. Your city").selectOption("mesa");
 
   const request = page.waitForRequest((r) => r.url().endsWith("/api/bookings") && r.method() === "POST");
@@ -57,7 +55,7 @@ test("asks for a day and time before submitting", async ({ page }) => {
 test("the API is idempotent, rejects taken slots and personal fields", async ({ page, request }) => {
   await page.goto("/book");
   const date = await page.locator("input[name=day]:not([disabled])").first().getAttribute("value");
-  await page.locator("input[name=day]:not([disabled])").first().check({ force: true });
+  await page.locator("label:has(input[name=day]:not([disabled]))").first().click();
   const window = await page.locator("input[name=slotWindow]:not([disabled])").first().getAttribute("value");
   const headers = { "x-forwarded-for": `198.18.${test.info().workerIndex}.${Date.now() % 250}` };
 

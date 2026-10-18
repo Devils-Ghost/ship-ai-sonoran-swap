@@ -54,16 +54,7 @@ export function cleanProps(name: EventName, props: unknown): EventProps {
 }
 
 /** SRS §11.9 tagged sources. */
-export const SOURCES = [
-  "qr-pitch",
-  "qr-table",
-  "linkedin",
-  "x",
-  "discord",
-  "test",
-  "submission",
-  "direct",
-] as const;
+export const SOURCES = ["qr-screen", "qr-table", "linkedin", "x", "test", "direct"] as const;
 
 const REFERRAL = /^referral:[a-z0-9.-]{1,253}$/;
 

@@ -5,16 +5,10 @@ import { ArrowRightIcon } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { track } from "@/lib/analytics/client";
 import { PROOF_TABS, type ProofTab } from "@/lib/proof/content";
-import {
-  HowItWorksSection,
-  LimitsSection,
-  PrivacySection,
-  QualitySection,
-  TimelineSection,
-} from "./proof-sections";
+import { HowItWorksSection, LimitsSection, PrivacySection, QualitySection } from "./proof-sections";
 import { TestingSection } from "./testing-section";
 
-// FR-PROOF-02: loaded only when the drawer opens, so the timeline and report data never weigh on page loads.
+// FR-PROOF-02: loaded only when the drawer opens, so the report data never weighs on page loads.
 export default function ProofPanel({ tab, onTab }: { tab: ProofTab; onTab: (t: ProofTab) => void }) {
   return (
     <Tabs
@@ -33,9 +27,6 @@ export default function ProofPanel({ tab, onTab }: { tab: ProofTab; onTab: (t: P
         ))}
       </TabsList>
       <div className="min-h-0 flex-1 overflow-y-auto px-6 pt-5 pb-8">
-        <TabsContent value="timeline">
-          <TimelineSection compact />
-        </TabsContent>
         <TabsContent value="quality">
           <QualitySection />
         </TabsContent>

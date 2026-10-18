@@ -4,7 +4,6 @@ import { AiLabel } from "@/components/shared/ai-label";
 import { CompareSlider } from "@/components/visualize/compare-slider";
 import { content } from "@/lib/content/load";
 import { PRIMARY_CTA } from "@/lib/site";
-import { formatDate } from "@/lib/utils/format";
 import { sampleAfter, sampleBefore, SAMPLE_YARDS } from "@/lib/visualize/samples";
 import { QuickEstimate } from "./quick-estimate";
 
@@ -20,7 +19,7 @@ const HERO_STYLE = "sonoran-native";
 const HERO_YARD = SAMPLE_YARDS[0];
 
 export function Hero({ variant }: { variant: Variant }) {
-  const { business, rebates } = content;
+  const { business } = content;
   return (
     <section aria-labelledby="hero-title" className="container-page pt-10 pb-16 lg:pt-14 lg:pb-20">
       <div className="grid gap-10 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-14">
@@ -37,10 +36,7 @@ export function Hero({ variant }: { variant: Variant }) {
               Preview my yard
             </Link>
           </div>
-          <p className="text-sm text-ink-muted">
-            Rebate rules from official city pages · last checked{" "}
-            <time dateTime={rebates.lastReviewed}>{formatDate(rebates.lastReviewed)}</time>
-          </p>
+          <p className="text-sm text-ink-muted">Rebate rules from official city pages</p>
         </div>
         <figure className="flex flex-col gap-2">
           <CompareSlider

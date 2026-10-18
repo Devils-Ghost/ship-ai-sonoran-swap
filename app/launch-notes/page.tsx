@@ -7,7 +7,6 @@ import {
   LimitsSection,
   PrivacySection,
   QualitySection,
-  TimelineSection,
 } from "@/components/proof/proof-sections";
 import { TestingSection } from "@/components/proof/testing-section";
 import { ROUTES } from "@/lib/routes";
@@ -56,7 +55,7 @@ export default function LaunchNotesPage() {
     <>
       <PageIntro
         title="Launch notes"
-        lead="How this site was built and tested: the timeline, quality reports, user-test results and honest limits."
+        lead="How this site was built and tested: quality reports, user-test results and honest limits."
         crumbs={[{ label: "Launch notes", href: "/launch-notes" }]}
       >
         <PrimaryCta />
@@ -70,9 +69,8 @@ export default function LaunchNotesPage() {
                 Is Sonoran Swap a real company?
               </h2>
               <p className="mt-3 text-ink-muted">
-                Not yet. It&apos;s a concept business built for a Phoenix hackathon to show how a local
-                landscaper&apos;s website could work. The rebate information is real and linked to official
-                city pages.
+                Not yet. It&apos;s a concept business built to show how a local landscaper&apos;s website
+                could work. The rebate information is real and linked to official city pages.
               </p>
             </div>
           </section>
@@ -115,10 +113,6 @@ export default function LaunchNotesPage() {
 
           <Block id="privacy" title="Privacy in short">
             <PrivacySection />
-          </Block>
-
-          <Block id="timeline" title="Build timeline">
-            <TimelineSection />
           </Block>
 
           <Block id="feedback" title="Send feedback">

@@ -2,7 +2,7 @@ import { cn } from "cn";
 import type { NavLink } from "@/lib/site";
 import { Breadcrumbs } from "./breadcrumbs";
 
-// The top of every inner page: breadcrumbs, eyebrow, the single H1 (HACKATHON D6), lead and actions.
+// The top of every inner page: breadcrumbs, eyebrow, the single H1 (QUALITY D6), lead and actions.
 export function PageIntro({
   title,
   eyebrow,
@@ -29,16 +29,5 @@ export function PageIntro({
         {children && <div className="mt-2 flex flex-wrap items-center gap-4">{children}</div>}
       </div>
     </section>
-  );
-}
-
-/** Honest marker on shell pages until their phase ships; removed page by page. */
-export function BuildingNote() {
-  return (
-    <div className="container-page pb-16">
-      <p className="max-w-3xl rounded-card border border-dashed border-line bg-paper px-5 py-4 text-ink-muted">
-        This page is being built during the hackathon, Oct 17–18, 2026.
-      </p>
-    </div>
   );
 }

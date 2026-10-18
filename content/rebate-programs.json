@@ -1,5 +1,4 @@
 {
-  "lastReviewed": "2026-10-15",
   "disclaimer": "Estimate only. Eligibility and payment are decided by each city. Sonoran Swap is not affiliated with any city.",
   "programs": [
     {
@@ -47,8 +46,7 @@
       ],
       "howToApply": "Online through the myPHX311 portal only (no mail or email).",
       "payment": "Check mailed after final approval, typically within 1 to 2 billing cycles.",
-      "sourceUrl": "https://www.phoenix.gov/administration/departments/waterservices/supply-conservation/save-water/conservation-incentives/residential-grass-incentives.html",
-      "lastVerified": "2026-10-15"
+      "sourceUrl": "https://www.phoenix.gov/administration/departments/waterservices/supply-conservation/save-water/conservation-incentives/residential-grass-incentives.html"
     },
     {
       "id": "mesa",
@@ -98,8 +96,7 @@
       ],
       "howToApply": "Apply to Mesa's Environmental and Sustainability Department before starting. Questions: 480-644-3306 or conservation.info@mesaaz.gov.",
       "payment": "Paid after completion and final approval.",
-      "sourceUrl": "https://mesaaz.gov/Xeriscape",
-      "lastVerified": "2026-10-15"
+      "sourceUrl": "https://mesaaz.gov/Xeriscape"
     },
     {
       "id": "chandler",
@@ -146,8 +143,7 @@
       ],
       "howToApply": "Submit the Pre-Grass-Removal NtP application; questions: conserve@chandleraz.gov or 480-782-3580.",
       "payment": "Credit to your utility account after final inspection.",
-      "sourceUrl": "https://www.chandleraz.gov/residents/water/water-conservation/rebate-and-incentive-programs/residential/rebate-policy",
-      "lastVerified": "2026-10-15"
+      "sourceUrl": "https://www.chandleraz.gov/residents/water/water-conservation/rebate-and-incentive-programs/residential/rebate-policy"
     },
     {
       "id": "scottsdale",
@@ -174,8 +170,7 @@
       "documents": [],
       "howToApply": "Watch the city's residential rebates page or sign up for early notification of the 2026 launch.",
       "payment": null,
-      "sourceUrl": "https://www.scottsdaleaz.gov/water/water-conservation/rebates/residential",
-      "lastVerified": "2026-10-15"
+      "sourceUrl": "https://www.scottsdaleaz.gov/water/water-conservation/rebates/residential"
     }
   ],
   "otherCities": {

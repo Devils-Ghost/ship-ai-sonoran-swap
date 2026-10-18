@@ -124,11 +124,11 @@ describe("mock provider", () => {
 
 describe("daily cap window", () => {
   it("counts per UTC day (Cloudflare resets at 00:00 UTC)", async () => {
-    expect(utcDayStart(new Date("2026-10-17T06:30:00Z")).toISOString()).toBe("2026-10-17T00:00:00.000Z");
-    const day1 = new Date("2026-10-17T10:00:00Z");
+    expect(utcDayStart(new Date("2030-03-16T06:30:00Z")).toISOString()).toBe("2030-03-16T00:00:00.000Z");
+    const day1 = new Date("2030-03-16T10:00:00Z");
     bumpMemoryCount(day1);
     bumpMemoryCount(day1);
     expect(await liveRendersToday("cloudflare", false, day1)).toBe(2);
-    expect(await liveRendersToday("cloudflare", false, new Date("2026-10-18T00:00:01Z"))).toBe(0);
+    expect(await liveRendersToday("cloudflare", false, new Date("2030-03-17T00:00:01Z"))).toBe(0);
   });
 });

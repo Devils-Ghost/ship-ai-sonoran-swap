@@ -29,12 +29,12 @@ test("tagged home visit: source read and stripped, page view, variant, CTA impre
   page,
 }) => {
   const sent = captureEvents(page);
-  await page.goto("/?src=qr-pitch&v=b");
+  await page.goto("/?src=qr-screen&v=b");
   await expect(page).toHaveURL(/\/\?v=b$/);
   await expect
     .poll(() => sent.map((e) => e.name))
     .toEqual(expect.arrayContaining(["page_view", "headline_variant", "cta_impression"]));
-  expect(sent.every((e) => e.source === "qr-pitch" && e.variant === "b" && e.team === false)).toBe(true);
+  expect(sent.every((e) => e.source === "qr-screen" && e.variant === "b" && e.team === false)).toBe(true);
   expect(sent.find((e) => e.name === "cta_impression")?.props).toEqual({
     cta: "see_my_rebate",
     variant: "b",
@@ -46,7 +46,7 @@ test("tagged home visit: source read and stripped, page view, variant, CTA impre
   await expect
     .poll(() => sent.filter((e) => e.name === "page_view").map((e) => e.props.path))
     .toContain("/studio");
-  expect(sent.find((e) => e.name === "hero_cta_click")?.source).toBe("qr-pitch");
+  expect(sent.find((e) => e.name === "hero_cta_click")?.source).toBe("qr-screen");
 });
 
 test("studio sample path sends estimator_start, sample_used and a bucketed estimate_shown", async ({

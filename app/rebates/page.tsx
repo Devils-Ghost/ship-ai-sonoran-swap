@@ -7,7 +7,7 @@ import { content } from "@/lib/content/load";
 import type { RebateProgram } from "@/lib/content/schema";
 import { summarize } from "@/lib/rebates/summary";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { formatDate, formatMoney, formatNumber } from "@/lib/utils/format";
+import { formatMoney, formatNumber } from "@/lib/utils/format";
 
 export const metadata = pageMetadata("/rebates");
 
@@ -43,10 +43,6 @@ const ROWS: Row[] = [
   { label: "Approval first", value: (p) => (p.approval.required ? p.approval.name : "Not required") },
   { label: "Time to finish", value: (p) => p.approval.completeWithin ?? "—" },
   { label: "Status", value: (p) => STATUS[p.status] },
-  {
-    label: "Last checked",
-    value: (p) => <time dateTime={p.lastVerified}>{formatDate(p.lastVerified)}</time>,
-  },
   {
     label: "Official page",
     value: (p) => (

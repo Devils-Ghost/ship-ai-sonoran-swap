@@ -30,7 +30,7 @@ describe("whitelist (FR-ANL-03)", () => {
   });
 
   it("normalizes sources (§11.9)", () => {
-    expect(normalizeSource("QR-Pitch")).toBe("qr-pitch");
+    expect(normalizeSource("QR-Screen")).toBe("qr-screen");
     expect(normalizeSource("referral:news.ycombinator.com")).toBe("referral:news.ycombinator.com");
     expect(normalizeSource("facebook")).toBe("other");
     expect(normalizeSource(undefined)).toBe("direct");
@@ -80,7 +80,7 @@ describe("client session (FR-ANL-02/05, FR-INS-13)", () => {
   });
 
   it("batches events into one beacon carrying session, source and variant", async () => {
-    window.history.replaceState(null, "", "/?src=qr-pitch&v=a");
+    window.history.replaceState(null, "", "/?src=qr-screen&v=a");
     track("page_view", { path: "/", variant: "a" });
     track("hero_cta_click", { cta: "see_my_rebate", variant: "a" });
     flush();
@@ -90,7 +90,7 @@ describe("client session (FR-ANL-02/05, FR-INS-13)", () => {
     expect(body.events).toHaveLength(2);
     expect(body.events[0]).toMatchObject({
       name: "page_view",
-      source: "qr-pitch",
+      source: "qr-screen",
       variant: "a",
       team: false,
     });

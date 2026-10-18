@@ -35,11 +35,11 @@ test("manual path computes boundary cases from SRS §7.5", async ({ page }) => {
     await sqft.fill(area);
     await expect(results(page), `${cityName} ${area}`).toContainText(expected);
   }
-  // Every result carries the approval warning (FR-REB-12) and, for programs, the source and date.
+  // Every result carries the approval warning (FR-REB-12) and, for programs, the official source.
   await city.selectOption({ label: "City of Phoenix" });
   await sqft.fill("1200");
   await expect(results(page)).toContainText("Don't remove any grass until Phoenix approves");
-  await expect(results(page)).toContainText("checked Oct 15, 2026");
+  await expect(results(page)).toContainText("Source: Residential Grass Removal Incentive, City of Phoenix");
 });
 
 test("a shared link opens straight to results", async ({ page }) => {

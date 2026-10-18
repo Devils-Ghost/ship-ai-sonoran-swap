@@ -31,7 +31,7 @@ export function Header() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="inline-flex min-h-11 items-center rounded-full px-3 text-[0.9375rem] font-medium text-ink hover:bg-sand"
+                  className="inline-flex min-h-11 items-center rounded-full px-2.5 text-[0.9375rem] font-medium whitespace-nowrap text-ink hover:bg-sand xl:px-3"
                 >
                   {link.label}
                 </Link>

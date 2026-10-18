@@ -7,6 +7,7 @@ import { AiLabel } from "@/components/shared/ai-label";
 import { Button } from "@/components/ui/button";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { track } from "@/lib/analytics/client";
+import { DEMO_HEADER, isDemo } from "@/lib/demo/flag";
 import { pickParams } from "@/lib/utils/url";
 import { composeBeforeAfter } from "@/lib/visualize/composite";
 import { PrepareFailure, prepareMessage, preparePhoto, type PreparedPhoto } from "@/lib/visualize/preprocess";
@@ -78,26 +79,20 @@ function samplePair(id: SampleYardId, style: string): Result {
   };
 }
 
-/** Reads ?style= and ?demo=1 without a Suspense hole (same pattern as the studio). */
+/** Reads ?style= without a Suspense hole (same pattern as the studio). Demo mode is a tab flag (lib/demo). */
 export function VisualizerRoot() {
   // Only the params this page reads: analytics strips ?src=/?team= after load, and that must not remount it.
   const search = useSyncExternalStore(
     () => () => {},
-    () => pickParams(window.location.search, ["style", "demo"]),
+    () => pickParams(window.location.search, ["style"]),
     () => "",
   );
   const params = new URLSearchParams(search);
   const style = params.get("style");
-  return (
-    <VisualizerApp
-      key={search}
-      initialStyle={isStyle(style) ? style : (STYLES[0]?.slug ?? "")}
-      demo={params.get("demo") === "1"}
-    />
-  );
+  return <VisualizerApp key={search} initialStyle={isStyle(style) ? style : (STYLES[0]?.slug ?? "")} />;
 }
 
-function VisualizerApp({ initialStyle, demo }: { initialStyle: string; demo: boolean }) {
+function VisualizerApp({ initialStyle }: { initialStyle: string }) {
   const [style, setStyle] = useState(initialStyle);
   const [photo, setPhoto] = useState<PreparedPhoto | null>(null);
   const [sample, setSample] = useState<SampleYardId | null>(null);
@@ -172,7 +167,7 @@ function VisualizerApp({ initialStyle, demo }: { initialStyle: string; demo: boo
         method: "POST",
         body: form,
         signal: ac.signal,
-        headers: demo ? { "x-demo": "1" } : undefined,
+        headers: isDemo() ? DEMO_HEADER : undefined,
       });
       const json = (await res.json().catch(() => null)) as {
         ok?: boolean;

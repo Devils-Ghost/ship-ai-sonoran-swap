@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { content, isConcept } from "@/lib/content/load";
-import { FOOTER_CREDIT, FOOTER_NAV } from "@/lib/site";
+import { FOOTER_NAV } from "@/lib/site";
 import { Wordmark } from "./wordmark";
 
-// SRS §5.2 footer: four link columns, the concept disclosure (FR-DISC) and the event credit.
+// SRS §5.2 footer: four link columns, and the concept disclosure (FR-DISC).
 export function Footer() {
   const { business } = content;
   return (
@@ -38,7 +38,6 @@ export function Footer() {
       <div className="border-t border-caliche/15">
         <div className="container-page flex flex-col gap-3 py-8 text-sm text-caliche/85">
           {isConcept && <p className="max-w-3xl">{business.disclosures.footer}</p>}
-          <p>{FOOTER_CREDIT}</p>
         </div>
       </div>
     </footer>

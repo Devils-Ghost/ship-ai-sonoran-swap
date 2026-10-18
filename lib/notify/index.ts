@@ -5,7 +5,7 @@ import { formatDay, windowInfo, type SlotWindow } from "@/lib/booking/slots";
 // FR-NOTIF-01/02 and ARCH §6: a Notifier adapter (ntfy or mock). Sending never throws; it reports
 // whether the push was accepted so the booking can store `notified` honestly.
 
-export type Channel = "ntfy" | "mock";
+export type Channel = "ntfy" | "mock" | "none";
 export type Notification = { title: string; body: string };
 
 export type Notifier = { channel: Channel; send(n: Notification): Promise<boolean> };

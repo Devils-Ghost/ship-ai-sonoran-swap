@@ -36,7 +36,7 @@ function SegmentedControl<T extends string>({
         <ToggleGroupPrimitive.Item
           key={o.value}
           value={o.value}
-          className="min-h-11 flex-1 cursor-pointer rounded-full px-4 text-[0.9375rem] font-semibold whitespace-nowrap text-ink-muted transition-colors duration-150 hover:text-ink data-[state=on]:bg-paper data-[state=on]:text-saguaro data-[state=on]:shadow-card"
+          className="min-h-11 flex-1 cursor-pointer rounded-full px-3 text-[0.9375rem] font-semibold whitespace-nowrap text-ink-muted transition-colors duration-150 hover:text-ink data-[state=on]:bg-paper data-[state=on]:text-saguaro data-[state=on]:shadow-card sm:px-4"
         >
           {o.label}
         </ToggleGroupPrimitive.Item>

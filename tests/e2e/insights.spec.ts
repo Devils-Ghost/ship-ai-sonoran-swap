@@ -6,10 +6,10 @@ const rate = (num: number, den: number) => ({ num, den, value: den >= 10 ? num /
 
 test("empty period: every live panel says so; static panels render; no a11y blockers", async ({ page }) => {
   await page.goto("/insights");
-  await expect(page.getByText(/Live data from this site since/)).toBeVisible();
+  await expect(page.getByText("Live data from this site. Team visits excluded.")).toBeVisible();
   await expect(page.getByText("No data yet for this period.").first()).toBeVisible();
   await expect(page.getByText("Too little data to call a winner yet.")).toBeVisible();
-  await expect(page.getByText(/Our first test round is Saturday at 12:30 PM/)).toBeVisible();
+  await expect(page.getByText(/No data-driven changes yet/)).toBeVisible();
   await expect(
     page.getByText(/Structured data: Article, BreadcrumbList, FAQPage, WebPage, WebSite/),
   ).toBeVisible();
@@ -38,7 +38,7 @@ test("numbers: funnel with biggest drop, small-number honesty, and the range chi
         ok: true,
         data: {
           range: "launch",
-          since: "2026-10-17T16:00:00.000Z",
+          since: "2030-03-16T16:00:00.000Z",
           funnel: {
             steps: steps.map(([id, label, count], i) => ({
               id,
@@ -67,7 +67,7 @@ test("numbers: funnel with biggest drop, small-number honesty, and the range chi
             },
             verdict: null,
           },
-          sources: [{ source: "qr-pitch", sessions: 9, estimated: rate(6, 9), bookings: 1 }],
+          sources: [{ source: "qr-screen", sessions: 9, estimated: rate(6, 9), bookings: 1 }],
           audience: { byCity: [], medianSqftBucket: null, medianRebateBucket: null, tiers: [], styles: [] },
           health: {
             renders: 0,
@@ -89,7 +89,9 @@ test("numbers: funnel with biggest drop, small-number honesty, and the range chi
   await expect(funnel.getByRole("row", { name: /Checked eligibility/ })).toContainText(
     "n = 6, too few to read",
   );
-  await expect(page.getByRole("region", { name: "Where visitors come from" })).toContainText("QR (pitch)");
+  await expect(page.getByRole("region", { name: "Where visitors come from" })).toContainText(
+    "QR (on screen)",
+  );
   await expect(page.getByText("Too little data to call a winner yet.")).toBeVisible();
 
   await page.getByRole("radio", { name: "Last hour" }).click();

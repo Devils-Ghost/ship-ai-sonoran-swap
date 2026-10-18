@@ -19,7 +19,6 @@ import { pickParams } from "@/lib/utils/url";
 // nothing is sent anywhere. Printing uses the browser's own "Save as PDF".
 
 const noop = () => () => {};
-const today = new Intl.DateTimeFormat("en-US", { dateStyle: "long", timeZone: "America/Phoenix" });
 
 export function PrepSheet() {
   const search = useSyncExternalStore(
@@ -85,7 +84,6 @@ function Sheet({
       </div>
 
       <dl className="grid gap-x-8 gap-y-4 rounded-card border border-line bg-paper p-6 sm:grid-cols-2 print:border-ink/30">
-        <Row label="Date" value={today.format(new Date())} />
         <Row
           label="Water utility"
           value={program ? `City of ${program.city}` : city === "other" ? "Another utility" : city}

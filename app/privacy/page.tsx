@@ -59,6 +59,10 @@ export default function PrivacyPage() {
               </li>
               <li>Map coordinates.</li>
               <li>
+                The map image on the printable prep sheet. It is passed between pages inside your browser tab
+                and never sent to us.
+              </li>
+              <li>
                 Photos. A photo you upload is resized in your browser, which also removes location data, then
                 sent to our image provider to create the preview. We don&apos;t store it.
               </li>
@@ -67,7 +71,7 @@ export default function PrivacyPage() {
 
           <StatementSection title="Who processes data for us">
             <ul>
-              <li>Vercel: hosting and page-view analytics without cookies.</li>
+              <li>Vercel: hosting.</li>
               <li>Neon: the database that stores the anonymous records above.</li>
               <li>Mapbox: the satellite map and address search.</li>
               <li>
@@ -78,7 +82,10 @@ export default function PrivacyPage() {
                 for map tiles around the area you are viewing.
               </li>
               <li>Cloudflare Workers AI: creating yard previews from your photo.</li>
-              <li>ntfy: sending booking alerts to the crew&apos;s phone (city and time only).</li>
+              <li>
+                ntfy: sending booking alerts to the crew&apos;s phone (city, lawn size, estimated rebate and
+                the booked time; nothing about you).
+              </li>
             </ul>
           </StatementSection>
 

@@ -31,7 +31,7 @@ export function homeFaq(): Faq[] {
     },
     {
       q: "Is Sonoran Swap a real company?",
-      a: "Not yet. It's a concept business built for a Phoenix hackathon to show how a local landscaper's website could work. The rebate information is real and linked to official city pages.",
+      a: "Not yet. It's a concept business built to show how a local landscaper's website could work. The rebate information is real and linked to official city pages.",
     },
   ];
 }

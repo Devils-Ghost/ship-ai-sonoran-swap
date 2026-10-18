@@ -1,12 +1,9 @@
 import business from "@/content/business.json";
-import rebates from "@/content/rebate-programs.json";
-import { formatDate } from "@/lib/utils/format";
 
 // FR-PROOF-02/03 copy for the Proof drawer and /launch-notes. Every statement here describes what the code
 // does or what the data files say; nothing is invented (AGENTS §2.1). Numbers come from the content files.
 
 export const PROOF_TABS = [
-  { id: "timeline", label: "Timeline" },
   { id: "quality", label: "Quality" },
   { id: "testing", label: "Testing" },
   { id: "how", label: "How it works" },
@@ -16,20 +13,17 @@ export const PROOF_TABS = [
 
 export type ProofTab = (typeof PROOF_TABS)[number]["id"];
 
-const checked = formatDate(rebates.lastReviewed, "long");
-
 /** The honest limits list (RC10). */
 export const LIMITS: string[] = [
-  `${business.name} is a concept business built for a hackathon. There is no crew yet: bookings are demonstrations and no one will visit.`,
-  `Rebate figures are estimates from the cities' public pages, last checked ${checked}. Eligibility and payment are decided by each city, and the Phoenix, Mesa and Chandler pages don't state whether funds remain.`,
+  `${business.name} is a concept business. There is no crew yet: bookings are demonstrations and no one will visit.`,
+  "Rebate figures are estimates from the cities' public pages. Eligibility and payment are decided by each city, and the Phoenix, Mesa and Chandler pages don't state whether funds remain.",
   "Scottsdale's program is between seasons, so the site shows its status instead of an amount.",
   "Prices are illustrative concept pricing, not quotes.",
   "Water savings are an estimate from a City of Phoenix figure (about a million gallons per acre of grass a year), not a measurement of your yard.",
   "A lawn outlined on satellite imagery is approximate. A yard walk would confirm the measurement before any application.",
   "When Mapbox is unavailable, address search and imagery switch to free OpenStreetMap search and USGS aerial photos, which can be older and less sharp.",
   "Yard previews are AI concept renderings from a free image service with a daily limit. After the limit, or if the service fails, the site shows a labeled example instead of your yard.",
-  "User-test numbers come from a small group of people at one event. They show how this site performed for them, not a statistical result.",
-  "Planning documents, the project scaffold, the design system and the first features were built on Oct 15–16, before the event weekend. The timeline shows every dated change.",
+  "User-test numbers come from a small group of people. They show how this site performed for them, not a statistical result.",
   "The site is in English only.",
 ];
 

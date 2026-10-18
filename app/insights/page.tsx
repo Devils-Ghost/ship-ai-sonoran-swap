@@ -3,7 +3,6 @@ import { InsightsLive } from "@/components/insights/insights-live";
 import { PageIntro } from "@/components/layout/page-intro";
 import { content } from "@/lib/content/load";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { formatDate } from "@/lib/utils/format";
 
 export const metadata = pageMetadata("/insights");
 
@@ -11,7 +10,7 @@ export const metadata = pageMetadata("/insights");
 // and the KPI explainer are built from committed content at build time.
 export default function InsightsPage() {
   const { seoReport, decisions } = content;
-  const entries = [...decisions.entries].sort((a, b) => b.date.localeCompare(a.date));
+  const entries = decisions.entries; // newest first, as written in the file
   const pct = (part: number) => (seoReport.routes ? `${Math.round((part / seoReport.routes) * 100)}%` : "–");
   const sc = seoReport.searchConsole;
 
@@ -52,13 +51,11 @@ export default function InsightsPage() {
                 label={`Structured data: ${seoReport.jsonLdTypes.join(", ") || "none yet"}`}
               />
               <Check
-                ok={sc.submittedAt !== null}
+                ok={sc.submitted}
                 label={
-                  sc.submittedAt
-                    ? `Sitemap submitted to Google Search Console on ${formatDate(sc.submittedAt)}${
-                        sc.indexedPages !== null
-                          ? `; ${sc.indexedPages} pages indexed as of ${formatDate(sc.checkedAt ?? sc.submittedAt)}`
-                          : ""
+                  sc.submitted
+                    ? `Sitemap submitted to Google Search Console${
+                        sc.indexedPages !== null ? `; ${sc.indexedPages} pages indexed` : ""
                       }`
                     : "Sitemap not yet submitted to Google Search Console"
                 }
@@ -66,14 +63,9 @@ export default function InsightsPage() {
             </ul>
             <p className="text-[0.9375rem] text-ink-muted">
               Search rankings and search click-through take weeks to appear for a new site, so we show what we
-              controlled this weekend: complete metadata, share previews, structured data and a submitted
-              sitemap.
+              control: complete metadata, share previews, structured data and a submitted sitemap.
             </p>
-            {seoReport.generatedAt && (
-              <p className="text-[0.8125rem] text-ink-muted">
-                Measured at build, {formatDate(seoReport.generatedAt)}.
-              </p>
-            )}
+            <p className="text-[0.8125rem] text-ink-muted">Measured at build.</p>
           </section>
 
           <section aria-labelledby="kpi-title" className="flex flex-col gap-4">
@@ -98,14 +90,13 @@ export default function InsightsPage() {
           </h2>
           {entries.length === 0 ? (
             <p className="rounded-card border border-dashed border-line p-5 text-ink-muted">
-              Our first test round is Saturday at 12:30 PM. Changes we make because of data will appear here.
+              No data-driven changes yet. Changes we make because of data will appear here.
             </p>
           ) : (
             <ol className="flex flex-col gap-4">
               {entries.map((e) => (
-                <li key={`${e.date}-${e.change}`} className="rounded-card border border-line bg-paper p-5">
-                  <p className="text-[0.8125rem] text-ink-muted">{formatDate(e.date)}</p>
-                  <dl className="mt-2 grid gap-2 sm:grid-cols-[9rem_1fr]">
+                <li key={e.change} className="rounded-card border border-line bg-paper p-5">
+                  <dl className="grid gap-2 sm:grid-cols-[9rem_1fr]">
                     <dt className="font-semibold">We saw</dt>
                     <dd>{e.observation}</dd>
                     <dt className="font-semibold">Evidence</dt>

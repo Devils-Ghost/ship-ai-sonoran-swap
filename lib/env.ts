@@ -18,11 +18,10 @@ const flag = z.preprocess(
     .transform((v) => v === "1"),
 );
 
-const isoDateTime = (fallback: string) =>
-  z.preprocess(
-    (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
-    z.iso.datetime({ offset: true }).default(fallback),
-  );
+const optionalIsoDateTime = z.preprocess(
+  (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+  z.iso.datetime({ offset: true }).optional(),
+);
 
 export const IMAGE_PROVIDERS = ["gallery", "gemini", "cloudflare", "mock"] as const;
 
@@ -51,11 +50,9 @@ const serverEnvSchema = z
     NTFY_TOPIC: optionalString,
     IP_HASH_SALT: optionalString,
     // FR-LIVE-02: unset means "start of today, Arizona", computed per request in lib/stats.
-    LIVE_SINCE: z.preprocess(
-      (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
-      z.iso.datetime({ offset: true }).optional(),
-    ),
-    INSIGHTS_SINCE: isoDateTime("2026-10-17T09:00:00-07:00"),
+    LIVE_SINCE: optionalIsoDateTime,
+    // FR-INS-01: unset means "since launch" covers all stored data.
+    INSIGHTS_SINCE: optionalIsoDateTime,
     MOCK_IMAGE_PROVIDER: flag,
     MOCK_NOTIFY: flag,
     MOCK_DB: flag,

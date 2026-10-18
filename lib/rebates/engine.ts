@@ -40,13 +40,10 @@ type PerSqftProgram = Extract<RebateProgram, { type: "per_sqft" }>;
 type TieredProgram = Extract<RebateProgram, { type: "tiered" }>;
 type StatusOnlyProgram = Extract<RebateProgram, { type: "status_only" }>;
 
-function base(
-  program: RebateProgram,
-): Pick<RebateResult, "programId" | "status" | "lastVerified" | "sourceUrl"> {
+function base(program: RebateProgram): Pick<RebateResult, "programId" | "status" | "sourceUrl"> {
   return {
     programId: program.id,
     status: program.status,
-    lastVerified: program.lastVerified,
     sourceUrl: program.sourceUrl,
   };
 }

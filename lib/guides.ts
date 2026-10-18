@@ -13,7 +13,6 @@ export type Guide = {
   slug: string;
   title: string;
   description: string;
-  updated: string;
   sources: { label: string; url: string }[];
   related: { label: string; href: string }[];
 };
@@ -24,7 +23,6 @@ export const GUIDES = [
     title: "How to Get Phoenix's Grass Removal Rebate, Step by Step",
     description:
       "Every step of the City of Phoenix grass removal incentive, from checking you qualify to the check in the mail.",
-    updated: "2026-10-16",
     sources: [source("phoenix")],
     related: [
       { label: "Phoenix rebate summary", href: "/rebates/phoenix" },
@@ -36,11 +34,9 @@ export const GUIDES = [
     title: "Fall Planting in Phoenix: Start Your Desert Yard Now",
     description:
       "Why fall is planting season in Phoenix, what to plant first, and how city approval fits the calendar.",
-    updated: "2026-10-16",
     sources: [
       {
-        label:
-          "KJZZ, The Show: Gardening during one of the hottest Phoenix Octobers on record (Oct 29, 2024)",
+        label: "KJZZ, The Show: Gardening during one of the hottest Phoenix Octobers on record",
         url: business.seasonal.sourceUrl,
       },
       source("phoenix"),
@@ -54,7 +50,6 @@ export const GUIDES = [
     slug: "artificial-turf-and-rebates",
     title: "Artificial Turf and Rebates: What Mesa and Chandler Say",
     description: "What Mesa, Chandler and Phoenix say about artificial turf, and what to choose instead.",
-    updated: "2026-10-16",
     sources: [source("mesa"), source("chandler"), source("phoenix")],
     related: [
       { label: "Mesa rebate summary", href: "/rebates/mesa" },

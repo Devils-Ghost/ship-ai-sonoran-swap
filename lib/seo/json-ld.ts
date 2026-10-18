@@ -50,7 +50,6 @@ export function articleJsonLd(guide: {
   slug: string;
   title: string;
   description: string;
-  updated: string;
   sources: { label: string; url: string }[];
 }) {
   return {
@@ -58,7 +57,6 @@ export function articleJsonLd(guide: {
     "@type": "Article",
     headline: guide.title,
     description: guide.description,
-    dateModified: guide.updated,
     mainEntityOfPage: abs(`/guides/${guide.slug}`),
     image: abs(`/api/og?${new URLSearchParams({ title: guide.title }).toString()}`),
     author: { "@type": "Organization", name: business.name, url: abs("/") },

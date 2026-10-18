@@ -2,7 +2,7 @@ import { CheckIcon, FileTextIcon, OctagonXIcon } from "lucide-react";
 import type { ProgramId, RebateProgram } from "@/lib/content/schema";
 import { getProgram } from "@/lib/rebates/engine";
 import { formatRateShort, summarize } from "@/lib/rebates/summary";
-import { formatDate, formatNumber } from "@/lib/utils/format";
+import { formatNumber } from "@/lib/utils/format";
 
 // MDX building blocks for the guides. Every number and rule is read from rebate-programs.json,
 // so a guide can never drift from the data (AGENTS §2.2).
@@ -16,8 +16,7 @@ type Field =
   | "completeWithin"
   | "payment"
   | "howToApply"
-  | "summary"
-  | "lastVerified";
+  | "summary";
 
 function value(p: RebateProgram, get: Field): string {
   switch (get) {
@@ -43,8 +42,6 @@ function value(p: RebateProgram, get: Field): string {
       return p.howToApply;
     case "summary":
       return summarize(p).sentence;
-    case "lastVerified":
-      return formatDate(p.lastVerified, "long");
   }
 }
 

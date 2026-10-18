@@ -9,7 +9,7 @@ import { content, isConcept } from "@/lib/content/load";
 import { WATER, waterGallonsPerYear } from "@/lib/estimate/water";
 import type { Faq } from "@/lib/faq";
 import { summarizeAll } from "@/lib/rebates/summary";
-import { formatDate, formatNumber } from "@/lib/utils/format";
+import { formatNumber } from "@/lib/utils/format";
 import { sampleAfter, showcaseYard } from "@/lib/visualize/samples";
 import { Section } from "./section";
 
@@ -46,7 +46,6 @@ export function StepsStrip() {
 
 export function CityCards() {
   const cards = summarizeAll();
-  const { programs } = content.rebates;
   return (
     <Section
       id="cities"
@@ -57,7 +56,6 @@ export function CityCards() {
     >
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((c) => {
-          const program = programs.find((p) => p.id === c.id);
           return (
             <li key={c.id}>
               <Link
@@ -76,12 +74,6 @@ export function CityCards() {
                   </ul>
                 ) : (
                   <p className="text-[0.9375rem] text-ink-muted">{c.sentence}</p>
-                )}
-                {program && (
-                  <span className="mt-auto text-[0.8125rem] text-ink-muted">
-                    Last checked{" "}
-                    <time dateTime={program.lastVerified}>{formatDate(program.lastVerified)}</time>
-                  </span>
                 )}
                 <span className="inline-flex items-center gap-1 font-semibold text-terracotta">
                   {c.city} details{" "}

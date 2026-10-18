@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { PageViews } from "@/components/analytics/page-views";
+import { DemoMode } from "@/components/demo/demo-mode";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
+import { RouteFocus } from "@/components/layout/route-focus";
 import { SkipLink } from "@/components/layout/skip-link";
 import { JsonLd } from "@/components/shared/json-ld";
 import { content } from "@/lib/content/load";
@@ -19,9 +21,12 @@ const fraunces = Fraunces({
   variable: "--font-fraunces",
 });
 
+// Not preloaded: body text paints at once in Next's size-matched fallback (no layout shift), and the home
+// page's LCP hero photo gets the early bandwidth instead (C2).
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
+  preload: false,
   variable: "--font-inter",
 });
 
@@ -50,6 +55,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <Footer />
         <PageViews />
+        <DemoMode />
+        <RouteFocus />
       </body>
     </html>
   );

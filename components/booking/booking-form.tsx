@@ -6,6 +6,7 @@ import { cn } from "cn";
 import { CitySelect } from "@/components/estimate/city-select";
 import { Button } from "@/components/ui/button";
 import { track } from "@/lib/analytics/client";
+import { DEMO_HEADER, isDemo } from "@/lib/demo/flag";
 import { formatDay, SLOT_WINDOWS, type Day, type SlotWindow } from "@/lib/booking/slots";
 import type { CityId } from "@/lib/estimate/estimate";
 
@@ -59,7 +60,7 @@ export function BookingForm({ days, initialCity, estimateId, conceptNote, button
     try {
       const res = await fetch("/api/bookings", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...(isDemo() ? DEMO_HEADER : {}) },
         body: JSON.stringify({
           slotDate: date,
           slotWindow,

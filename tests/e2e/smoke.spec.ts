@@ -89,3 +89,20 @@ test("sitemap lists only indexable routes", async ({ request }) => {
       .sort(),
   );
 });
+
+// QUALITY C5: no horizontal scroll at the narrowest supported width, on every route.
+test("no page scrolls sideways at 320 px", async ({ page, isMobile }) => {
+  test.skip(isMobile, "runs once, at a fixed 320 px viewport");
+  test.setTimeout(120_000);
+  await page.setViewportSize({ width: 320, height: 720 });
+  const wide: string[] = [];
+  for (const route of ROUTES) {
+    await page.goto(route.path);
+    await page.waitForLoadState("load");
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    if (overflow > 0) wide.push(`${route.path} (+${overflow}px)`);
+  }
+  expect(wide).toEqual([]);
+});

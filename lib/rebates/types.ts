@@ -22,6 +22,5 @@ export type RebateResult = {
   notes: RebateNote[];
   capApplied: boolean;
   minimumSqft: number | null;
-  lastVerified: string;
   sourceUrl: string;
 };

@@ -18,9 +18,7 @@ export function GET() {
     ...ROUTES.filter((r) => r.index).map((r) => `- [${r.title}](${url(r.path)}): ${r.description}`),
     "",
     "## Data sources",
-    ...rebates.programs.map(
-      (p) => `- ${p.name}, City of ${p.city} (checked ${p.lastVerified}): ${p.sourceUrl}`,
-    ),
+    ...rebates.programs.map((p) => `- ${p.name}, City of ${p.city}: ${p.sourceUrl}`),
     "",
   ];
   return new Response(lines.join("\n"), { headers: { "Content-Type": "text/plain; charset=utf-8" } });

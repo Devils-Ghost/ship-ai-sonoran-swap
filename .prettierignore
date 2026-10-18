@@ -2,7 +2,6 @@ pnpm-lock.yaml
 .next/
 node_modules/
 db/migrations/
-content/timeline.json
 public/
 coverage/
 playwright-report/

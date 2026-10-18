@@ -10,9 +10,9 @@ import {
 
 describe("stats summary", () => {
   it("start of the Arizona day", () => {
-    expect(startOfArizonaDay(new Date("2026-10-17T18:00:00Z"))).toBe("2026-10-17T07:00:00.000Z");
+    expect(startOfArizonaDay(new Date("2030-03-16T18:00:00Z"))).toBe("2030-03-16T07:00:00.000Z");
     // 11 PM Friday in Arizona is already Saturday in UTC.
-    expect(startOfArizonaDay(new Date("2026-10-18T06:00:00Z"))).toBe("2026-10-17T07:00:00.000Z");
+    expect(startOfArizonaDay(new Date("2030-03-17T06:00:00Z"))).toBe("2030-03-16T07:00:00.000Z");
   });
 
   it("buckets cities, folding the rest into other (FR-LIVE-03)", () => {
@@ -29,20 +29,20 @@ describe("stats summary", () => {
   it("merges the ticker newest first, 8 items", () => {
     const est: TickerItem[] = Array.from({ length: 6 }, (_, i) => ({
       kind: "estimate",
-      at: `2026-10-17T1${i}:00:00.000Z`,
+      at: `2030-03-16T1${i}:00:00.000Z`,
       city: "mesa",
       sqft: 1000,
       rebate: 1000,
     }));
     const book: TickerItem[] = [
-      { kind: "booking", at: "2026-10-17T15:30:00.000Z", city: "phoenix" },
-      { kind: "booking", at: "2026-10-17T09:00:00.000Z", city: "phoenix" },
-      { kind: "booking", at: "2026-10-17T08:00:00.000Z", city: "phoenix" },
+      { kind: "booking", at: "2030-03-16T15:30:00.000Z", city: "phoenix" },
+      { kind: "booking", at: "2030-03-16T09:00:00.000Z", city: "phoenix" },
+      { kind: "booking", at: "2030-03-16T08:00:00.000Z", city: "phoenix" },
     ];
     const t = mergeTicker(est, book);
     expect(t).toHaveLength(8);
-    expect(t[0]?.at).toBe("2026-10-17T15:30:00.000Z");
-    expect(t.at(-1)?.at).toBe("2026-10-17T09:00:00.000Z");
+    expect(t[0]?.at).toBe("2030-03-16T15:30:00.000Z");
+    expect(t.at(-1)?.at).toBe("2030-03-16T09:00:00.000Z");
   });
 
   it("median", () => {

@@ -106,7 +106,7 @@ const STATIC_ROUTES: RouteInfo[] = [
     path: "/launch-notes",
     title: "Launch Notes: How This Site Was Built and Tested",
     description:
-      "The build timeline, quality reports, user-test results and honest limits for this concept site.",
+      "How this concept site was built: quality reports, user-test results, honest limits and how it works.",
     index: true,
   },
   {

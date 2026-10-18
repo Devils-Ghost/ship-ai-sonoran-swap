@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ROUTES } from "./routes";
 
 describe("route registry", () => {
-  it("covers at least the 18 indexable routes HACKATHON RC2 asks for", () => {
+  it("covers at least the 18 indexable routes QUALITY RC2 asks for", () => {
     expect(ROUTES.filter((r) => r.index).length).toBeGreaterThanOrEqual(18);
   });
 

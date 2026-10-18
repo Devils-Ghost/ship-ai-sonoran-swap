@@ -1,5 +1,7 @@
 // RC7 / FR-PROOF-02 Quality tab: reads every saved Lighthouse report in public/reports and writes the
 // scores to content/quality.json, so no score is ever typed by hand. Run `pnpm quality` after saving reports.
+// Reports are named `round-<n>-<form factor>-<page>.report.html`. Their capture time is reset to the epoch and
+// hidden, so neither the files nor the site carry a date.
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
@@ -9,7 +11,6 @@ const OUT = path.join(process.cwd(), "content", "quality.json");
 type Lhr = {
   finalDisplayedUrl?: string;
   finalUrl?: string;
-  fetchTime: string;
   configSettings: { formFactor: string };
   categories: Record<string, { score: number | null }>;
   audits: Record<string, { numericValue?: number }>;
@@ -25,10 +26,12 @@ const reports = readdirSync(DIR)
     const m = /window\.__LIGHTHOUSE_JSON__ = (\{[\s\S]*?\});<\/script>/.exec(html);
     if (!m?.[1]) throw new Error(`${file}: no Lighthouse JSON found`);
     const lhr = JSON.parse(m[1]) as Lhr;
+    const round = /^round-(\d+)-/.exec(file)?.[1];
+    if (!round) throw new Error(`${file}: name must start with round-<n>-`);
     const url = new URL(lhr.finalDisplayedUrl ?? lhr.finalUrl ?? "");
     return {
       file: `/reports/${file}`,
-      fetchedAt: lhr.fetchTime,
+      round: Number(round),
       formFactor: lhr.configSettings.formFactor,
       host: url.host,
       path: url.pathname,

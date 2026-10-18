@@ -31,7 +31,10 @@ export async function POST(req: Request) {
   if (!isBookable(body.slotDate, body.slotWindow, arizonaToday()))
     return fail("SLOT_UNAVAILABLE", { requestId });
 
+  // ARCH §8: demo mode (rehearsals, a demo without Wi-Fi) never buzzes the crew phone, and says so.
+  const demo = req.headers.get("x-demo") === "1";
   const notifier = getNotifier();
+  const channel = demo ? "none" : notifier.channel;
   try {
     const estimate = body.estimateId ? await getEstimateSummary(body.estimateId) : null;
     const { booking, created } = await createBooking({
@@ -43,7 +46,8 @@ export async function POST(req: Request) {
       mode: content.business.mode,
     });
     // A repeat submit returns the first booking as it stands; the crew is only buzzed once.
-    if (!created) return ok({ id: booking.id, notified: booking.notified, channel: notifier.channel });
+    if (!created) return ok({ id: booking.id, notified: booking.notified, channel });
+    if (demo) return ok({ id: booking.id, notified: false, channel });
 
     // FR-NOTIF-02: a failed push never blocks the booking; it is recorded as not delivered.
     const notified = await notifier.send(
@@ -57,7 +61,7 @@ export async function POST(req: Request) {
     );
     if (!notified) logServerError(requestId, "POST /api/bookings notify", new Error("push not delivered"));
     await setNotified(booking.id, notified);
-    return ok({ id: booking.id, notified, channel: notifier.channel });
+    return ok({ id: booking.id, notified, channel });
   } catch (err) {
     logServerError(requestId, "POST /api/bookings", err);
     return fail("INTERNAL", { requestId });

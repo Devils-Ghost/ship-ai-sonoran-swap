@@ -48,13 +48,13 @@ export function funnel(counts: Record<FunnelStepId, number>): {
   return { steps, biggestDrop };
 }
 
-export function rangeStart(range: Range, launch: string, now: Date = new Date()): string {
+export function rangeStart(range: Range, launch: string | undefined, now: Date = new Date()): string {
   if (range === "hour") return new Date(now.getTime() - 3600_000).toISOString();
   if (range === "today") {
     const az = new Date(now.getTime() - 7 * 3600_000);
     return new Date(Date.UTC(az.getUTCFullYear(), az.getUTCMonth(), az.getUTCDate(), 7)).toISOString();
   }
-  return new Date(launch).toISOString();
+  return new Date(launch ?? 0).toISOString();
 }
 
 export type VariantResult = {

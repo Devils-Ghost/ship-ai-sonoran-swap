@@ -1,3 +1,4 @@
+import { initDemo } from "@/lib/demo/flag";
 import {
   MAX_BATCH,
   normalizeSource,
@@ -12,7 +13,17 @@ import {
 
 const KEYS = { sid: "ss_sid", src: "ss_src", v: "ss_v", team: "ss_team", test: "ss_test" } as const;
 /** URL params read once and then removed from the address bar (SRS §11.9). */
-const STRIP = ["src", "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "team", "t"];
+const STRIP = [
+  "src",
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+  "team",
+  "t",
+  "demo",
+];
 const FLUSH_MS = 1500;
 
 type Session = { id: string; source: string; variant: Variant | null; team: boolean };
@@ -86,7 +97,9 @@ export function initAnalytics(): Session {
   // visitor. It lives in localStorage instead (still no cookie, still this browser only); ?team=0 clears it.
   if (params.get("team") === "1") writeLocal(KEYS.team, "1");
   if (params.get("team") === "0") writeLocal(KEYS.team, null);
-  const team = readLocal(KEYS.team) === "1" || read(KEYS.team) === "1";
+  // Demo-mode sessions are our own rehearsals and demos: count them as team (read before ?demo is stripped).
+  const demo = initDemo();
+  const team = demo || readLocal(KEYS.team) === "1" || read(KEYS.team) === "1";
 
   let id = read(KEYS.sid);
   if (!id) {

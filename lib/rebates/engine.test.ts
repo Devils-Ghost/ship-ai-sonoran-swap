@@ -118,10 +118,9 @@ describe("notes and flags", () => {
     expect(codes(computeRebate("scottsdale", { sqft: 1200 }))).not.toContain("FUNDING_UNKNOWN");
   });
 
-  it("carries the source and last-checked date (FR-REB-04)", () => {
+  it("carries the official source (FR-REB-04)", () => {
     const r = computeRebate("phoenix", { sqft: 1200 });
     expect(r.sourceUrl).toMatch(/^https:\/\/www\.phoenix\.gov\//);
-    expect(r.lastVerified).toBe(getProgram("phoenix").lastVerified);
   });
 });
 

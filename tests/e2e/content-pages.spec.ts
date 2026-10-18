@@ -20,7 +20,7 @@ test("pricing shows the engine's net-cost example and the concept caption (SRS �
   await expect(net).toContainText("$2,400");
   await expect(net).toContainText("$9,600 – $15,600");
   await expect(page.getByText(/Illustrative concept pricing\./)).toHaveCount(1);
-  // HACKATHON §5: no invented social proof on a concept business.
+  // QUALITY §4: no invented social proof on a concept business.
   await expect(page.getByText("Most chosen")).toHaveCount(0);
 });
 

@@ -2,7 +2,7 @@
 
 export type NavLink = { label: string; href: string };
 
-/** Header (desktop) and mobile menu: at most 6 items plus the CTA (HACKATHON D3). */
+/** Header (desktop) and mobile menu: at most 6 items plus the CTA (QUALITY D3). */
 export const PRIMARY_NAV: NavLink[] = [
   { label: "How it works", href: "/how-it-works" },
   { label: "Rebates", href: "/rebates" },
@@ -49,7 +49,3 @@ export const FOOTER_NAV: { title: string; links: NavLink[] }[] = [
     ],
   },
 ];
-
-// SRS §5.2 says "Built at Ship AI AZ, Oct 17–18, 2026." CONTENT §1 adds the venue, which is a
-// sponsor; HACKATHON §3.4 forbids sponsor names, so the SRS wording wins.
-export const FOOTER_CREDIT = "Built at Ship AI AZ, Oct 17–18, 2026.";

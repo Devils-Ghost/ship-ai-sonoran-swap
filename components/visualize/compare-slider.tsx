@@ -158,8 +158,12 @@ function Picture({
         alt={alt}
         fill
         sizes={sizes}
+        // Full-bleed photos behind a slider: 60 is visually the same here and ~25% lighter (C2).
+        quality={60}
         preload={load === "preload"}
         loading={load === "preload" ? undefined : load}
+        // The after image is visible but isn't the LCP: let the before image have the bandwidth first.
+        fetchPriority={load === "eager" ? "low" : undefined}
         draggable={false}
         className="object-cover"
       />

@@ -1,31 +1,24 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ReceiptTextIcon } from "lucide-react";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Skeleton } from "@/components/ui/skeleton";
 import { track } from "@/lib/analytics/client";
 import { PROOF_OPEN_EVENT } from "@/lib/proof/open";
 import type { ProofTab } from "@/lib/proof/content";
 
 // FR-PROOF-01: a "Proof" button on every page opens a right-side drawer (full-height sheet on phones). Radix
 // traps focus and closes on Escape; the URL hash #proof opens it, so a link can share it.
-const ProofPanel = dynamic(() => import("./proof-panel"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex flex-col gap-3 px-6 pt-4" aria-busy="true">
-      <Skeleton className="h-11 w-full" />
-      <Skeleton className="h-40 w-full" />
-    </div>
-  ),
-});
+const ProofSheet = dynamic(() => import("./proof-sheet"), { ssr: false });
 
 const HASH = "#proof";
 
 export function ProofDrawer({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
-  const [tab, setTab] = useState<ProofTab>("timeline");
+  const [tab, setTab] = useState<ProofTab>("quality");
+  // The sheet's code loads the first time it opens (button, hash or menu), not with the page.
+  const [loaded, setLoaded] = useState(false);
+  const opener = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const fromHash = () => window.location.hash === HASH && show();
@@ -40,8 +33,10 @@ export function ProofDrawer({ className }: { className?: string }) {
   }, []);
 
   function show() {
+    opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setLoaded(true);
     setOpen(true);
-    track("proof_opened", { tab: "timeline" });
+    track("proof_opened", { tab: "quality" });
     if (window.location.hash !== HASH) window.history.replaceState(window.history.state, "", HASH);
   }
 
@@ -58,8 +53,9 @@ export function ProofDrawer({ className }: { className?: string }) {
   };
 
   return (
-    <Sheet open={open} onOpenChange={change}>
+    <>
       <button
+        aria-haspopup="dialog"
         type="button"
         onClick={show}
         className={className}
@@ -68,13 +64,19 @@ export function ProofDrawer({ className }: { className?: string }) {
       >
         <ReceiptTextIcon className="size-5" aria-hidden="true" />
       </button>
-      <SheetContent closeLabel="Close proof">
-        <SheetHeader className="pr-14">
-          <SheetTitle>Proof</SheetTitle>
-          <SheetDescription>What we shipped, how we checked it, and its limits.</SheetDescription>
-        </SheetHeader>
-        {open && <ProofPanel tab={tab} onTab={setTab} />}
-      </SheetContent>
-    </Sheet>
+      {loaded && (
+        <ProofSheet
+          open={open}
+          onOpenChange={change}
+          tab={tab}
+          setTab={setTab}
+          restoreFocus={() => {
+            const el = opener.current;
+            if (el?.isConnected && el.offsetParent !== null) el.focus();
+            else document.getElementById("main")?.focus({ preventScroll: true });
+          }}
+        />
+      )}
+    </>
   );
 }

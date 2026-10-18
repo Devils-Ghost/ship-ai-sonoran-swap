@@ -75,7 +75,7 @@ export function windowInfo(window: SlotWindow) {
   return SLOT_WINDOWS.find((w) => w.id === window) ?? SLOT_WINDOWS[0];
 }
 
-/** "2026-10-17" → "Saturday, Oct 17" (or "Sat" / "Oct 17" parts for the picker). */
+/** "2030-03-16" → "Saturday, Mar 16" (or "Sat" / "Mar 16" parts for the picker). */
 export function formatDay(date: string, style: "long" | "weekday" | "monthDay" = "long"): string {
   const d = new Date(`${date}T12:00:00Z`);
   const opts: Intl.DateTimeFormatOptions =
