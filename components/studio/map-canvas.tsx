@@ -301,6 +301,21 @@ export function MapCanvas({ ref, createMap, target, onSummary, onError, classNam
   }, [target]);
 
   const undo = () => {
+    // Right after closing a shape there is no draft, and Undo looked dead (people tap it straight after
+    // the outline snaps shut). Reopen the last finished shape instead, minus its last corner.
+    if (draft.current.length === 0) {
+      const last = shapes.current.at(-1);
+      if (!last) return;
+      shapes.current = shapes.current.slice(0, -1);
+      draft.current = last.slice(0, -1);
+      lastIgnored.current = summarizeShapes(
+        shapes.current.map((pts) => ({ type: "Polygon", coordinates: [ring(pts)] })),
+      ).ignoredCount;
+      setDrawing(true);
+      render();
+      publish();
+      return;
+    }
     draft.current = draft.current.slice(0, -1);
     render();
   };

@@ -136,3 +136,43 @@ test("a refused Mapbox map falls back to the free map, and outlining still works
   expect(await snapshot.getAttribute("src")).toMatch(/^data:image\/jpeg;base64,/);
   expect(seen.ours.some((r) => r.includes("data:image"))).toBe(false);
 });
+
+test("Undo point removes the last corner, and reopens a finished shape", async ({ page }) => {
+  await mockProviders(page, { geocode: 200, style: 401 });
+  await page.goto("/studio");
+  await page.getByRole("button", { name: "Show the map" }).click();
+  const canvas = freeCanvas(page);
+  await expect(canvas).toBeVisible();
+  await page.getByRole("button", { name: "Dismiss hint" }).click();
+  const box = await canvas.boundingBox();
+  if (!box) throw new Error("map canvas has no box");
+  const cx = box.x + box.width / 2;
+  const cy = box.y + box.height / 2;
+  const touch = page.viewportSize()?.width === 375;
+  const tap = async (x: number, y: number) => {
+    if (touch) await page.touchscreen.tap(x, y);
+    else await page.mouse.click(x, y);
+    await page.waitForTimeout(350); // two quick taps would read as a double-tap
+  };
+  const undo = page.getByRole("button", { name: "Undo point" });
+  const badge = page.getByText(/tap the first point to finish/);
+
+  for (const [x, y] of [
+    [cx - 60, cy - 60],
+    [cx + 60, cy - 60],
+    [cx + 60, cy + 60],
+  ] as const)
+    await tap(x, y);
+  await expect(badge).toBeVisible();
+  await undo.click();
+  await expect(badge).toHaveCount(0); // two corners left: no area yet
+  await tap(cx + 60, cy + 60);
+  await tap(cx - 60, cy + 60);
+  await tap(cx - 60, cy - 60); // close on the first point
+  await expect(page.getByText(/^Shape 1:/)).toBeVisible();
+
+  // After finishing, Undo reopens the shape without its last corner instead of doing nothing.
+  await undo.click();
+  await expect(page.getByText(/^Shape 1:/)).toHaveCount(0);
+  await expect(badge).toBeVisible();
+});
