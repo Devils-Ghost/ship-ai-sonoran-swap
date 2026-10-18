@@ -84,7 +84,7 @@ export function InsightsLive() {
               {
                 <Table
                   caption="Unique sessions at each step"
-                  head={["Step", "Sessions", "From previous", "Overall"]}
+                  head={["Step", "Sessions", "Of all visitors"]}
                   rows={data.funnel.steps.map((s, i) => [
                     <span key="l" className="flex items-center gap-2">
                       {s.label}
@@ -95,11 +95,17 @@ export function InsightsLive() {
                       )}
                     </span>,
                     <Bar key="n" value={s.count} max={data.funnel.steps[0]?.count ?? 1} />,
-                    i === 0 ? "–" : <Pct key="p" rate={s.step} />,
                     i === 0 ? "–" : <Pct key="o" rate={s.overall} />,
                   ])}
                 />
               }
+              {/* Every share uses the same denominator (all visitors), so small-sample notes stay consistent. */}
+              <p className="text-[0.8125rem] text-ink-muted">
+                Steps aren&apos;t strictly in order: a visitor can see a rebate on the home page without
+                opening the studio, or book without checking eligibility, so a later step can count more
+                people than an earlier one. &ldquo;Biggest drop-off&rdquo; marks the step that keeps the
+                smallest share of the people who reached the step before it.
+              </p>
             </>
           )}
         </Panel>
@@ -163,6 +169,9 @@ export function InsightsLive() {
                     : data.ab.verdict === "tie"
                       ? "No clear difference between the headlines."
                       : `Headline ${data.ab.verdict.toUpperCase()} leads on click-through.`}
+                </p>
+                <p className="text-[0.8125rem] text-ink-muted">
+                  Headline B is shown only to visitors who arrive through a test link, so most visitors see A.
                 </p>
               </div>
             )}

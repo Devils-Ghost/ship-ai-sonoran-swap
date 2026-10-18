@@ -110,3 +110,11 @@ describe("panelsWithData", () => {
     expect(panelsWithData(tested).has("ab")).toBe(true);
   });
 });
+
+describe("funnel shares", () => {
+  it("measure every step against all visitors, so small samples cite the same n on every row", () => {
+    const f = funnel({ sessions: 6, started: 4, estimated: 3, previewed: 1, eligibility: 0, booked: 2 });
+    for (const s of f.steps) expect(s.overall.den).toBe(6);
+    expect(f.steps.every((s) => s.overall.value === null)).toBe(true);
+  });
+});

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { HeroCta } from "@/components/analytics/hero-cta";
-import { AiLabel } from "@/components/shared/ai-label";
+import { SparklesIcon } from "lucide-react";
 import { CompareSlider } from "@/components/visualize/compare-slider";
 import { content } from "@/lib/content/load";
 import { PRIMARY_CTA } from "@/lib/site";
@@ -54,10 +54,14 @@ export function Hero({ variant }: { variant: Variant }) {
             intro
             priority
             sizes="(min-width: 1248px) 610px, (min-width: 1024px) 50vw, calc(100vw - 32px)"
-          >
-            <AiLabel />
-          </CompareSlider>
-          <figcaption className="text-[0.8125rem] text-ink-muted">{business.disclosures.sample}</figcaption>
+          />
+          {/* One caption instead of a badge plus a caption; it keeps both exact labels (AGENTS §2.7). */}
+          <figcaption className="flex items-start gap-1.5 text-[0.8125rem] text-ink-muted">
+            <SparklesIcon className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+            <span>
+              {business.disclosures.sample} {business.disclosures.ai}
+            </span>
+          </figcaption>
         </figure>
       </div>
     </section>

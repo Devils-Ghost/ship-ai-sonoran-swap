@@ -13,16 +13,21 @@ export function CitySelect({
   onChange,
   label = "Your water bill comes from",
   cities = CITY_IDS,
+  labelClassName,
 }: {
   value: CityId;
   onChange: (city: CityId) => void;
   label?: string;
   cities?: readonly CityId[];
+  /** Lets a form style the label like its other step headings. */
+  labelClassName?: string;
 }) {
   const id = useId();
   return (
     <div className="flex flex-col gap-2">
-      <Label htmlFor={id}>{label}</Label>
+      <Label htmlFor={id} className={labelClassName}>
+        {label}
+      </Label>
       <div className="relative">
         <select
           id={id}

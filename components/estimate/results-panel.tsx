@@ -14,7 +14,7 @@ import { WATER } from "@/lib/estimate/water";
 import { getProgram } from "@/lib/rebates/engine";
 import { formatNumber } from "@/lib/utils/format";
 import { RebateAmount } from "./rebate-amount";
-import { WaterEquivalent } from "./water-equivalent";
+import { BathtubSource, WaterEquivalent } from "./water-equivalent";
 import { ReopenAlertForm } from "@/components/alerts/reopen-alert-form";
 import { isReopenAlertProgram } from "@/lib/alerts";
 
@@ -210,6 +210,7 @@ export function ResultsPanel({
               Source<span className="sr-only"> (opens in a new tab)</span>
             </a>
           </p>
+          <BathtubSource className="mt-1" />
         </details>
       </div>
 

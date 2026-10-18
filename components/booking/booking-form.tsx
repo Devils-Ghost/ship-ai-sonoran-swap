@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { track } from "@/lib/analytics/client";
 import { DEMO_HEADER, isDemo } from "@/lib/demo/flag";
 import { formatDay, SLOT_WINDOWS, type Day, type SlotWindow } from "@/lib/booking/slots";
-import type { CityId } from "@/lib/estimate/estimate";
+import { notInDataText, programFor, type CityId } from "@/lib/estimate/estimate";
+import { getProgram } from "@/lib/rebates/engine";
 
 // FR-BOOK-01–06. Native radios for days and windows: arrow keys, labels and "dimmed" (disabled) state
 // come from the browser, and taken windows are announced as unavailable (FR-BOOK-03).
@@ -89,8 +90,19 @@ export function BookingForm({ days, initialCity, estimateId, conceptNote, button
       className="flex flex-col gap-8"
       aria-describedby={error ? errorId : undefined}
     >
+      {/* City first, so visitors outside our rebate data find out before picking a time. */}
+      <div className="flex max-w-md flex-col gap-2">
+        <CitySelect
+          value={city}
+          onChange={setCity}
+          label="1. Your city"
+          labelClassName="mb-1 font-sans text-lg font-semibold"
+        />
+        <CityNote city={city} />
+      </div>
+
       <fieldset className="flex flex-col gap-3">
-        <legend className="mb-3 font-sans text-lg font-semibold text-ink">1. Pick a day</legend>
+        <legend className="mb-3 font-sans text-lg font-semibold text-ink">2. Pick a day</legend>
         <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
           {days.map((d) => {
             const full = d.slots.every((s) => !s.available);
@@ -124,7 +136,7 @@ export function BookingForm({ days, initialCity, estimateId, conceptNote, button
       </fieldset>
 
       <fieldset className="flex flex-col gap-3" disabled={!day}>
-        <legend className="mb-3 font-sans text-lg font-semibold text-ink">2. Pick a time</legend>
+        <legend className="mb-3 font-sans text-lg font-semibold text-ink">3. Pick a time</legend>
         {!day && <p className="text-ink-muted">Choose a day to see open times.</p>}
         {day && (
           <div className="grid gap-3 sm:grid-cols-2">
@@ -164,10 +176,6 @@ export function BookingForm({ days, initialCity, estimateId, conceptNote, button
         )}
       </fieldset>
 
-      <div className="max-w-sm">
-        <CitySelect value={city} onChange={setCity} label="3. Your city" />
-      </div>
-
       <div className="flex flex-col gap-3">
         {conceptNote && <p className="text-ink-muted">{conceptNote}</p>}
         <div>
@@ -180,5 +188,21 @@ export function BookingForm({ days, initialCity, estimateId, conceptNote, button
         </p>
       </div>
     </form>
+  );
+}
+
+/** Cities outside our rebate data, or between seasons, hear it before they pick a time. */
+function CityNote({ city }: { city: CityId }) {
+  const programId = programFor(city);
+  const program = programId ? getProgram(programId) : null;
+  const text = !program
+    ? `${notInDataText(city)} The yard walk and design don't depend on a rebate.`
+    : program.status === "closed"
+      ? `${program.statusNote} The yard walk and design don't depend on a rebate.`
+      : null;
+  return (
+    <p aria-live="polite" className="min-h-0 text-[0.9375rem] text-ink-muted">
+      {text}
+    </p>
   );
 }

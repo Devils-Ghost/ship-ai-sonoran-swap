@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { WaterEquivalent } from "@/components/estimate/water-equivalent";
+import { BathtubSource, WaterEquivalent } from "@/components/estimate/water-equivalent";
 import Link from "next/link";
 import { ArrowRightIcon, FileCheck2Icon, SproutIcon } from "lucide-react";
 import { PrimaryCta, SecondaryCta } from "@/components/layout/cta-link";
@@ -242,6 +242,7 @@ function WaterImpact({ gallons }: { gallons: number }) {
               Source<span className="sr-only"> (opens in a new tab)</span>
             </a>
           </p>
+          <BathtubSource className="mt-2" />
         </details>
       </div>
     </div>

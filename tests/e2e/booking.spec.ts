@@ -20,7 +20,7 @@ test("pick a day and time, book, and land on the confirmation", async ({ page })
   // Taken windows are disabled and labeled (FR-BOOK-03).
   await page.locator("label:has(input[name=day]:not([disabled]))").first().click();
   await page.locator("label:has(input[name=slotWindow]:not([disabled]))").first().click();
-  await page.getByLabel("3. Your city").selectOption("mesa");
+  await page.getByLabel("1. Your city").selectOption("mesa");
 
   const request = page.waitForRequest((r) => r.url().endsWith("/api/bookings") && r.method() === "POST");
   await page.getByRole("button", { name: "Book a demo yard walk" }).click();
@@ -91,4 +91,24 @@ test("the API is idempotent, rejects taken slots and personal fields", async ({ 
 test("an unknown confirmation shows the 404 page", async ({ page }) => {
   await page.goto("/book/confirmed/00000000-0000-4000-8000-000000000000");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("This page dried up.");
+});
+
+test("city comes first: out-of-area and between-seasons notes, and the yard-walk summary", async ({
+  page,
+}) => {
+  await page.goto("/book");
+  const summary = page.getByRole("complementary", { name: "On the yard walk" });
+  await expect(summary).toContainText("Free, no obligation.");
+  await expect(summary.getByRole("region", { name: "Your estimate" })).toHaveCount(0);
+
+  const city = page.getByLabel("1. Your city");
+  await expect(page.getByText(/The yard walk and design don't depend on a rebate/)).toHaveCount(0);
+  await city.selectOption("tempe");
+  await expect(
+    page.getByText(/Not in our data yet\..*The yard walk and design don't depend on a rebate/),
+  ).toBeVisible();
+  await city.selectOption("scottsdale");
+  await expect(page.getByText(/The yard walk and design don't depend on a rebate/)).toBeVisible();
+  await city.selectOption("phoenix");
+  await expect(page.getByText(/The yard walk and design don't depend on a rebate/)).toHaveCount(0);
 });

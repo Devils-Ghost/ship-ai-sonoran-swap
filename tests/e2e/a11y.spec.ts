@@ -78,7 +78,7 @@ test("keyboard only: home → sample-yard rebate → book a demo walk", async ({
   // Radios: Tab into the group, arrow keys skip full days and taken windows.
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Book a free yard walk.");
   // The picker streams in after the static intro (it reads today's date per request).
-  await expect(page.getByText("1. Pick a day")).toBeVisible();
+  await expect(page.getByText("2. Pick a day")).toBeVisible();
   await tabTo(/^(Sat|Mon|Tue|Wed|Thu|Fri)\b/);
   await page.keyboard.press("Space");
   await tabTo(/Morning|Afternoon/);

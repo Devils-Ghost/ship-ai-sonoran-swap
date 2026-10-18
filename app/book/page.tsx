@@ -23,11 +23,9 @@ export default function BookPage({ searchParams }: PageProps<"/book">) {
         crumbs={[{ label: "Book", href: "/book" }]}
       />
       <div className="container-page pb-20">
-        <div className="max-w-3xl">
-          <Suspense fallback={<Skeleton className="h-[560px] w-full rounded-card" />}>
-            <BookingSection searchParams={searchParams} />
-          </Suspense>
-        </div>
+        <Suspense fallback={<Skeleton className="h-[560px] w-full rounded-card" />}>
+          <BookingSection searchParams={searchParams} />
+        </Suspense>
       </div>
     </>
   );
@@ -45,8 +43,7 @@ async function BookingSection({ searchParams }: { searchParams: PageProps<"/book
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      {estimate && <EstimateCard estimate={estimate} />}
+    <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start lg:gap-14">
       <BookingForm
         days={bookingDays(arizonaToday())}
         initialCity={estimate && isCityId(estimate.city) ? estimate.city : "phoenix"}
@@ -54,26 +51,46 @@ async function BookingSection({ searchParams }: { searchParams: PageProps<"/book
         conceptNote={isConcept ? "This is a demonstration booking. No one will visit." : null}
         buttonLabel={isConcept ? "Book a demo yard walk" : "Book a free yard walk"}
       />
+      <WalkSummary estimate={estimate} />
     </div>
   );
 }
 
-function EstimateCard({ estimate }: { estimate: EstimateSummary }) {
+// The right column on desktop (after the form on phones): the carried-over estimate, what the walk covers,
+// and the terms. Describes the service only; no numbers beyond the visitor's own estimate.
+function WalkSummary({ estimate }: { estimate: EstimateSummary | null }) {
   return (
-    <section aria-label="Your estimate" className="rounded-card border border-line bg-paper p-5">
-      <p className="eyebrow">Attached estimate</p>
-      <p className="mt-2 text-lg text-ink">
-        {cityName(estimate.city)} · {formatSqft(estimate.sqft)}
-        {estimate.rebateAmount != null && (
-          <>
-            {" "}
-            · est. rebate{" "}
-            <span className="font-semibold text-terracotta tabular">
-              {formatMoney(estimate.rebateAmount)}
-            </span>
-          </>
-        )}
-      </p>
-    </section>
+    <aside
+      aria-labelledby="walk-title"
+      className="flex flex-col gap-5 rounded-card border border-line bg-paper p-5 shadow-card sm:p-6 lg:sticky lg:top-24"
+    >
+      {estimate && (
+        <section aria-label="Your estimate" className="flex flex-col gap-1 border-b border-line pb-5">
+          <p className="eyebrow">Your estimate</p>
+          <p className="text-lg text-ink">
+            {cityName(estimate.city)} · {formatSqft(estimate.sqft)}
+          </p>
+          {estimate.rebateAmount != null && (
+            <p className="text-ink">
+              Estimated rebate{" "}
+              <span className="font-display text-2xl font-semibold text-terracotta tabular">
+                {formatMoney(estimate.rebateAmount)}
+              </span>
+            </p>
+          )}
+        </section>
+      )}
+      <div className="flex flex-col gap-3">
+        <h2 id="walk-title" className="font-sans text-lg font-semibold text-ink">
+          On the yard walk
+        </h2>
+        <ul className="flex list-disc flex-col gap-2 pl-5 text-[0.9375rem] text-ink">
+          <li>We measure your lawn to confirm the square footage.</li>
+          <li>We talk through styles, plants and drip irrigation for your yard.</li>
+          <li>We go over your city&apos;s rules and the approval-first steps.</li>
+        </ul>
+      </div>
+      <p className="font-semibold text-saguaro">Free, no obligation.</p>
+    </aside>
   );
 }

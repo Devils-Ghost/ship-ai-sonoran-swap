@@ -96,10 +96,13 @@ test("numbers: funnel with biggest drop, small-number honesty, and the range chi
   const funnel = page.getByRole("region", { name: "The funnel" });
   await expect(funnel.getByRole("row", { name: /Previewed a yard/ })).toContainText("Biggest drop-off");
   await expect(funnel.getByRole("row", { name: /Started an estimate/ })).toContainText("75%");
-  // 4 of 6 checked eligibility: a denominator under 10 is never shown as a percentage.
-  await expect(funnel.getByRole("row", { name: /Checked eligibility/ })).toContainText(
-    "n = 6, too few to read",
-  );
+  // Every share is of all visitors (40), so no row borrows the previous row's count.
+  await expect(funnel.getByRole("row", { name: /Checked eligibility/ })).toContainText("10%");
+  await expect(funnel.getByRole("columnheader", { name: "From previous" })).toHaveCount(0);
+  await expect(funnel.getByText(/Steps aren.t strictly in order/)).toBeVisible();
+  await expect(
+    page.getByText(/Headline B is shown only to visitors who arrive through a test link/),
+  ).toBeVisible();
   await expect(page.getByRole("region", { name: "Where visitors come from" })).toContainText(
     "QR (on screen)",
   );
