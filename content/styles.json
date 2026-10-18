@@ -1,0 +1,48 @@
+{
+  "basePromptVersion": 2,
+  "styles": [
+    {
+      "slug": "sonoran-native",
+      "name": "Sonoran Native",
+      "tagline": "The desert, as it grows here.",
+      "description": "Palo verde shade, golden barrel and brittlebush in warm decomposed granite. Native plants, natural drifts, almost no upkeep once established.",
+      "mood": ["warm", "natural", "native"],
+      "materials": "warm tan decomposed granite, a few natural weathered boulders, a gentle dry wash of river rock",
+      "plantsPrompt": "a small palo verde tree, golden barrel cactus, brittlebush, desert marigold, desert spoon and a prickly pear",
+      "plantIds": ["palo-verde", "golden-barrel", "brittlebush", "desert-marigold", "desert-spoon", "prickly-pear", "creosote", "ocotillo"],
+      "maintenance": "Very low once established",
+      "swatches": ["#C9A877", "#8FA650", "#E2B33C"],
+      "sampleBefore": "/samples/yard-1-before.jpg",
+      "sampleAfter": "/samples/yard-1-sonoran-native.jpg"
+    },
+    {
+      "slug": "modern-desert",
+      "name": "Modern Desert",
+      "tagline": "Clean lines, bold shapes.",
+      "description": "Sculptural agaves and red yucca, large boulders, gray granite and steel edging. Architectural and calm.",
+      "mood": ["clean", "architectural", "calm"],
+      "materials": "gray crushed granite, large smooth boulders, clean steel edging, a few square concrete pavers",
+      "plantsPrompt": "large blue-gray sculptural agaves, neat rows of hesperaloe: fountain-shaped clumps of narrow dark-green grass-like leaves with tall slender flower stalks topped with small coral blossoms, silver desert spoon, golden barrel cactus and one multi-trunk desert tree",
+      "plantIds": ["agave", "red-yucca", "desert-spoon", "golden-barrel", "desert-willow", "ocotillo"],
+      "maintenance": "Low",
+      "swatches": ["#8C8C86", "#2F4A35", "#A4471F"],
+      "sampleBefore": "/samples/yard-1-before.jpg",
+      "sampleAfter": "/samples/yard-1-modern-desert.jpg"
+    },
+    {
+      "slug": "pollinator-garden",
+      "name": "Pollinator Garden",
+      "tagline": "Color for you, food for bees.",
+      "description": "Penstemon, globe mallow, desert marigold and salvias that bloom across the seasons and feed bees, butterflies and hummingbirds.",
+      "mood": ["colorful", "lively", "seasonal"],
+      "materials": "warm decomposed granite with a curving flagstone path and a few small boulders",
+      "plantsPrompt": "flowering penstemon, orange globe mallow, yellow desert marigold, purple salvia, blooming Texas sage shrubs and a desert willow tree",
+      "plantIds": ["parry-penstemon", "globe-mallow", "desert-marigold", "autumn-sage", "texas-sage", "desert-willow", "brittlebush"],
+      "maintenance": "Low to moderate (seasonal trimming)",
+      "swatches": ["#D9774C", "#9A6FB0", "#E2B33C"],
+      "sampleBefore": "/samples/yard-1-before.jpg",
+      "sampleAfter": "/samples/yard-1-pollinator-garden.jpg"
+    }
+  ],
+  "basePrompt": "Edit this exact photograph. Keep the house, roofline, windows, doors, driveway, sidewalk, fences, existing trees, sky, lighting, camera position and perspective unchanged. Replace only the grass lawn areas with a {name} desert landscape typical of Phoenix, Arizona: {materials}. Add plants such as {plantsPrompt}, spaced naturally with realistic mature sizes, about half the area shaded by plant canopy. Use drip-irrigated planting beds and 2-inch granite top dressing. Do not add artificial turf, pools, fountains, water features, people, animals, vehicles, text, signs or logos. Photorealistic, natural daylight, realistic scale."
+}

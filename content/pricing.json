@@ -1,0 +1,50 @@
+{
+  "caption": "Illustrative concept pricing.",
+  "minimumProject": 3000,
+  "currency": "USD",
+  "tiers": [
+    {
+      "id": "essentials",
+      "name": "Essentials",
+      "lowPerSqft": 6,
+      "highPerSqft": 9,
+      "featured": false,
+      "includes": [
+        "Grass removal and haul-away",
+        "Sprinkler-to-drip conversion",
+        "2-inch granite top dressing",
+        "Low-water plants for 50% mature canopy coverage",
+        "One-page planting plan"
+      ]
+    },
+    {
+      "id": "signature",
+      "name": "Signature",
+      "lowPerSqft": 10,
+      "highPerSqft": 15,
+      "featured": true,
+      "badge": "Recommended",
+      "includes": [
+        "Everything in Essentials",
+        "Design consultation and full plan",
+        "Boulders and accent plants",
+        "A path or seating area",
+        "Lighting prep"
+      ]
+    },
+    {
+      "id": "showcase",
+      "name": "Showcase",
+      "lowPerSqft": 16,
+      "highPerSqft": 24,
+      "featured": false,
+      "includes": [
+        "Everything in Signature",
+        "Custom hardscape",
+        "Dry creek bed for monsoon runoff",
+        "Low-voltage lighting",
+        "Shade tree package"
+      ]
+    }
+  ]
+}

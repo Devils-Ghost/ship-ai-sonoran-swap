@@ -1,0 +1,47 @@
+# deps
+node_modules/
+.pnpm-store/
+
+# next
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# env (AGENTS §6: never commit .env* except the example)
+.env*
+!.env.example
+
+# tests and receipts generated locally
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/coverage/
+/shots/
+
+# never commit tester photos or generated renders (AGENTS §6)
+/uploads/
+/renders/
+
+# misc
+.DS_Store
+Thumbs.db
+*.log
+.vercel
+
+# misc from create-next-app
+.pnp
+.pnp.*
+*.pem
+/build
+
+# temporary editor and development artifacts
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*.swp
+*.swo
+*~

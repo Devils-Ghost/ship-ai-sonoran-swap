@@ -1,0 +1,367 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* DESIGN_SYSTEM §2–4. Components use these tokens only; no raw hex outside this file. */
+@theme {
+  --color-caliche: #f6f1e7;
+  --color-sand: #eadfc9;
+  --color-ink: #1f2421;
+  --color-ink-muted: #5c6159;
+  --color-saguaro: #2f4a35;
+  --color-terracotta: #a4471f;
+  --color-terracotta-dark: #8f3d1a; /* hover: terracotta darkened ~6% */
+  --color-palo-verde: #8fa650;
+  --color-dusk: #6e8ca6;
+  --color-success: #2f7d4f;
+  --color-warning: #8a5a0a;
+  --color-warning-bg: #fbefd9;
+  --color-error: #b42318;
+  --color-line: #ddd3c0;
+  --color-paper: #fffdf8; /* "caliche-white" input and card background */
+  --color-focus: #a4471f;
+
+  /* /live dark variant (DESIGN §2) */
+  --color-night: #1b241e;
+  --color-terracotta-light: #d9774c;
+
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-input: 6px;
+  --radius-card: 12px;
+  --radius-media: 20px;
+
+  --shadow-card: 0 1px 2px rgb(31 36 33 / 0.06), 0 8px 24px rgb(31 36 33 / 0.06);
+
+  --ease-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* shadcn semantic names, mapped onto our tokens so primitives inherit the brand. */
+@theme inline {
+  --color-background: var(--color-caliche);
+  --color-foreground: var(--color-ink);
+  --color-card: var(--color-paper);
+  --color-card-foreground: var(--color-ink);
+  --color-popover: var(--color-paper);
+  --color-popover-foreground: var(--color-ink);
+  --color-primary: var(--color-terracotta);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--color-sand);
+  --color-secondary-foreground: var(--color-ink);
+  --color-muted: var(--color-sand);
+  --color-muted-foreground: var(--color-ink-muted);
+  --color-accent: var(--color-sand);
+  --color-accent-foreground: var(--color-ink);
+  --color-destructive: var(--color-error);
+  --color-border: var(--color-line);
+  --color-input: var(--color-line);
+  --color-ring: var(--color-focus);
+  --font-heading: var(--font-display);
+  --radius-sm: 4px;
+  --radius-md: var(--radius-input);
+  --radius-lg: 8px;
+  --radius-xl: var(--radius-card);
+  --radius-2xl: 16px;
+  --radius-3xl: var(--radius-media);
+}
+
+/* DESIGN §4: max 1200 px content, 16 px gutters on mobile, 24 px from md. */
+@utility container-page {
+  width: 100%;
+  max-width: calc(1200px + 48px);
+  margin-inline: auto;
+  padding-inline: 16px;
+  @media (width >= 48rem) {
+    padding-inline: 24px;
+  }
+}
+
+/* DESIGN §4: 96 px desktop / 64 px mobile vertical section padding. */
+@utility section-y {
+  padding-block: 64px;
+  @media (width >= 64rem) {
+    padding-block: 96px;
+  }
+}
+
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-terracotta);
+}
+
+@utility text-lead {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--color-ink-muted);
+  max-width: 68ch;
+  @media (width >= 48rem) {
+    font-size: 1.25rem;
+  }
+}
+
+/* DESIGN §6 inline link: terracotta, underline offset 3 px, thickness 1.5 px. */
+@utility link {
+  color: var(--color-terracotta);
+  text-decoration-line: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+  &:hover {
+    color: var(--color-terracotta-dark);
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* DESIGN §4 texture: SVG noise at 3% on caliche backgrounds. */
+@utility bg-grain {
+  background-color: var(--color-caliche);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .03 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 80px; /* anchors clear the sticky header */
+  }
+
+  body {
+    @apply bg-grain text-ink;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  /* DESIGN §3 type scale: H1 64/40, H2 38/30, H3 24/20 (desktop/mobile). */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    color: var(--color-saguaro);
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    @media (width >= 48rem) {
+      font-size: 4rem;
+    }
+  }
+  h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    @media (width >= 48rem) {
+      font-size: 2.375rem;
+    }
+  }
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    @media (width >= 48rem) {
+      font-size: 1.5rem;
+    }
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* SRS §15.7: 2 px focus outline, offset 2 px, everywhere. */
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-sand);
+    color: var(--color-ink);
+  }
+
+  /* SRS §15.2: prefers-contrast gets stronger borders. */
+  @media (prefers-contrast: more) {
+    :root {
+      --color-line: var(--color-ink-muted);
+      --color-border: var(--color-ink-muted);
+    }
+  }
+
+  /* DESIGN §7: motion is optional, never required. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* FR-PREP-02: the prep sheet prints on Letter/A4 with the site chrome removed (header and footer carry
+   print:hidden). Colors stay as designed for screen; print forces exact colors for the warning card. */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+  html,
+  body {
+    background: #ffffff;
+  }
+  nav[aria-label="Breadcrumb"] {
+    display: none !important;
+  }
+  .prep-sheet {
+    max-width: none;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+/* Experimental V2: desert editorial compositions using shared design tokens. */
+.v2-hero h1 {
+  font-size: clamp(2.65rem, 4.8vw, 4.6rem);
+  line-height: 1.03;
+  letter-spacing: -0.045em;
+}
+.v2-hero-figure {
+  padding: 14px;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+  border-radius: 160px 160px 12px 12px;
+}
+.v2-figure-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 8px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-saguaro);
+}
+.v2-hero-figure > div[style] {
+  border-radius: 140px 140px 6px 6px;
+}
+.v2-hero-figure figcaption {
+  padding: 8px;
+}
+.v2-estimate-strip {
+  border-top: 1px solid var(--color-saguaro);
+  padding-top: 24px;
+}
+.v2-phases > li {
+  border-top: 1px solid var(--color-saguaro);
+  padding-top: 20px;
+}
+.v2-phase-number {
+  display: block;
+  margin-bottom: 24px;
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  line-height: 1;
+  color: var(--color-terracotta);
+}
+.v2-process-details {
+  border-block: 1px solid var(--color-line);
+  padding-block: 12px;
+}
+.v2-journey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  border-block: 1px solid var(--color-line);
+  padding-block: 18px;
+  margin-bottom: 28px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.v2-journey span {
+  margin-right: 8px;
+  color: var(--color-terracotta);
+}
+.v2-plan-preview {
+  border-top: 2px solid var(--color-saguaro);
+  padding-top: 24px;
+}
+@media (min-width: 1024px) {
+  .v2-hero {
+    padding-top: 72px;
+  }
+  .v2-hero-figure {
+    margin-left: 12px;
+    box-shadow: 16px 16px 0 var(--color-sand);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  a[data-slot="button"],
+  button[data-slot="button"] {
+    transition:
+      transform 200ms var(--ease-soft),
+      background-color 200ms;
+  }
+  a[data-slot="button"]:hover,
+  button[data-slot="button"]:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* Keep labels clear of the arch; the source pair stays aligned and uncropped relative to itself. */
+.v2-hero-figure .top-3 {
+  top: 22%;
+}
+.v2-hero-figure .left-3.top-3 {
+  left: 24px;
+}
+.v2-hero-figure .right-3.top-3 {
+  right: 24px;
+}
+.v2-home-section#cities {
+  border-top: 1px solid var(--color-line);
+}
+.v2-home-section#cities > div > ul > li > a {
+  border-radius: 0;
+  border-width: 0 0 1px;
+  border-color: var(--color-saguaro);
+  background: transparent;
+}
+.v2-home-section#styles {
+  background: var(--color-paper);
+}
+.v2-home-section#styles > div > ul > li {
+  background: var(--color-caliche);
+}
+@media (min-width: 1024px) {
+  .v2-home-section#styles > div > ul {
+    grid-template-columns: 1.35fr 1fr 1fr;
+    align-items: start;
+  }
+  .v2-home-section#styles > div > ul > li:nth-child(2) {
+    margin-top: 56px;
+  }
+  .v2-home-section#styles > div > ul > li:nth-child(3) {
+    margin-top: 112px;
+  }
+  .v2-home-section#promise > div {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    align-items: center;
+    gap: 40px 80px;
+  }
+  .v2-home-section#promise > div > div:last-child {
+    grid-column: 1 / -1;
+  }
+}

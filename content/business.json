@@ -1,0 +1,49 @@
+{
+  "name": "Sonoran Swap",
+  "mode": "concept",
+  "tagline": "The city pays. We do the swap.",
+  "oneLiner": "Sonoran Swap turns Phoenix lawns into desert yards, and the city helps pay for it.",
+  "shortDescription": "Lawn-to-desert conversions for Phoenix-metro homes, with the city rebate paperwork handled.",
+  "promise": "Approval first. Always. We never remove grass before your city approves your project in writing.",
+  "promiseGuarantee": "If we ever remove grass before approval and you lose your rebate, we pay you the rebate amount.",
+  "hours": "Yard walks Monday–Saturday, 7 AM – 5 PM",
+  "contact": { "phone": null, "email": null, "address": null },
+  "serviceCities": ["phoenix", "mesa", "chandler", "tempe", "scottsdale", "gilbert", "glendale"],
+  "rebateCities": ["phoenix", "mesa", "chandler", "scottsdale"],
+  "services": [
+    { "id": "conversion", "name": "Lawn-to-desert conversion", "description": "Remove grass, convert sprinklers to drip, grade, plant, and top-dress with 2-inch granite." },
+    { "id": "drip", "name": "Drip irrigation conversion", "description": "Replace spray heads with drip emitters at each plant." },
+    { "id": "planting", "name": "Desert planting and trees", "description": "Low-water plants and shade trees from the regional low-water plant list." },
+    { "id": "paperwork", "name": "Rebate paperwork help", "description": "Measurement, aerial image with area, photo checklist and plant list for your application. Free with a conversion." },
+    { "id": "care", "name": "First-season care visit", "description": "One visit after the first monsoon or frost to adjust drip and replace losses. Included." }
+  ],
+  "process": [
+    { "step": 1, "title": "Measure", "text": "Outline your lawn on the map. We confirm it on a free yard walk." },
+    { "step": 2, "title": "Design", "text": "Pick Sonoran Native, Modern Desert or Pollinator Garden." },
+    { "step": 3, "title": "Apply", "text": "We prepare your city application packet. You submit it." },
+    { "step": 4, "title": "Approval", "text": "We wait for the city's written go-ahead. Nothing comes out before that.", "highlight": true },
+    { "step": 5, "title": "Swap", "text": "Grass out. Drip in. Plants and granite in." },
+    { "step": 6, "title": "Rebate", "text": "Final photos and paperwork. The city inspects and pays you." }
+  ],
+  "disclosures": {
+    "badge": "Concept business",
+    "footer": "Sonoran Swap is a concept business built for the Ship AI AZ GTM Hackathon. Rebate information comes from official city pages; eligibility and payment are decided by each city. Not affiliated with any city.",
+    "pricing": "Illustrative concept pricing.",
+    "booking": "This is a demonstration booking. No one will visit. This shows how booking would work.",
+    "ai": "AI concept rendering. Actual results vary.",
+    "sample": "AI-generated sample yard. Not a real home."
+  },
+  "waterEstimate": {
+    "galPerSqftYear": 23,
+    "derivation": "A City of Phoenix figure reported by KJZZ: about one million gallons per acre of grass per year. 1,000,000 ÷ 43,560 sq ft ≈ 23 gallons per sq ft per year.",
+    "sourceUrl": "https://kjzz.org/content/1785695/phoenix-reminds-homeowners-ways-save-water",
+    "label": "estimate"
+  },
+  "seasonal": {
+    "headline": "Start in October. Plant in November.",
+    "body": "Fall is planting season in Phoenix, and plants that go in before the short days of winter have time to settle in. City approval comes first and can take up to three weeks.",
+    "sourceUrl": "https://www.kjzz.org/the-show/2024-10-29/gardening-during-one-of-the-hottest-phoenix-octobers-on-record-heres-where-to-start"
+  },
+  "sample": { "label": "Sample yard", "city": "phoenix", "sqft": 1200 },
+  "event": { "name": "Ship AI AZ GTM Hackathon", "venue": "Workuity Biltmore", "dates": "Oct 17–18, 2026" }
+}

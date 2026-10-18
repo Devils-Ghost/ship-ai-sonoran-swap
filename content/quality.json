@@ -1,0 +1,94 @@
+{
+  "reports": [
+    {
+      "file": "/reports/2026-10-15-mobile-home.report.html",
+      "fetchedAt": "2026-10-16T04:26:27.599Z",
+      "formFactor": "mobile",
+      "host": "sonoran-swap.vercel.app",
+      "path": "/",
+      "scores": {
+        "performance": 96,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "lcpMs": 2457,
+      "cls": 0
+    },
+    {
+      "file": "/reports/2026-10-15-mobile-rebates-phoenix.report.html",
+      "fetchedAt": "2026-10-16T04:27:08.863Z",
+      "formFactor": "mobile",
+      "host": "sonoran-swap.vercel.app",
+      "path": "/rebates/phoenix",
+      "scores": {
+        "performance": 93,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "lcpMs": 2517,
+      "cls": 0
+    },
+    {
+      "file": "/reports/2026-10-15-mobile-studio.report.html",
+      "fetchedAt": "2026-10-16T04:26:46.910Z",
+      "formFactor": "mobile",
+      "host": "sonoran-swap.vercel.app",
+      "path": "/studio",
+      "scores": {
+        "performance": 98,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "lcpMs": 2441,
+      "cls": 0
+    },
+    {
+      "file": "/reports/2026-10-16-mobile-home.report.html",
+      "fetchedAt": "2026-10-17T00:52:35.139Z",
+      "formFactor": "mobile",
+      "host": "sonoran-swap.vercel.app",
+      "path": "/",
+      "scores": {
+        "performance": 96,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "lcpMs": 2651,
+      "cls": 0.014
+    },
+    {
+      "file": "/reports/2026-10-16-mobile-rebates-phoenix.report.html",
+      "fetchedAt": "2026-10-17T01:12:13.649Z",
+      "formFactor": "mobile",
+      "host": "sonoran-swap.vercel.app",
+      "path": "/rebates/phoenix",
+      "scores": {
+        "performance": 91,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "lcpMs": 3048,
+      "cls": 0
+    },
+    {
+      "file": "/reports/2026-10-16-mobile-studio.report.html",
+      "fetchedAt": "2026-10-17T00:54:11.901Z",
+      "formFactor": "mobile",
+      "host": "sonoran-swap.vercel.app",
+      "path": "/studio",
+      "scores": {
+        "performance": 94,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "lcpMs": 2730,
+      "cls": 0
+    }
+  ]
+}

@@ -1,0 +1,304 @@
+{
+  "listName": "ADWR Phoenix AMA Low-Water-Use/Drought-Tolerant Plant List",
+  "listNote": "Verified against the ADWR Phoenix AMA 5th Management Plan Low-Water-Use/Drought-Tolerant Plant List.",
+  "listSourceUrl": "https://www.azwater.gov/sites/default/files/2024-10/2024_PHXAMA5MPLWUPL_Final.pdf",
+  "plants": [
+    {
+      "id": "palo-verde",
+      "common": "Desert Museum palo verde",
+      "botanical": "Parkinsonia 'Desert Museum'",
+      "type": "tree",
+      "sun": [
+        "full"
+      ],
+      "matureSize": "20–25 ft tall and wide",
+      "bloom": "Spring",
+      "flowerColor": "yellow",
+      "pollinator": true,
+      "styles": [
+        "sonoran-native"
+      ],
+      "note": "Fast filtered shade; thornless hybrid.",
+      "featured": true
+    },
+    {
+      "id": "desert-willow",
+      "common": "Desert willow",
+      "botanical": "Chilopsis linearis",
+      "type": "tree",
+      "sun": [
+        "full"
+      ],
+      "matureSize": "15–25 ft tall",
+      "bloom": "Spring–fall",
+      "flowerColor": "pink to purple",
+      "pollinator": true,
+      "styles": [
+        "modern-desert",
+        "pollinator-garden"
+      ],
+      "note": "Hummingbird favorite; deciduous in winter.",
+      "featured": true
+    },
+    {
+      "id": "mesquite",
+      "common": "Velvet mesquite",
+      "botanical": "Prosopis velutina",
+      "type": "tree",
+      "sun": [
+        "full"
+      ],
+      "matureSize": "20–30 ft tall and wide",
+      "bloom": "Spring",
+      "flowerColor": "cream",
+      "pollinator": true,
+      "styles": [
+        "sonoran-native"
+      ],
+      "note": "Native shade tree with a broad canopy.",
+      "featured": false
+    },
+    {
+      "id": "texas-sage",
+      "common": "Texas sage (Texas ranger)",
+      "botanical": "Leucophyllum frutescens",
+      "type": "shrub",
+      "sun": [
+        "full"
+      ],
+      "matureSize": "4–6 ft tall and wide",
+      "bloom": "After summer rains",
+      "flowerColor": "purple",
+      "pollinator": true,
+      "styles": [
+        "pollinator-garden"
+      ],
+      "note": "Blooms after monsoon humidity; avoid shearing into boxes.",
+      "featured": true
+    },
+    {
+      "id": "brittlebush",
+      "common": "Brittlebush",
+      "botanical": "Encelia farinosa",
+      "type": "shrub",
+      "sun": [
+        "full"
+      ],
+      "matureSize": "3 ft tall and wide",
+      "bloom": "Late winter–spring",
+      "flowerColor": "yellow",
+      "pollinator": true,
+      "styles": [
+        "sonoran-native",
+        "pollinator-garden"
+      ],
+      "note": "Silver leaves; native spring color.",
+      "featured": false
+    },
+    {
+      "id": "creosote",
+      "common": "Creosote bush",
+      "botanical": "Larrea tridentata",
+      "type": "shrub",
+      "sun": [
+        "full"
+      ],
+      "matureSize": "4–8 ft tall",
+      "bloom": "Spring",
+      "flowerColor": "yellow",
+      "pollinator": true,
+      "styles": [
+        "sonoran-native"
+      ],
+      "note": "The smell of desert rain.",
+      "featured": false
+    },
+    {
+      "id": "autumn-sage",
+      "common": "Autumn sage",
+      "botanical": "Salvia greggii",
+      "type": "shrub",
+      "sun": [
+        "full",
+        "part"
+      ],
+      "matureSize": "2–3 ft tall and wide",
+      "bloom": "Spring and fall",
+      "flowerColor": "red, pink or purple",
+      "pollinator": true,
+      "styles": [
+        "pollinator-garden"
+      ],
+      "note": "Hummingbirds love it; likes afternoon shade.",
+      "featured": false
+    },
+    {
+      "id": "golden-barrel",
+      "common": "Golden barrel cactus",
+      "botanical": "Echinocactus grusonii",
+      "type": "cactus",
+      "sun": [
+        "full",
+        "part"
+      ],
+      "matureSize": "2–3 ft wide",
+      "bloom": "Summer",
+      "flowerColor": "yellow",
+      "pollinator": false,
+      "styles": [
+        "sonoran-native",
+        "modern-desert"
+      ],
+      "note": "Sculptural accent; protect young plants from harsh afternoon sun.",
+      "featured": true
+    },
+    {
+      "id": "prickly-pear",
+      "common": "Prickly pear",
+      "botanical": "Opuntia engelmannii",
+      "type": "cactus",
+      "sun": [
+        "full"
+      ],
+      "matureSize": "4–6 ft tall and wide",
+      "bloom": "Spring",
+      "flowerColor": "yellow",
+      "pollinator": true,
+      "styles": [
+        "sonoran-native"
+      ],
+      "note": "Native; edible fruit in summer.",
+      "featured": false
+    },
+    {
+      "id": "ocotillo",
+      "common": "Ocotillo",
+      "botanical": "Fouquieria splendens",
+      "type": "accent",
+      "sun": [
+        "full"
+      ],
+      "matureSize": "10–20 ft tall",
+      "bloom": "Spring",
+      "flowerColor": "red",
+      "pollinator": true,
+      "styles": [
+        "sonoran-native",
+        "modern-desert"
+      ],
+      "note": "Leafs out after rain; hummingbird magnet.",
+      "featured": false
+    },
+    {
+      "id": "agave",
+      "common": "Agave (e.g., Parry's or Weber)",
+      "botanical": "Agave spp.",
+      "type": "accent",
+      "sun": [
+        "full",
+        "part"
+      ],
+      "matureSize": "2–5 ft wide by species",
+      "bloom": "Once, after many years",
+      "flowerColor": "yellow",
+      "pollinator": true,
+      "styles": [
+        "modern-desert"
+      ],
+      "note": "Choose species sized for the space; keep sharp tips away from paths.",
+      "featured": true
+    },
+    {
+      "id": "red-yucca",
+      "common": "Red yucca",
+      "botanical": "Hesperaloe parviflora",
+      "type": "accent",
+      "sun": [
+        "full"
+      ],
+      "matureSize": "3 ft tall, 4 ft wide",
+      "bloom": "Spring–fall",
+      "flowerColor": "coral red",
+      "pollinator": true,
+      "styles": [
+        "modern-desert"
+      ],
+      "note": "Tough, tidy, hummingbird friendly.",
+      "featured": true
+    },
+    {
+      "id": "desert-spoon",
+      "common": "Desert spoon",
+      "botanical": "Dasylirion wheeleri",
+      "type": "accent",
+      "sun": [
+        "full"
+      ],
+      "matureSize": "4–5 ft wide",
+      "bloom": "Summer",
+      "flowerColor": "cream",
+      "pollinator": false,
+      "styles": [
+        "sonoran-native",
+        "modern-desert"
+      ],
+      "note": "Silvery spherical form.",
+      "featured": false
+    },
+    {
+      "id": "parry-penstemon",
+      "common": "Parry's penstemon",
+      "botanical": "Penstemon parryi",
+      "type": "groundcover",
+      "sun": [
+        "full"
+      ],
+      "matureSize": "2–4 ft flower stalks",
+      "bloom": "Late winter–spring",
+      "flowerColor": "pink",
+      "pollinator": true,
+      "styles": [
+        "pollinator-garden"
+      ],
+      "note": "Reseeds; spring show.",
+      "featured": false
+    },
+    {
+      "id": "globe-mallow",
+      "common": "Globe mallow",
+      "botanical": "Sphaeralcea ambigua",
+      "type": "shrub",
+      "sun": [
+        "full"
+      ],
+      "matureSize": "2–3 ft tall and wide",
+      "bloom": "Spring",
+      "flowerColor": "orange",
+      "pollinator": true,
+      "styles": [
+        "pollinator-garden"
+      ],
+      "note": "Native bee favorite.",
+      "featured": false
+    },
+    {
+      "id": "desert-marigold",
+      "common": "Desert marigold",
+      "botanical": "Baileya multiradiata",
+      "type": "groundcover",
+      "sun": [
+        "full"
+      ],
+      "matureSize": "1 ft tall",
+      "bloom": "Spring–fall",
+      "flowerColor": "yellow",
+      "pollinator": true,
+      "styles": [
+        "sonoran-native",
+        "pollinator-garden"
+      ],
+      "note": "Long bloom season; reseeds.",
+      "featured": true
+    }
+  ]
+}

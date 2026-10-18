@@ -1,0 +1,10 @@
+# Sample yard images: provenance
+
+All 12 images in this folder are **AI-generated**. None shows a real home.
+
+- **Generated:** Oct 15, 2026, by the Sonoran Swap team.
+- **Model:** Cloudflare Workers AI `@cf/black-forest-labs/flux-2-klein-4b`, free daily allocation (no payment method).
+- **Before photos** (`yard-N-before.jpg`): text-to-image from prompts describing an ordinary Phoenix-metro front lawn photographed from the sidewalk, with no people, vehicles, house numbers, signs or text. Yard 3 had one extra edit to remove a number-like plaque.
+- **Style renders** (`yard-N-<style>.jpg`): image edits of the matching before photo using the SRS §10.1 base prompt and `content/styles.json` (basePromptVersion 2), exactly as the live visualizer sends them.
+- **Labels on the site:** before photos show "AI-generated sample yard. Not a real home." Renders show "AI concept rendering. Actual results vary." (AGENTS §2.7).
+- Images were re-encoded as JPEG (quality 0.82) at 1536 × 1024. No other retouching.

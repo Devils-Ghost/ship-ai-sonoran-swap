@@ -1,0 +1,63 @@
+import type { Metadata, Viewport } from "next";
+import { Fraunces, Inter } from "next/font/google";
+import { PageViews } from "@/components/analytics/page-views";
+import { DemoMode } from "@/components/demo/demo-mode";
+import { Footer } from "@/components/layout/footer";
+import { Header } from "@/components/layout/header";
+import { RouteFocus } from "@/components/layout/route-focus";
+import { SkipLink } from "@/components/layout/skip-link";
+import { JsonLd } from "@/components/shared/json-ld";
+import { content } from "@/lib/content/load";
+import { publicEnv } from "@/lib/env";
+import { websiteJsonLd } from "@/lib/seo/json-ld";
+import { ogImage } from "@/lib/seo/metadata";
+import "./globals.css";
+
+// DESIGN §3: Fraunces for display, Inter for body; swap to avoid invisible text. The opsz axis is
+// left out: it nearly doubled the font (66 → 36 KB) and cost ~1 Lighthouse point on mobile LCP (C1).
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-fraunces",
+});
+
+// Not preloaded: body text paints at once in Next's size-matched fallback (no layout shift), and the home
+// page's LCP hero photo gets the early bandwidth instead (C2).
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  variable: "--font-inter",
+});
+
+const { business } = content;
+
+export const metadata: Metadata = {
+  metadataBase: new URL(publicEnv.siteUrl),
+  title: `${business.name}: ${business.tagline}`,
+  description: business.shortDescription,
+  openGraph: { images: [ogImage(business.tagline, business.oneLiner)] },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#2f4a35",
+};
+
+export default function RootLayout({ children }: LayoutProps<"/">) {
+  return (
+    <html lang="en-US" className={`${fraunces.variable} ${inter.variable} h-full antialiased`}>
+      <body className="flex min-h-full flex-col">
+        <JsonLd data={websiteJsonLd()} />
+        <SkipLink />
+        <Header />
+        <main id="main" tabIndex={-1} className="flex flex-1 flex-col outline-none">
+          {children}
+        </main>
+        <Footer />
+        <PageViews />
+        <DemoMode />
+        <RouteFocus />
+      </body>
+    </html>
+  );
+}
