@@ -19,7 +19,8 @@ import { ReopenAlertForm } from "@/components/alerts/reopen-alert-form";
 import { isReopenAlertProgram } from "@/lib/alerts";
 
 // FR-HOME-02: inline mini-estimator. Slider 250–5,000 sq ft (step 10) plus a number input.
-// Used in the home hero and, locked to one city, on the city rebate pages.
+// "strip" is the wide hero layout (one column on phones, two from 1024 px); "card" is the stacked one
+// (city pages lock it to one city).
 const MIN = 250;
 const MAX = 5000;
 const STEP = 10;
@@ -27,9 +28,11 @@ const QUICK_CITIES: readonly CityId[] = ["phoenix", "mesa", "chandler", "scottsd
 
 export function QuickEstimate({
   defaultSqft = 1200,
+  layout = "card",
   lockedCity,
 }: {
   defaultSqft?: number;
+  layout?: "card" | "strip";
   /** FR-RBC: the city pages embed the estimator locked to their program. */
   lockedCity?: ProgramId;
 }) {
@@ -40,6 +43,7 @@ export function QuickEstimate({
 
   const rebate = computeRebate(city, { sqft });
   const program = getProgram(city);
+  const strip = layout === "strip";
 
   const commitDraft = (raw: string) => {
     setDraft(raw);
@@ -48,7 +52,14 @@ export function QuickEstimate({
   };
 
   return (
-    <div className="flex flex-col gap-5 rounded-card border border-line bg-paper p-5 shadow-card sm:p-6">
+    <div
+      className={cn(
+        "rounded-card border border-line bg-paper p-5 shadow-card sm:p-6",
+        strip
+          ? "grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:items-center"
+          : "flex flex-col gap-5",
+      )}
+    >
       <div className="flex flex-col gap-4">
         <h2 className="font-sans text-lg font-semibold text-ink">How big is your lawn?</h2>
         <div className={cn("grid gap-4", lockedCity ? "sm:grid-cols-[9rem]" : "sm:grid-cols-[1fr_9rem]")}>
@@ -89,7 +100,12 @@ export function QuickEstimate({
           }}
         />
       </div>
-      <div className="flex flex-col gap-3 border-t border-line pt-4">
+      <div
+        className={cn(
+          "flex flex-col gap-3 border-t border-line pt-4",
+          strip && "lg:border-t-0 lg:border-l lg:pt-0 lg:pl-8",
+        )}
+      >
         <div aria-live="polite" className="flex min-h-20 flex-col gap-1">
           {rebate.amount === null ? (
             <>

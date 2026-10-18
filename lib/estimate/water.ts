@@ -4,12 +4,11 @@ import business from "@/content/business.json";
 export const WATER = business.waterEstimate;
 
 /**
- * Days of an average American family's home water use that the gallons equal, using EPA WaterSense's
- * "more than 300 gallons per day". Because the real figure is above 300, this is an upper bound: the copy
- * says "up to". Whole days, rounded down.
+ * Full bathtubs the gallons would fill, using USGS Water Science School's "a good-sized bath holds 40
+ * gallons" (source in content/business.json). Rounded to a whole tub.
  */
-export function familyDays(gallons: number): number {
-  return Math.floor(Math.max(0, gallons) / WATER.householdEquivalent.galPerFamilyDay);
+export function bathtubs(gallons: number): number {
+  return Math.round(Math.max(0, gallons) / WATER.bathtubEquivalent.galPerBathtub);
 }
 
 /** Gallons a year, rounded to the nearest 100 so the estimate doesn't look more precise than it is. */

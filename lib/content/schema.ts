@@ -55,9 +55,9 @@ export const businessSchema = z.strictObject({
     derivation: nonEmpty,
     sourceUrl: httpsUrl,
     label: z.literal("estimate"),
-    // An official, sourced conversion that makes the gallons easy to picture.
-    householdEquivalent: z.strictObject({
-      galPerFamilyDay: z.number().positive(),
+    // An official, sourced conversion that makes the gallons easy to picture (kept in data, not shown).
+    bathtubEquivalent: z.strictObject({
+      galPerBathtub: z.number().positive(),
       statement: nonEmpty,
       sourceName: nonEmpty,
       sourceUrl: httpsUrl,
