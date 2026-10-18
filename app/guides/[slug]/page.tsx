@@ -1,3 +1,4 @@
+import { GuideRead } from "@/components/analytics/guide-read";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import Link from "next/link";
@@ -65,6 +66,7 @@ export default async function GuidePage({ params }: PageProps<"/guides/[slug]">)
         <div className="max-w-[68ch]">
           <Body />
         </div>
+        <GuideRead slug={guide.slug} />
       </article>
 
       <section aria-labelledby="sources" className="border-t border-line py-12">

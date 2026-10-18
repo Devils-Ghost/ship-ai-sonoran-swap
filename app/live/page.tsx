@@ -1,17 +1,11 @@
-import { PrimaryCta } from "@/components/layout/cta-link";
-import { BuildingNote, PageIntro } from "@/components/layout/page-intro";
+import { LiveBoard } from "@/components/live/live-board";
+import { publicEnv } from "@/lib/env";
 import { pageMetadata } from "@/lib/seo/metadata";
 
 export const metadata = pageMetadata("/live");
 
-// The projector board (FR-LIVE, dark variant) ships later. No breadcrumbs (SRS §5.2).
+// FR-LIVE (SRS §11.3): the projector board. No breadcrumbs (SRS §5.2). The QR is tagged ?src=qr-pitch (§11.9).
 export default function LivePage() {
-  return (
-    <>
-      <PageIntro title="Live board" lead="Estimates and bookings made on this site, counted as they happen.">
-        <PrimaryCta />
-      </PageIntro>
-      <BuildingNote />
-    </>
-  );
+  const qrUrl = new URL("/?src=qr-pitch", publicEnv.siteUrl).toString();
+  return <LiveBoard qrUrl={qrUrl} host={new URL(publicEnv.siteUrl).host} />;
 }

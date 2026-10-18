@@ -7,7 +7,8 @@ test("headline A by default, B at /?v=b with the URL kept (SRS §4.8)", async ({
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Swap your lawn for the Sonoran. The city helps pay.",
   );
-  await expect(page).toHaveURL(/\/\?v=b&src=test$/);
+  // The variant stays in the URL; the source tag is read once and stripped (SRS §11.9).
+  await expect(page).toHaveURL(/\/\?v=b$/);
 });
 
 test("hero slider is keyboard-operable and every image is labeled", async ({ page }) => {

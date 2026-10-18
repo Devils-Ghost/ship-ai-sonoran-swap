@@ -6,6 +6,8 @@ import business from "@/content/business.json";
 import { AiLabel } from "@/components/shared/ai-label";
 import { Button } from "@/components/ui/button";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import { track } from "@/lib/analytics/client";
+import { pickParams } from "@/lib/utils/url";
 import { composeBeforeAfter } from "@/lib/visualize/composite";
 import { PrepareFailure, prepareMessage, preparePhoto, type PreparedPhoto } from "@/lib/visualize/preprocess";
 import {
@@ -78,9 +80,10 @@ function samplePair(id: SampleYardId, style: string): Result {
 
 /** Reads ?style= and ?demo=1 without a Suspense hole (same pattern as the studio). */
 export function VisualizerRoot() {
+  // Only the params this page reads: analytics strips ?src=/?team= after load, and that must not remount it.
   const search = useSyncExternalStore(
     () => () => {},
-    () => window.location.search,
+    () => pickParams(window.location.search, ["style", "demo"]),
     () => "",
   );
   const params = new URLSearchParams(search);
@@ -116,6 +119,7 @@ function VisualizerApp({ initialStyle, demo }: { initialStyle: string; demo: boo
   };
 
   const onFile = async (file: File) => {
+    track("visualizer_upload", { source: "upload" });
     setError(null);
     setResult(null);
     setSample(null);
@@ -130,6 +134,7 @@ function VisualizerApp({ initialStyle, demo }: { initialStyle: string; demo: boo
   };
 
   const onSample = (id: SampleYardId) => {
+    track("visualizer_upload", { source: "sample" });
     setError(null);
     setPhoto(null);
     setSample(id);
@@ -151,6 +156,8 @@ function VisualizerApp({ initialStyle, demo }: { initialStyle: string; demo: boo
     const ac = new AbortController();
     controller.current = ac;
     let timedOut = false;
+    const started = performance.now();
+    const failed = (code: string) => track("render_failed", { style, code });
     const timer = setTimeout(() => {
       timedOut = true;
       ac.abort();
@@ -176,6 +183,7 @@ function VisualizerApp({ initialStyle, demo }: { initialStyle: string; demo: boo
       if (json?.ok && json.data) {
         const d = json.data;
         if (d.kind === "live") {
+          track("render_success", { style, ms: performance.now() - started });
           show({
             before: { src: photo.url, alt: "Your photo" },
             after: {
@@ -186,18 +194,22 @@ function VisualizerApp({ initialStyle, demo }: { initialStyle: string; demo: boo
             style,
           });
         } else {
+          failed(d.reason ?? "EXAMPLE");
           show(examplePair(style, d.reason === "GALLERY" ? "gallery" : "fallback"));
         }
-      } else if (json?.error?.code === "PROVIDER_REFUSED" || json?.error?.code === "INVALID_IMAGE") {
-        setError(LABEL.refused);
-      } else if (json?.error?.code === "RATE_LIMITED") {
-        setError(LABEL.rateLimited);
       } else {
-        show(examplePair(style, "fallback")); // FR-VIS-12
+        const code = json?.error?.code ?? "UNKNOWN";
+        failed(code);
+        if (code === "PROVIDER_REFUSED" || code === "INVALID_IMAGE") setError(LABEL.refused);
+        else if (code === "RATE_LIMITED") setError(LABEL.rateLimited);
+        else show(examplePair(style, "fallback")); // FR-VIS-12
       }
     } catch {
       // A visitor's cancel returns to the photo; a timeout or network failure shows the example.
-      if (timedOut || !ac.signal.aborted) show(examplePair(style, "fallback"));
+      if (timedOut || !ac.signal.aborted) {
+        failed(timedOut ? "CLIENT_TIMEOUT" : "NETWORK");
+        show(examplePair(style, "fallback"));
+      }
     } finally {
       clearTimeout(timer);
       controller.current = null;
@@ -225,6 +237,7 @@ function VisualizerApp({ initialStyle, demo }: { initialStyle: string; demo: boo
       a.href = URL.createObjectURL(blob);
       a.download = `sonoran-swap-${result.style}.png`;
       a.click();
+      track("render_downloaded", { style: result.style });
       setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     } catch {
       setError("Couldn't build the download. Try again.");

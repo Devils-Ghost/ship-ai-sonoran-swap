@@ -50,7 +50,11 @@ const serverEnvSchema = z
     ),
     NTFY_TOPIC: optionalString,
     IP_HASH_SALT: optionalString,
-    LIVE_SINCE: isoDateTime("2026-10-18T12:00:00-07:00"),
+    // FR-LIVE-02: unset means "start of today, Arizona", computed per request in lib/stats.
+    LIVE_SINCE: z.preprocess(
+      (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+      z.iso.datetime({ offset: true }).optional(),
+    ),
     INSIGHTS_SINCE: isoDateTime("2026-10-17T09:00:00-07:00"),
     MOCK_IMAGE_PROVIDER: flag,
     MOCK_NOTIFY: flag,

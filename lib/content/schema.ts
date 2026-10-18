@@ -6,7 +6,7 @@ import { z } from "zod";
 const nonEmpty = z.string().trim().min(1);
 const httpsUrl = z.url({ protocol: /^https$/ });
 const isoDate = z.iso.date();
-const PROGRAM_IDS = ["phoenix", "mesa", "chandler", "scottsdale"] as const;
+export const PROGRAM_IDS = ["phoenix", "mesa", "chandler", "scottsdale"] as const;
 const programId = z.enum(PROGRAM_IDS);
 const tierId = z.enum(["essentials", "signature", "showcase"]);
 

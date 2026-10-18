@@ -12,7 +12,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Toaster } from "@/components/ui/sonner";
+import { testSessionId, track } from "@/lib/analytics/client";
+import { rebateBucket, sqftBucket } from "@/lib/analytics/whitelist";
 import { MAX_MANUAL_SQFT } from "@/lib/estimate/area";
+import { pickParams } from "@/lib/utils/url";
 import { computeEstimate, isCityId, programFor, type CityId } from "@/lib/estimate/estimate";
 import { DEFAULT_TIER, TIERS, type TierId } from "@/lib/estimate/pricing";
 import { formatMoney, formatNumber } from "@/lib/utils/format";
@@ -42,7 +45,8 @@ function isTier(v: string | null): v is TierId {
 export function StudioRoot() {
   const search = useSyncExternalStore(
     subscribeToNothing,
-    () => window.location.search,
+    // Only the params the studio reads: analytics strips ?src=/?team=/?t= after load, which must not remount it.
+    () => pickParams(window.location.search, ["sqft", "city", "tier"]),
     () => "",
   );
   return <StudioApp key={search} params={new URLSearchParams(search)} />;
@@ -67,6 +71,22 @@ function StudioApp({ params }: { params: URLSearchParams }) {
   const [estimateId, setEstimateId] = useState<string | null>(null);
   const manualId = useId();
   const resultsRef = useRef<HTMLDivElement>(null);
+  const started = useRef(false);
+
+  // FR-ANL-03: estimator_start once per page load, on the visitor's first real action.
+  const start = (how: Path) => {
+    if (started.current) return;
+    started.current = true;
+    track("estimator_start", { path: how });
+  };
+
+  const shapeCount = useRef(0);
+  // The React Compiler keeps this stable (it reads only a ref and a setter), so MapMeasure's callbacks don't churn.
+  const onMap = (next: MapResult) => {
+    if (next.shapeCount > shapeCount.current) track("polygon_completed", { count: next.shapeCount });
+    shapeCount.current = next.shapeCount;
+    setMap(next);
+  };
 
   const sqft = path === "sample" ? SAMPLE.sqft : path === "manual" ? clampSqft(Number(manualSqft)) : map.sqft;
 
@@ -79,7 +99,11 @@ function StudioApp({ params }: { params: URLSearchParams }) {
 
   const choosePath = (next: Path) => {
     setPath(next);
-    if (next === "sample") setCity(SAMPLE.city);
+    start(next);
+    if (next === "sample") {
+      setCity(SAMPLE.city);
+      track("sample_used");
+    }
   };
 
   const copyLink = async () => {
@@ -114,6 +138,7 @@ function StudioApp({ params }: { params: URLSearchParams }) {
       <div className="flex flex-wrap gap-x-6 gap-y-2">
         <Link
           href={`/studio/prep?city=${city}&sqft=${sqft}&tier=${tier}`}
+          onClick={() => track("prep_sheet_opened", { city })}
           className="min-h-11 content-center font-semibold link"
         >
           Print prep sheet
@@ -148,7 +173,16 @@ function StudioApp({ params }: { params: URLSearchParams }) {
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[3fr_2fr] lg:items-start">
         <div className="flex flex-col gap-6">
-          {path === "map" && <MapMeasure onChange={setMap} onCity={(c) => setCity(c)} />}
+          {path === "map" && (
+            <MapMeasure
+              onChange={onMap}
+              onCity={(c) => {
+                setCity(c);
+                start("map");
+                track("address_selected");
+              }}
+            />
+          )}
 
           {path === "manual" && (
             <div className="flex flex-col gap-4 rounded-card border border-line bg-paper p-6">
@@ -163,7 +197,10 @@ function StudioApp({ params }: { params: URLSearchParams }) {
                   step={1}
                   placeholder="e.g. 1200"
                   value={manualSqft}
-                  onChange={(e) => setManualSqft(e.target.value)}
+                  onChange={(e) => {
+                    setManualSqft(e.target.value);
+                    start("manual");
+                  }}
                   className="tabular"
                 />
               </div>
@@ -249,6 +286,14 @@ function useStoreFirstEstimate(
     if (stored.current || !estimate) return;
     const timer = setTimeout(async () => {
       stored.current = true;
+      if (source === "manual") track("manual_area_entered");
+      track("estimate_shown", {
+        city: estimate.input.city,
+        sqftBucket: sqftBucket(estimate.sqft),
+        rebateBucket: rebateBucket(estimate.rebate?.amount ?? 0),
+        tier: estimate.input.tier,
+      });
+      const testSession = testSessionId();
       try {
         const res = await fetch("/api/estimates", {
           method: "POST",
@@ -261,6 +306,7 @@ function useStoreFirstEstimate(
             tier: estimate.input.tier,
             trees: estimate.input.trees ?? 0,
             removesAllGrass: estimate.input.removesAllGrass ?? false,
+            ...(testSession ? { testSessionId: testSession } : {}),
           }),
         });
         const json: unknown = await res.json();

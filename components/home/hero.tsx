@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { PrimaryCta } from "@/components/layout/cta-link";
+import { HeroCta } from "@/components/analytics/hero-cta";
 import { AiLabel } from "@/components/shared/ai-label";
 import { CompareSlider } from "@/components/visualize/compare-slider";
 import { content } from "@/lib/content/load";
+import { PRIMARY_CTA } from "@/lib/site";
 import { formatDate } from "@/lib/utils/format";
 import { sampleAfter, sampleBefore, SAMPLE_YARDS } from "@/lib/visualize/samples";
 import { QuickEstimate } from "./quick-estimate";
@@ -31,7 +32,7 @@ export function Hero({ variant }: { variant: Variant }) {
             all in about a minute. We handle the design, the paperwork and the swap.
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
-            <PrimaryCta />
+            <HeroCta link={PRIMARY_CTA} variant={variant} />
             <Link href="/visualize" className="font-semibold link">
               Preview my yard
             </Link>
