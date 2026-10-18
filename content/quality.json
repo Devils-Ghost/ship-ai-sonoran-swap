@@ -1,3 +1,94 @@
 {
-  "reports": []
+  "reports": [
+    {
+      "file": "/reports/round-1-mobile-home.report.html",
+      "round": 1,
+      "formFactor": "mobile",
+      "host": "ship-ai-sonoran-swap.vercel.app",
+      "path": "/",
+      "scores": {
+        "performance": 63,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "lcpMs": 3504,
+      "cls": 0.014
+    },
+    {
+      "file": "/reports/round-1-mobile-rebates-phoenix.report.html",
+      "round": 1,
+      "formFactor": "mobile",
+      "host": "ship-ai-sonoran-swap.vercel.app",
+      "path": "/rebates/phoenix",
+      "scores": {
+        "performance": 96,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "lcpMs": 2404,
+      "cls": 0
+    },
+    {
+      "file": "/reports/round-1-mobile-studio.report.html",
+      "round": 1,
+      "formFactor": "mobile",
+      "host": "ship-ai-sonoran-swap.vercel.app",
+      "path": "/studio",
+      "scores": {
+        "performance": 94,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "lcpMs": 2577,
+      "cls": 0
+    },
+    {
+      "file": "/reports/round-2-mobile-home.report.html",
+      "round": 2,
+      "formFactor": "mobile",
+      "host": "ship-ai-sonoran-swap.vercel.app",
+      "path": "/",
+      "scores": {
+        "performance": 88,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "lcpMs": 3131,
+      "cls": 0.005
+    },
+    {
+      "file": "/reports/round-2-mobile-rebates-phoenix.report.html",
+      "round": 2,
+      "formFactor": "mobile",
+      "host": "ship-ai-sonoran-swap.vercel.app",
+      "path": "/rebates/phoenix",
+      "scores": {
+        "performance": 95,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "lcpMs": 2476,
+      "cls": 0
+    },
+    {
+      "file": "/reports/round-2-mobile-studio.report.html",
+      "round": 2,
+      "formFactor": "mobile",
+      "host": "ship-ai-sonoran-swap.vercel.app",
+      "path": "/studio",
+      "scores": {
+        "performance": 92,
+        "accessibility": 100,
+        "bestPractices": 100,
+        "seo": 100
+      },
+      "lcpMs": 2810,
+      "cls": 0
+    }
+  ]
 }
