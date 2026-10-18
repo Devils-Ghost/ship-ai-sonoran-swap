@@ -84,15 +84,11 @@ export default function InsightsPage() {
           </section>
         </div>
 
-        <section aria-labelledby="decisions-title" className="flex max-w-3xl flex-col gap-4">
-          <h2 id="decisions-title" className="text-2xl">
-            What we changed because of data
-          </h2>
-          {entries.length === 0 ? (
-            <p className="rounded-card border border-dashed border-line p-5 text-ink-muted">
-              No data-driven changes yet. Changes we make because of data will appear here.
-            </p>
-          ) : (
+        {entries.length > 0 && (
+          <section aria-labelledby="decisions-title" className="flex max-w-3xl flex-col gap-4">
+            <h2 id="decisions-title" className="text-2xl">
+              What we changed because of data
+            </h2>
             <ol className="flex flex-col gap-4">
               {entries.map((e) => (
                 <li key={e.change} className="rounded-card border border-line bg-paper p-5">
@@ -113,8 +109,8 @@ export default function InsightsPage() {
                 </li>
               ))}
             </ol>
-          )}
-        </section>
+          </section>
+        )}
       </div>
     </>
   );

@@ -14,6 +14,9 @@ import { WATER } from "@/lib/estimate/water";
 import { getProgram } from "@/lib/rebates/engine";
 import { formatNumber } from "@/lib/utils/format";
 import { RebateAmount } from "./rebate-amount";
+import { WaterEquivalent } from "./water-equivalent";
+import { ReopenAlertForm } from "@/components/alerts/reopen-alert-form";
+import { isReopenAlertProgram } from "@/lib/alerts";
 
 const IS_CONCEPT = business.mode === "concept";
 const TIER_OPTIONS = TIERS.map((t) => ({ value: t.id, label: t.name }));
@@ -88,6 +91,9 @@ export function ResultsPanel({
               <ArrowUpRightIcon className="ml-0.5 inline size-4" aria-hidden="true" />
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
+            {program.status === "closed" && isReopenAlertProgram(program.id) && (
+              <ReopenAlertForm programId={program.id} className="mt-2" />
+            )}
           </div>
         )}
         {blocked && program && (
@@ -169,6 +175,10 @@ export function ResultsPanel({
             <DropletsIcon className="mt-1 size-4 shrink-0 text-dusk" aria-hidden="true" />≈{" "}
             {formatNumber(estimate.waterGalYear)} gallons a year
           </span>
+          <WaterEquivalent
+            gallons={estimate.waterGalYear}
+            className="text-[0.875rem] font-normal text-ink-muted"
+          />
         </Figure>
         {program && (program.approval.reviewTime || program.approval.completeWithin) && (
           <Figure label="Timeline">

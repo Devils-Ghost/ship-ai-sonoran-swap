@@ -8,6 +8,8 @@ import { sampleAfter, sampleBefore, SAMPLE_YARDS } from "@/lib/visualize/samples
 import { QuickEstimate } from "./quick-estimate";
 
 // FR-HOME-01/02. Copy: CONTENT §2 hero. Variant B is served at /?v=b through proxy.ts (SRS §4.8).
+// The estimator sits in the hero so visitors get a number at once; "See my rebate" is the only primary
+// button (D2) and stays in the first viewport. On phones the photo follows the estimator.
 export const HEADLINES = {
   a: "Phoenix will pay you to lose your lawn.",
   b: "Swap your lawn for the Sonoran. The city helps pay.",
@@ -32,11 +34,12 @@ export function Hero({ variant }: { variant: Variant }) {
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
             <HeroCta link={PRIMARY_CTA} variant={variant} />
-            <Link href="/visualize" className="font-semibold link">
-              Preview my yard
+            <Link href="/visualize" className="inline-flex min-h-11 items-center font-semibold link">
+              Preview my yard →
             </Link>
           </div>
           <p className="text-sm text-ink-muted">Rebate rules from official city pages</p>
+          <QuickEstimate defaultSqft={business.sample.sqft} />
         </div>
         <figure className="flex flex-col gap-2">
           <CompareSlider
@@ -47,15 +50,12 @@ export function Hero({ variant }: { variant: Variant }) {
             }}
             intro
             priority
-            sizes="(min-width: 1248px) 610px, (min-width: 1024px) 50vw, 100vw"
+            sizes="(min-width: 1248px) 610px, (min-width: 1024px) 50vw, calc(100vw - 32px)"
           >
             <AiLabel />
           </CompareSlider>
           <figcaption className="text-[0.8125rem] text-ink-muted">{business.disclosures.sample}</figcaption>
         </figure>
-      </div>
-      <div className="mt-10">
-        <QuickEstimate defaultSqft={business.sample.sqft} layout="strip" />
       </div>
     </section>
   );

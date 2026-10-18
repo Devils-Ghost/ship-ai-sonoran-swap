@@ -58,7 +58,7 @@ test("/eligibility has no serious or critical accessibility violations on a resu
   await page.goto("/eligibility");
   await page.getByRole("button", { name: "Start the check" }).click();
   await page.getByRole("button", { name: "Scottsdale" }).click();
-  await expect(page.getByRole("heading", { name: /Scottsdale/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Scottsdale: check the program status" })).toBeVisible();
   const { violations } = await new AxeBuilder({ page }).analyze();
   const blocking = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
   expect(blocking.map((v) => `${v.id}: ${v.help} (${v.nodes.length})`)).toEqual([]);

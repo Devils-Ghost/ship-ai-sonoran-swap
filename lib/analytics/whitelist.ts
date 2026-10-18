@@ -27,6 +27,10 @@ export const EVENTS = {
   page_view: { path: "string", variant: "string" },
   // FR-INS-07 "map failure count" needs its own event; not in the FR-ANL-03 list, added for that panel.
   map_failed: { engine: "string" },
+  // Shareable rebate result: how it was shared (native share sheet or copied link) and the city.
+  rebate_shared: { method: "string", city: "string" },
+  // "Notify me when it reopens" sign-ups for programs between seasons (no email in the event).
+  reopen_alert_signup: { city: "string" },
 } as const satisfies Record<string, Record<string, PropType>>;
 
 export type EventName = keyof typeof EVENTS;

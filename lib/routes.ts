@@ -46,6 +46,13 @@ const STATIC_ROUTES: RouteInfo[] = [
     index: false,
   },
   {
+    // Shareable rebate result; each link's title and share image come from its city and lawn size.
+    path: "/share",
+    title: "Shared Rebate Estimate",
+    description: "A shared lawn rebate estimate. See what your own lawn could earn.",
+    index: false,
+  },
+  {
     path: "/visualize",
     title: "Preview Your Yard as a Desert Garden",
     description: "Upload a photo of your lawn and preview it in three desert styles.",

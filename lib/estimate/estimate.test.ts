@@ -2,7 +2,7 @@ import type { Polygon } from "geojson";
 import { describe, expect, it } from "vitest";
 import { polygonSqft, ringSelfIntersects, summarizeShapes } from "./area";
 import { netRange, projectRange } from "./pricing";
-import { waterGallonsPerYear } from "./water";
+import { familyDays, waterGallonsPerYear, WATER } from "./water";
 
 describe("pricing (SRS §3.4)", () => {
   it("matches the SRS §6.11 worked example: 1,200 sq ft Phoenix Signature", () => {
@@ -30,6 +30,15 @@ describe("water (SRS §3.5)", () => {
     expect(waterGallonsPerYear(1000)).toBe(23000);
     expect(waterGallonsPerYear(1240)).toBe(28500);
     expect(waterGallonsPerYear(0)).toBe(0);
+  });
+
+  it("converts gallons to days of an average family's home use with EPA's 300 gallons a day", () => {
+    expect(WATER.householdEquivalent.galPerFamilyDay).toBe(300);
+    expect(WATER.householdEquivalent.sourceUrl).toMatch(/^https:\/\/www\.epa\.gov\//);
+    expect(familyDays(23000)).toBe(76); // 1,000 sq ft lawn
+    expect(familyDays(28500)).toBe(95); // 1,240 sq ft lawn
+    expect(familyDays(299)).toBe(0);
+    expect(familyDays(-5)).toBe(0);
   });
 });
 

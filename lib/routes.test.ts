@@ -20,6 +20,6 @@ describe("route registry", () => {
 
   it("excludes the pages FR-SEO-02 keeps out of search", () => {
     const hidden = ROUTES.filter((r) => !r.index).map((r) => r.path);
-    expect(hidden).toEqual(expect.arrayContaining(["/live", "/studio/prep"]));
+    expect(hidden).toEqual(expect.arrayContaining(["/live", "/studio/prep", "/share"]));
   });
 });

@@ -61,13 +61,16 @@ describe("ResultsPanel states", () => {
 });
 
 describe("QuickEstimate", () => {
-  it("updates the rebate from the keyboard on the slider (FR-HOME-02)", () => {
+  it("updates the rebate from the lawn slider (FR-HOME-02)", () => {
     render(<QuickEstimate defaultSqft={1200} />);
     const slider = screen.getByRole("slider", { name: "Lawn size in square feet" });
+    expect(slider).toHaveAttribute("min", "250");
+    expect(slider).toHaveAttribute("max", "5000");
+    expect(slider).toHaveAttribute("step", "10");
     expect(screen.getByText("$2.00 × 1,200 sq ft")).toBeInTheDocument();
-    fireEvent.keyDown(slider, { key: "ArrowRight" });
+    fireEvent.change(slider, { target: { value: "1210" } });
     expect(screen.getByText("$2.00 × 1,210 sq ft")).toBeInTheDocument();
-    fireEvent.keyDown(slider, { key: "End" });
+    fireEvent.change(slider, { target: { value: "5000" } });
     expect(screen.getByText("$2.00 × 5,000 sq ft")).toBeInTheDocument();
   });
 

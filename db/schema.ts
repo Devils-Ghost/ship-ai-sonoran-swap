@@ -12,10 +12,12 @@ import {
   smallint,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 
-// SRS §13.1. No personal data in concept mode (AGENTS §2.4): no names, addresses or coordinates.
+// SRS §13.1. No personal data in concept mode (AGENTS §2.4): no names, addresses or coordinates. The only
+// emails are the optional feedback reply address and reopening alerts, each kept only with consent.
 
 const id = () => uuid("id").primaryKey().defaultRandom();
 const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
@@ -137,6 +139,23 @@ export const feedback = pgTable(
     page: text("page"),
   },
   (t) => [check("feedback_message_length", sql`char_length(${t.message}) <= 1000`)],
+);
+
+// Program reopening alerts (e.g. Scottsdale between seasons). An email is stored only with explicit
+// consent, once per program; it is used for nothing but the one reopening notice.
+export const reopenAlerts = pgTable(
+  "reopen_alerts",
+  {
+    id: id(),
+    createdAt: createdAt(),
+    programId: text("program_id").notNull(),
+    email: text("email").notNull(),
+    consent: boolean("consent").notNull(),
+  },
+  (t) => [
+    uniqueIndex("reopen_alerts_program_email_idx").on(t.programId, t.email),
+    check("reopen_alerts_consent", sql`${t.consent} = true`),
+  ],
 );
 
 export const rateLimits = pgTable(

@@ -14,7 +14,12 @@ const nextConfig: NextConfig = {
   },
   // C2: AVIF first (about half the bytes of WebP for the hero photos, the home LCP), WebP as fallback.
   // `qualities` is an allowlist (required since Next 16): 75 is the default, 60 for the full-bleed photos.
-  images: { formats: ["image/avif", "image/webp"], qualities: [60, 75] },
+  // 672 sits between the default 640 and 750 widths: a 380 px hero photo on a 1.75× phone needs 665 px.
+  images: {
+    formats: ["image/avif", "image/webp"],
+    qualities: [60, 75],
+    deviceSizes: [640, 672, 750, 828, 1080, 1200, 1920, 2048, 3840],
+  },
   partialPrefetching: true,
   turbopack: {
     rules: {

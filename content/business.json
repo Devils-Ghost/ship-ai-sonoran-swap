@@ -37,7 +37,13 @@
     "galPerSqftYear": 23,
     "derivation": "A City of Phoenix figure reported by KJZZ: about one million gallons per acre of grass per year. 1,000,000 ÷ 43,560 sq ft ≈ 23 gallons per sq ft per year.",
     "sourceUrl": "https://kjzz.org/content/1785695/phoenix-reminds-homeowners-ways-save-water",
-    "label": "estimate"
+    "label": "estimate",
+    "householdEquivalent": {
+      "galPerFamilyDay": 300,
+      "statement": "The average American family uses more than 300 gallons of water per day at home.",
+      "sourceName": "U.S. EPA WaterSense, How We Use Water",
+      "sourceUrl": "https://www.epa.gov/watersense/how-we-use-water"
+    }
   },
   "seasonal": {
     "headline": "Start in October. Plant in November.",

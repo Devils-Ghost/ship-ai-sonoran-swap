@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { track } from "@/lib/analytics/client";
 import type { ProgramId } from "@/lib/content/schema";
 import { evaluate, type Answers, type Evaluation, type ResolvedQuestion } from "@/lib/eligibility/evaluate";
+import { ReopenAlertForm } from "@/components/alerts/reopen-alert-form";
+import { isReopenAlertProgram } from "@/lib/alerts";
 
 // SRS §9 (FR-ELIG-01–06). Questions arrive resolved from the server page, so the client bundle ships no
 // JSON parsing or Zod. One question per screen; answers survive Back (SRS §12 Eligibility).
@@ -292,6 +294,9 @@ function ResultScreen({
           {program ? `${program.city}: check the program status` : "Check your city's program"}
         </h2>
         <p className="text-ink">{program ? program.statusNote : otherCityText}</p>
+        {program && !program.hasQuestions && isReopenAlertProgram(program.id) && (
+          <ReopenAlertForm programId={program.id} />
+        )}
         {extras}
         <div className="flex flex-wrap items-center gap-4">
           <Button asChild>

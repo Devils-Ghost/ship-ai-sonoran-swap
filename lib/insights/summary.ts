@@ -101,3 +101,29 @@ export type Insights = {
     mapFailures: number;
   };
 };
+
+export type PanelId = "funnel" | "cta" | "ab" | "sources" | "audience" | "health";
+
+/**
+ * Which insights panels have something real to show for the period. Panels without data are hidden
+ * rather than shown as an empty heading; nothing is ever filled with placeholder numbers.
+ */
+export function panelsWithData(d: Insights): Set<PanelId> {
+  const shown = new Set<PanelId>();
+  if ((d.funnel.steps[0]?.count ?? 0) > 0) shown.add("funnel");
+  if (d.cta.impressions > 0) shown.add("cta");
+  const fiveSecond = (v: VariantResult) => v.fiveSecond.pass + v.fiveSecond.fail;
+  if (d.ab.a.sessions + d.ab.b.sessions + fiveSecond(d.ab.a) + fiveSecond(d.ab.b) > 0) shown.add("ab");
+  if (d.sources.length > 0) shown.add("sources");
+  if (d.audience.byCity.length > 0) shown.add("audience");
+  if (
+    d.health.renders > 0 ||
+    d.health.mapFailures > 0 ||
+    d.health.entryPaths.length > 0 ||
+    d.health.renderSuccess.den > 0 ||
+    d.health.galleryShare.den > 0
+  ) {
+    shown.add("health");
+  }
+  return shown;
+}

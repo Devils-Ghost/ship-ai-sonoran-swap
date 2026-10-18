@@ -4,12 +4,23 @@ import { expect, test } from "@playwright/test";
 // FR-INS-01–13. MOCK_DB=1 serves empty insights; a routed response stands in for real numbers.
 const rate = (num: number, den: number) => ({ num, den, value: den >= 10 ? num / den : null });
 
-test("empty period: every live panel says so; static panels render; no a11y blockers", async ({ page }) => {
+test("empty period: no empty panel headings, one honest line; static panels render; no a11y blockers", async ({
+  page,
+}) => {
   await page.goto("/insights");
   await expect(page.getByText("Live data from this site. Team visits excluded.")).toBeVisible();
-  await expect(page.getByText("No data yet for this period.").first()).toBeVisible();
-  await expect(page.getByText("Too little data to call a winner yet.")).toBeVisible();
-  await expect(page.getByText(/No data-driven changes yet/)).toBeVisible();
+  await expect(page.getByText("No data yet for this period.")).toHaveCount(1);
+  for (const panel of [
+    "The funnel",
+    "Click-through",
+    "Headline test",
+    "Where visitors come from",
+    "Who's measuring",
+    "Feature health",
+    "What we changed because of data",
+  ]) {
+    await expect(page.getByRole("heading", { name: panel })).toHaveCount(0);
+  }
   await expect(
     page.getByText(/Structured data: Article, BreadcrumbList, FAQPage, WebPage, WebSite/),
   ).toBeVisible();
@@ -93,6 +104,10 @@ test("numbers: funnel with biggest drop, small-number honesty, and the range chi
     "QR (on screen)",
   );
   await expect(page.getByText("Too little data to call a winner yet.")).toBeVisible();
+  // Panels with no data for the period stay hidden instead of showing an empty heading.
+  await expect(page.getByRole("heading", { name: "Who's measuring" })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Feature health" })).toHaveCount(0);
+  await expect(page.getByText("No data yet for this period.")).toHaveCount(0);
 
   await page.getByRole("radio", { name: "Last hour" }).click();
   await expect.poll(() => asked).toContain("hour");

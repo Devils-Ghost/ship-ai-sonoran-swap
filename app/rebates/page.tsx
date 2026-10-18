@@ -8,6 +8,7 @@ import type { RebateProgram } from "@/lib/content/schema";
 import { summarize } from "@/lib/rebates/summary";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { formatMoney, formatNumber } from "@/lib/utils/format";
+import { isReopenAlertProgram } from "@/lib/alerts";
 
 export const metadata = pageMetadata("/rebates");
 
@@ -42,7 +43,20 @@ const ROWS: Row[] = [
   },
   { label: "Approval first", value: (p) => (p.approval.required ? p.approval.name : "Not required") },
   { label: "Time to finish", value: (p) => p.approval.completeWithin ?? "—" },
-  { label: "Status", value: (p) => STATUS[p.status] },
+  {
+    label: "Status",
+    value: (p) =>
+      p.status === "closed" && isReopenAlertProgram(p.id) ? (
+        <span className="flex flex-col gap-1">
+          {STATUS[p.status]}
+          <Link href={`/rebates/${p.id}#reopen-alert`} className="w-fit font-semibold link">
+            Notify me when it reopens
+          </Link>
+        </span>
+      ) : (
+        STATUS[p.status]
+      ),
+  },
   {
     label: "Official page",
     value: (p) => (

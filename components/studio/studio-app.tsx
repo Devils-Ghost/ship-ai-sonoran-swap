@@ -4,13 +4,13 @@ import Link from "next/link";
 import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { HomeIcon, MapIcon, RulerIcon } from "lucide-react";
 import { ToggleGroup as ToggleGroupPrimitive } from "radix-ui";
-import { toast } from "sonner";
 import business from "@/content/business.json";
 import { CitySelect } from "@/components/estimate/city-select";
 import { ResultsPanel } from "@/components/estimate/results-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ShareRebate } from "@/components/share/share-rebate";
 import { Toaster } from "@/components/ui/sonner";
 import { testSessionId, track } from "@/lib/analytics/client";
 import { rebateBucket, sqftBucket } from "@/lib/analytics/whitelist";
@@ -107,19 +107,6 @@ function StudioApp({ params }: { params: URLSearchParams }) {
     }
   };
 
-  const copyLink = async () => {
-    const url = new URL("/studio", window.location.origin);
-    url.searchParams.set("sqft", String(sqft));
-    url.searchParams.set("city", city);
-    url.searchParams.set("tier", tier);
-    try {
-      await navigator.clipboard.writeText(url.toString());
-      toast.success("Link copied. It holds your city and lawn size, never your address.");
-    } catch {
-      toast.error("Couldn't copy. Here's the link: " + url.toString());
-    }
-  };
-
   const program = programFor(city);
   const actions = estimate && (
     <div className="flex flex-col gap-3">
@@ -147,10 +134,8 @@ function StudioApp({ params }: { params: URLSearchParams }) {
         >
           Print prep sheet
         </Link>
-        <button type="button" onClick={copyLink} className="min-h-11 cursor-pointer font-semibold link">
-          Copy link
-        </button>
       </div>
+      {program && <ShareRebate city={program} sqft={sqft} />}
     </div>
   );
 

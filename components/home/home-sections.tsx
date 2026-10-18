@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { WaterEquivalent } from "@/components/estimate/water-equivalent";
 import Link from "next/link";
 import { ArrowRightIcon, FileCheck2Icon, SproutIcon } from "lucide-react";
 import { PrimaryCta, SecondaryCta } from "@/components/layout/cta-link";
@@ -12,6 +13,7 @@ import { summarizeAll } from "@/lib/rebates/summary";
 import { formatNumber } from "@/lib/utils/format";
 import { sampleAfter, showcaseYard } from "@/lib/visualize/samples";
 import { Section } from "./section";
+import { isReopenAlertProgram } from "@/lib/alerts";
 
 // SRS §6.1 FR-HOME-03 – 12. Copy: CONTENT §2. Every number comes from content/*.json via the engine.
 
@@ -83,6 +85,14 @@ export function CityCards() {
                   />
                 </span>
               </Link>
+              {!c.open && isReopenAlertProgram(c.id) && (
+                <Link
+                  href={`/rebates/${c.id}#reopen-alert`}
+                  className="mt-2 inline-flex min-h-11 items-center font-semibold link"
+                >
+                  Notify me when {c.city} reopens
+                </Link>
+              )}
             </li>
           );
         })}
@@ -216,6 +226,7 @@ function WaterImpact({ gallons }: { gallons: number }) {
           A 1,000 sq ft lawn uses roughly {formatNumber(gallons)} gallons of water a year.{" "}
           <span className="text-ink-muted">(Estimate.)</span>
         </p>
+        <WaterEquivalent gallons={gallons} className="text-[0.9375rem] text-ink-muted" />
         <details className="text-[0.9375rem] text-ink-muted">
           <summary className="w-fit cursor-pointer underline decoration-1 underline-offset-3">
             How we estimate this

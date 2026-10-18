@@ -40,6 +40,14 @@ export function CompareSlider({
   sizes = "(min-width: 1024px) 50vw, 100vw",
 }: Props) {
   const [pos, setPos] = useState(intro ? 85 : 50);
+  // With `priority` the before photo is the LCP. The after photo waits until the page is interactive so it
+  // never competes with it; until then the frame shows the before photo, which is what the intro starts on.
+  const [showAfter, setShowAfter] = useState(!priority);
+  useEffect(() => {
+    if (!priority) return;
+    const id = window.requestAnimationFrame(() => setShowAfter(true));
+    return () => window.cancelAnimationFrame(id);
+  }, [priority]);
   const box = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
 
@@ -100,7 +108,7 @@ export function CompareSlider({
           changes size, so it is a stable LCP element even while the intro glide moves the divider (C2). */}
       <Picture {...before} load={priority ? "preload" : "lazy"} sizes={sizes} />
       <div className="absolute inset-0" style={{ clipPath: `inset(0 0 0 ${shown}%)` }}>
-        <Picture {...after} load={priority ? "eager" : "lazy"} sizes={sizes} />
+        {showAfter && <Picture {...after} load={priority ? "eager" : "lazy"} sizes={sizes} />}
       </div>
 
       {mode !== "after" && (
@@ -162,8 +170,9 @@ function Picture({
         quality={60}
         preload={load === "preload"}
         loading={load === "preload" ? undefined : load}
-        // The after image is visible but isn't the LCP: let the before image have the bandwidth first.
-        fetchPriority={load === "eager" ? "low" : undefined}
+        // The before image is the LCP: request it (and its preload link) at high priority so it isn't
+        // queued behind scripts. The after image is visible but isn't the LCP, so it waits its turn.
+        fetchPriority={load === "preload" ? "high" : load === "eager" ? "low" : undefined}
         draggable={false}
         className="object-cover"
       />

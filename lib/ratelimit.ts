@@ -13,6 +13,7 @@ export const LIMITS = {
   bookings: { max: 10, windowMs: 60_000 },
   bookingRead: { max: 60, windowMs: 60_000 },
   feedback: { max: 5, windowMs: 10 * 60_000 },
+  alerts: { max: 5, windowMs: 10 * 60_000 },
   events: { max: 120, windowMs: 60_000 },
   testSessions: { max: 10, windowMs: 60_000 },
 } as const;

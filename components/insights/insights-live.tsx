@@ -5,7 +5,7 @@ import { TriangleAlertIcon } from "lucide-react";
 import { cn } from "cn";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import type { Insights, Range, Rate } from "@/lib/insights/summary";
+import { panelsWithData, type Insights, type Range, type Rate } from "@/lib/insights/summary";
 import { formatMoney, formatNumber } from "@/lib/utils/format";
 
 // FR-INS-01–07, 11, 12 and the §12 "Insights panels" states. Simple accessible tables with inline bars;
@@ -39,6 +39,9 @@ export function InsightsLive() {
   }, [range]);
 
   const data = state.kind === "ok" ? state.data : null;
+  // Panels without data for the period are hidden, not shown as empty headings.
+  const shown = data ? panelsWithData(data) : null;
+  const loading = state.kind === "loading";
 
   return (
     <div className="flex flex-col gap-10">
@@ -63,40 +66,49 @@ export function InsightsLive() {
         )}
       </div>
 
-      <Panel title="The funnel" loading={state.kind === "loading"}>
-        {data && (
-          <>
-            {data.funnel.steps[0]?.count === 0 ? (
-              <Empty />
-            ) : (
-              <Table
-                caption="Unique sessions at each step"
-                head={["Step", "Sessions", "From previous", "Overall"]}
-                rows={data.funnel.steps.map((s, i) => [
-                  <span key="l" className="flex items-center gap-2">
-                    {s.label}
-                    {data.funnel.biggestDrop === s.id && (
-                      <span className="rounded-full bg-warning-bg px-2 py-0.5 text-xs font-semibold text-warning">
-                        Biggest drop-off
-                      </span>
-                    )}
-                  </span>,
-                  <Bar key="n" value={s.count} max={data.funnel.steps[0]?.count ?? 1} />,
-                  i === 0 ? "–" : <Pct key="p" rate={s.step} />,
-                  i === 0 ? "–" : <Pct key="o" rate={s.overall} />,
-                ])}
-              />
-            )}
-          </>
-        )}
-      </Panel>
+      {loading && (
+        <div aria-busy="true" aria-label="Loading insights" className="flex flex-col gap-10">
+          <Skeleton className="h-48 w-full" />
+          <div className="grid gap-10 lg:grid-cols-2">
+            <Skeleton className="h-40 w-full" />
+            <Skeleton className="h-40 w-full" />
+          </div>
+        </div>
+      )}
+      {shown && shown.size === 0 && <Empty />}
+
+      {shown?.has("funnel") && (
+        <Panel title="The funnel">
+          {data && (
+            <>
+              {
+                <Table
+                  caption="Unique sessions at each step"
+                  head={["Step", "Sessions", "From previous", "Overall"]}
+                  rows={data.funnel.steps.map((s, i) => [
+                    <span key="l" className="flex items-center gap-2">
+                      {s.label}
+                      {data.funnel.biggestDrop === s.id && (
+                        <span className="rounded-full bg-warning-bg px-2 py-0.5 text-xs font-semibold text-warning">
+                          Biggest drop-off
+                        </span>
+                      )}
+                    </span>,
+                    <Bar key="n" value={s.count} max={data.funnel.steps[0]?.count ?? 1} />,
+                    i === 0 ? "–" : <Pct key="p" rate={s.step} />,
+                    i === 0 ? "–" : <Pct key="o" rate={s.overall} />,
+                  ])}
+                />
+              }
+            </>
+          )}
+        </Panel>
+      )}
 
       <div className="grid gap-10 lg:grid-cols-2">
-        <Panel title="Click-through" loading={state.kind === "loading"}>
-          {data &&
-            (data.cta.impressions === 0 ? (
-              <Empty />
-            ) : (
+        {shown?.has("cta") && (
+          <Panel title="Click-through">
+            {data && (
               <Table
                 caption="Hero 'See my rebate' button: seen vs clicked"
                 head={["Headline", "Seen", "Clicked", "Click-through"]}
@@ -115,50 +127,51 @@ export function InsightsLive() {
                   ],
                 ]}
               />
-            ))}
-        </Panel>
+            )}
+          </Panel>
+        )}
 
-        <Panel title="Headline test" loading={state.kind === "loading"}>
-          {data && (
-            <div className="flex flex-col gap-4">
-              <Table
-                caption="Headline A vs B"
-                head={["", "A", "B"]}
-                rows={[
-                  ["Sessions", formatNumber(data.ab.a.sessions), formatNumber(data.ab.b.sessions)],
-                  [
-                    "Click-through",
-                    <Pct key="a" rate={data.ab.a.ctr} />,
-                    <Pct key="b" rate={data.ab.b.ctr} />,
-                  ],
-                  [
-                    "Median time to a rebate",
-                    seconds(data.ab.a.medianMsToRebate),
-                    seconds(data.ab.b.medianMsToRebate),
-                  ],
-                  [
-                    "Five-second test (pass / fail)",
-                    `${data.ab.a.fiveSecond.pass} / ${data.ab.a.fiveSecond.fail}`,
-                    `${data.ab.b.fiveSecond.pass} / ${data.ab.b.fiveSecond.fail}`,
-                  ],
-                ]}
-              />
-              <p className="font-semibold text-ink">
-                {data.ab.verdict === null
-                  ? "Too little data to call a winner yet."
-                  : data.ab.verdict === "tie"
-                    ? "No clear difference between the headlines."
-                    : `Headline ${data.ab.verdict.toUpperCase()} leads on click-through.`}
-              </p>
-            </div>
-          )}
-        </Panel>
+        {shown?.has("ab") && (
+          <Panel title="Headline test">
+            {data && (
+              <div className="flex flex-col gap-4">
+                <Table
+                  caption="Headline A vs B"
+                  head={["", "A", "B"]}
+                  rows={[
+                    ["Sessions", formatNumber(data.ab.a.sessions), formatNumber(data.ab.b.sessions)],
+                    [
+                      "Click-through",
+                      <Pct key="a" rate={data.ab.a.ctr} />,
+                      <Pct key="b" rate={data.ab.b.ctr} />,
+                    ],
+                    [
+                      "Median time to a rebate",
+                      seconds(data.ab.a.medianMsToRebate),
+                      seconds(data.ab.b.medianMsToRebate),
+                    ],
+                    [
+                      "Five-second test (pass / fail)",
+                      `${data.ab.a.fiveSecond.pass} / ${data.ab.a.fiveSecond.fail}`,
+                      `${data.ab.b.fiveSecond.pass} / ${data.ab.b.fiveSecond.fail}`,
+                    ],
+                  ]}
+                />
+                <p className="font-semibold text-ink">
+                  {data.ab.verdict === null
+                    ? "Too little data to call a winner yet."
+                    : data.ab.verdict === "tie"
+                      ? "No clear difference between the headlines."
+                      : `Headline ${data.ab.verdict.toUpperCase()} leads on click-through.`}
+                </p>
+              </div>
+            )}
+          </Panel>
+        )}
 
-        <Panel title="Where visitors come from" loading={state.kind === "loading"}>
-          {data &&
-            (data.sources.length === 0 ? (
-              <Empty />
-            ) : (
+        {shown?.has("sources") && (
+          <Panel title="Where visitors come from">
+            {data && (
               <Table
                 caption="Sessions, rebate views and bookings by source"
                 head={["Source", "Sessions", "Saw a rebate", "Bookings"]}
@@ -169,14 +182,13 @@ export function InsightsLive() {
                   formatNumber(s.bookings),
                 ])}
               />
-            ))}
-        </Panel>
+            )}
+          </Panel>
+        )}
 
-        <Panel title="Who's measuring" loading={state.kind === "loading"}>
-          {data &&
-            (data.audience.byCity.length === 0 ? (
-              <Empty />
-            ) : (
+        {shown?.has("audience") && (
+          <Panel title="Who's measuring">
+            {data && (
               <div className="flex flex-col gap-5">
                 <Counts caption="Estimates by city" items={data.audience.byCity} label={cityLabel} />
                 <dl className="grid grid-cols-2 gap-4">
@@ -205,46 +217,47 @@ export function InsightsLive() {
                   Sizes and rebates are bucketed (250 sq ft, $500); no individual rows.
                 </p>
               </div>
-            ))}
-        </Panel>
+            )}
+          </Panel>
+        )}
 
-        <Panel title="Feature health" loading={state.kind === "loading"}>
-          {data && (
-            <div className="flex flex-col gap-5">
-              <dl className="grid grid-cols-2 gap-4">
-                <Fact label="Live previews that worked" value={<Pct rate={data.health.renderSuccess} />} />
-                <Fact label="Median preview time" value={seconds(data.health.medianRenderMs)} />
-                <Fact
-                  label="Example shown (daily limit reached)"
-                  value={<Pct rate={data.health.galleryShare} />}
-                />
-                <Fact label="Map failures" value={formatNumber(data.health.mapFailures)} />
-              </dl>
-              {data.health.entryPaths.length > 0 ? (
-                <Counts
-                  caption="How people start an estimate"
-                  items={data.health.entryPaths}
-                  label={pathLabel}
-                />
-              ) : (
-                <Empty />
-              )}
-            </div>
-          )}
-        </Panel>
+        {shown?.has("health") && (
+          <Panel title="Feature health">
+            {data && (
+              <div className="flex flex-col gap-5">
+                <dl className="grid grid-cols-2 gap-4">
+                  <Fact label="Live previews that worked" value={<Pct rate={data.health.renderSuccess} />} />
+                  <Fact label="Median preview time" value={seconds(data.health.medianRenderMs)} />
+                  <Fact
+                    label="Example shown (daily limit reached)"
+                    value={<Pct rate={data.health.galleryShare} />}
+                  />
+                  <Fact label="Map failures" value={formatNumber(data.health.mapFailures)} />
+                </dl>
+                {data.health.entryPaths.length > 0 && (
+                  <Counts
+                    caption="How people start an estimate"
+                    items={data.health.entryPaths}
+                    label={pathLabel}
+                  />
+                )}
+              </div>
+            )}
+          </Panel>
+        )}
       </div>
     </div>
   );
 }
 
-function Panel({ title, loading, children }: { title: string; loading: boolean; children: React.ReactNode }) {
+function Panel({ title, children }: { title: string; children: React.ReactNode }) {
   const id = `panel-${title.toLowerCase().replace(/\W+/g, "-")}`;
   return (
-    <section aria-labelledby={id} aria-busy={loading} className="flex flex-col gap-4">
+    <section aria-labelledby={id} className="flex flex-col gap-4">
       <h2 id={id} className="text-2xl">
         {title}
       </h2>
-      {loading ? <Skeleton className="h-40 w-full" /> : children}
+      {children}
     </section>
   );
 }

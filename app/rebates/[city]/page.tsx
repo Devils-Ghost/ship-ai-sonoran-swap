@@ -19,6 +19,8 @@ import { content } from "@/lib/content/load";
 import { cityFaq, faqJsonLd } from "@/lib/faq";
 import { summarize } from "@/lib/rebates/summary";
 import { dynamicPageMetadata } from "@/lib/seo/metadata";
+import { ReopenAlertForm } from "@/components/alerts/reopen-alert-form";
+import { isReopenAlertProgram } from "@/lib/alerts";
 
 // Content-only pages: render fully at build. An unlisted param waits for the full render, so
 // notFound() below answers with a real 404 instead of a 200 app shell (Cache Components has no dynamicParams).
@@ -82,6 +84,12 @@ export default async function CityRebatePage({ params }: PageProps<"/rebates/[ci
           <SecondaryCta link={{ label: "Measure my lawn anyway", href: `/studio?city=${program.id}` }} />
         )}
       </PageIntro>
+
+      {!summary.open && isReopenAlertProgram(program.id) && (
+        <div id="reopen-alert" className="container-page scroll-mt-24 pb-12">
+          <ReopenAlertForm programId={program.id} headingLevel="h2" className="max-w-2xl" />
+        </div>
+      )}
 
       <Block id="glance" title="At a glance">
         <ProgramFacts program={program} />

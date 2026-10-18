@@ -13,7 +13,7 @@ export default function PrivacyPage() {
     <>
       <PageIntro
         title="Privacy"
-        lead="We keep your city, lawn size and the options you choose. We don't collect names, phone numbers, addresses or photos."
+        lead="We keep your city, lawn size and the options you choose. We don't collect names, phone numbers, addresses or photos, and an email only when you ask us for something."
         crumbs={[{ label: "Privacy", href: "/privacy" }]}
       />
       <div className="container-page pb-16">
@@ -47,12 +47,25 @@ export default function PrivacyPage() {
                 <strong>Feedback:</strong> your message, and an email address only if you choose to give one
                 and agree that we may reply.
               </li>
+              <li>
+                <strong>Reopening alerts:</strong> if you ask to be told when Scottsdale&apos;s rebate
+                reopens, your email address and which program it is for, stored only after you tick the
+                consent box. We use it for that one email and nothing else, and never share or sell it. To be
+                removed, ask through the feedback form.
+              </li>
+              <li>
+                <strong>Share links:</strong> a shared estimate link holds only the city and the lawn size,
+                never your address.
+              </li>
             </ul>
           </StatementSection>
 
           <StatementSection title="What we don't collect">
             <ul>
-              <li>Names, phone numbers or email addresses (except the optional feedback email above).</li>
+              <li>
+                Names, phone numbers or email addresses (except the optional feedback email and the reopening
+                alert email above, each only with your consent).
+              </li>
               <li>
                 Your street address. Address search runs in your browser: it goes to Mapbox (or, when Mapbox
                 is unavailable, to Photon) to find your home on the map and is never sent to our server. Your
@@ -73,7 +86,10 @@ export default function PrivacyPage() {
           <StatementSection title="Who processes data for us">
             <ul>
               <li>Vercel: hosting.</li>
-              <li>Neon: the database that stores the anonymous records above.</li>
+              <li>
+                Neon: the database that stores the anonymous records above, feedback and reopening alert
+                emails.
+              </li>
               <li>Mapbox: the satellite map and address search.</li>
               <li>
                 Photon by komoot, using OpenStreetMap data: backup address search when Mapbox is unavailable.

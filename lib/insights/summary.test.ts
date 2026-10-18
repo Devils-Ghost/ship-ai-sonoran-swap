@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { abVerdict, funnel, rangeStart, rate, type VariantResult } from "./summary";
+import {
+  abVerdict,
+  funnel,
+  panelsWithData,
+  rangeStart,
+  rate,
+  type Insights,
+  type VariantResult,
+} from "./summary";
 
 describe("insights summary (FR-INS-02/04/11)", () => {
   it("hides rates with a denominator under 10", () => {
@@ -42,5 +50,63 @@ describe("insights summary (FR-INS-02/04/11)", () => {
     expect(abVerdict(v("a", 19, 10, 19), v("b", 40, 5, 40))).toBeNull();
     expect(abVerdict(v("a", 20, 10, 20), v("b", 40, 10, 40))).toBe("a");
     expect(abVerdict(v("a", 50, 25, 50), v("b", 100, 51, 100))).toBe("tie");
+  });
+});
+
+describe("panelsWithData", () => {
+  const empty: Insights = {
+    range: "launch",
+    since: "2030-01-01T00:00:00Z",
+    funnel: funnel({ sessions: 0, started: 0, estimated: 0, previewed: 0, eligibility: 0, booked: 0 }),
+    cta: { impressions: 0, clicks: 0, ctr: rate(0, 0), byVariant: [] },
+    ab: {
+      a: {
+        variant: "a",
+        sessions: 0,
+        ctr: rate(0, 0),
+        medianMsToRebate: null,
+        fiveSecond: { pass: 0, fail: 0 },
+      },
+      b: {
+        variant: "b",
+        sessions: 0,
+        ctr: rate(0, 0),
+        medianMsToRebate: null,
+        fiveSecond: { pass: 0, fail: 0 },
+      },
+      verdict: null,
+    },
+    sources: [],
+    audience: { byCity: [], medianSqftBucket: null, medianRebateBucket: null, tiers: [], styles: [] },
+    health: {
+      renders: 0,
+      renderSuccess: rate(0, 0),
+      medianRenderMs: null,
+      galleryShare: rate(0, 0),
+      entryPaths: [],
+      mapFailures: 0,
+    },
+  };
+
+  it("hides every panel when the period has no data", () => {
+    expect([...panelsWithData(empty)]).toEqual([]);
+  });
+
+  it("shows only the panels that have real data", () => {
+    const some: Insights = {
+      ...empty,
+      funnel: funnel({ sessions: 4, started: 2, estimated: 1, previewed: 0, eligibility: 0, booked: 0 }),
+      sources: [{ source: "direct", sessions: 4, estimated: rate(1, 4), bookings: 0 }],
+      health: { ...empty.health, mapFailures: 1 },
+    };
+    expect([...panelsWithData(some)].sort()).toEqual(["funnel", "health", "sources"]);
+  });
+
+  it("counts a five-second test result as headline-test data", () => {
+    const tested: Insights = {
+      ...empty,
+      ab: { ...empty.ab, a: { ...empty.ab.a, fiveSecond: { pass: 1, fail: 0 } } },
+    };
+    expect(panelsWithData(tested).has("ab")).toBe(true);
   });
 });

@@ -23,6 +23,18 @@ test("hero slider is keyboard-operable and every image is labeled", async ({ pag
   await expect(page.getByText("AI concept rendering. Actual results vary.")).toHaveCount(4);
 });
 
+test("the lawn-size slider works from the keyboard and fills to its thumb (FR-HOME-02)", async ({ page }) => {
+  await page.goto("/");
+  const slider = page.getByRole("slider", { name: "Lawn size in square feet" });
+  await slider.focus();
+  await page.keyboard.press("End");
+  await expect(slider).toHaveValue("5000");
+  await expect(page.getByText("$2.00 × 5,000 sq ft")).toBeVisible();
+  await page.keyboard.press("ArrowLeft");
+  await expect(slider).toHaveValue("4990");
+  await expect(page.getByLabel("Lawn (sq ft)")).toHaveValue("4990");
+});
+
 test("city cards come from the program data and link to each city", async ({ page }) => {
   await page.goto("/");
   const cards = page.getByRole("region", { name: "What your city pays" });
