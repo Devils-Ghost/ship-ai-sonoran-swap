@@ -1,5 +1,5 @@
 {
-  "basePromptVersion": 1,
+  "basePromptVersion": 2,
   "styles": [
     {
       "slug": "sonoran-native",
@@ -22,7 +22,7 @@
       "description": "Sculptural agaves and red yucca, large boulders, gray granite and steel edging. Architectural and calm.",
       "mood": ["clean", "architectural", "calm"],
       "materials": "gray crushed granite, large smooth boulders, clean steel edging, a few square concrete pavers",
-      "plantsPrompt": "large sculptural agaves, red yucca (hesperaloe) in neat rows, desert spoon, golden barrel cactus and one multi-trunk desert tree",
+      "plantsPrompt": "large blue-gray sculptural agaves, neat rows of hesperaloe: fountain-shaped clumps of narrow dark-green grass-like leaves with tall slender flower stalks topped with small coral blossoms, silver desert spoon, golden barrel cactus and one multi-trunk desert tree",
       "plantIds": ["agave", "red-yucca", "desert-spoon", "golden-barrel", "desert-willow", "ocotillo"],
       "maintenance": "Low",
       "swatches": ["#8C8C86", "#2F4A35", "#A4471F"],

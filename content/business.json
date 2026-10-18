@@ -30,7 +30,8 @@
     "footer": "Sonoran Swap is a concept business built for the Ship AI AZ GTM Hackathon. Rebate information comes from official city pages; eligibility and payment are decided by each city. Not affiliated with any city.",
     "pricing": "Illustrative concept pricing.",
     "booking": "This is a demonstration booking. No one will visit. This shows how booking would work.",
-    "ai": "AI concept rendering. Actual results vary."
+    "ai": "AI concept rendering. Actual results vary.",
+    "sample": "AI-generated sample yard. Not a real home."
   },
   "waterEstimate": {
     "galPerSqftYear": 23,

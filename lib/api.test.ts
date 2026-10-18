@@ -46,6 +46,11 @@ describe("ip hashing", () => {
     expect(h).not.toContain("203.0.113.7");
     expect(hashIp("203.0.113.7", "other-salt")).not.toBe(h);
   });
+
+  it("prefers the header Vercel sets over a client-supplied X-Forwarded-For", () => {
+    const headers = new Headers({ "x-forwarded-for": "6.6.6.6", "x-vercel-forwarded-for": "203.0.113.9" });
+    expect(clientIp(headers)).toBe("203.0.113.9");
+  });
 });
 
 describe("rate limiting", () => {

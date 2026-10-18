@@ -13,6 +13,8 @@ const tierId = z.enum(["essentials", "signature", "showcase"]);
 // AGENTS §2.7 and §2.3: the labels are fixed wording, not free copy.
 export const AI_LABEL = "AI concept rendering. Actual results vary.";
 export const PRICING_LABEL = "Illustrative concept pricing.";
+/** The sample "before" photos are generated, so they are labeled as such wherever shown. */
+export const SAMPLE_LABEL = "AI-generated sample yard. Not a real home.";
 
 export const businessSchema = z.strictObject({
   name: nonEmpty,
@@ -47,6 +49,7 @@ export const businessSchema = z.strictObject({
     pricing: z.literal(PRICING_LABEL),
     booking: nonEmpty,
     ai: z.literal(AI_LABEL),
+    sample: z.literal(SAMPLE_LABEL),
   }),
   waterEstimate: z.strictObject({
     galPerSqftYear: z.number().positive(),

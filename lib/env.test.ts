@@ -12,7 +12,7 @@ describe("parseServerEnv", () => {
   it("applies defaults for optional values", () => {
     const env = parseServerEnv(base);
     expect(env.IMAGE_PROVIDER).toBe("gallery");
-    expect(env.RENDER_DAILY_CAP).toBe(50);
+    expect(env.RENDER_DAILY_CAP).toBe(40);
     expect(env.NTFY_SERVER).toBe("https://ntfy.sh");
     expect(env.MOCK_DB).toBe(false);
   });

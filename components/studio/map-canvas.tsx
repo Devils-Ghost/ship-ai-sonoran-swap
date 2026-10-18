@@ -18,6 +18,7 @@ export type MapCanvasHandle = { deleteShape: (index: number) => void };
 const PHOENIX: [number, number] = [-112.07, 33.45];
 const CLOSE_PX = 14; // tap within this distance of the first point to close a shape
 const HINT_MS = 10_000;
+const LOAD_TIMEOUT_MS = 20_000;
 
 type Props = {
   ref?: React.Ref<MapCanvasHandle>;
@@ -148,10 +149,16 @@ export function MapCanvas({ ref, token: accessToken, target, onSummary, onError,
     map.doubleClickZoom.disable();
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
 
+    // FR-EST-13: give up only when the map can't work at all: the style itself fails (bad token,
+    // network) or nothing loads in time. A single failed tile mustn't take the whole map down.
     let loaded = false;
-    map.on("error", () => {
-      if (!loaded) onError(); // token or network failure before the style loads
+    map.on("error", (e) => {
+      const status = (e.error as { status?: number } | undefined)?.status;
+      if (!loaded && (status === 401 || status === 403 || !map.isStyleLoaded())) onError();
     });
+    const loadTimer = setTimeout(() => {
+      if (!loaded) onError();
+    }, LOAD_TIMEOUT_MS);
 
     map.on("load", () => {
       loaded = true;
@@ -258,6 +265,7 @@ export function MapCanvas({ ref, token: accessToken, target, onSummary, onError,
     const hintTimer = setTimeout(() => setHint(false), HINT_MS);
     return () => {
       clearTimeout(hintTimer);
+      clearTimeout(loadTimer);
       map.remove();
       mapRef.current = null;
     };

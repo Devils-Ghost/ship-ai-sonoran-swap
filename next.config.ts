@@ -4,6 +4,8 @@ import { parseServerEnv } from "./lib/env";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  // The gallery/mock image providers read public/samples from disk inside the render function.
+  outputFileTracingIncludes: { "/api/render": ["./public/samples/*.jpg"] },
   partialPrefetching: true,
   turbopack: {
     rules: {

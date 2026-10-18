@@ -42,7 +42,7 @@ const serverEnvSchema = z
     CLOUDFLARE_API_TOKEN: optionalString,
     RENDER_DAILY_CAP: z.preprocess(
       (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
-      z.coerce.number().int().positive().default(50),
+      z.coerce.number().int().positive().default(40),
     ),
     NTFY_SERVER: z.preprocess(
       (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
