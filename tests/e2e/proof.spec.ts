@@ -1,9 +1,23 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { SHOW_RECEIPTS } from "@/lib/site";
 
 // SRS §11.4–11.5 (FR-PROOF-01–03, FR-FB). MOCK_DB=1: feedback is validated but not stored.
 
+test("with receipts off, there is no Proof control and /launch-notes is a 404", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(SHOW_RECEIPTS, "receipts are on");
+  expect((await page.goto("/launch-notes"))?.status()).toBe(404);
+  await page.goto("/pricing#proof");
+  if (isMobile) await page.getByRole("button", { name: "Open menu" }).click();
+  await expect(page.getByRole("button", { name: /^Proof/ })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Launch notes" })).toHaveCount(0);
+});
+
 test("the Proof drawer opens, shows its tabs, and closes on Escape", async ({ page, isMobile }) => {
+  test.skip(!SHOW_RECEIPTS, "receipts are off (lib/site.ts)");
   await page.goto("/pricing");
   if (isMobile) {
     await page.getByRole("button", { name: "Open menu" }).click();
@@ -37,11 +51,13 @@ test("the Proof drawer opens, shows its tabs, and closes on Escape", async ({ pa
 });
 
 test("a #proof link opens the drawer on load", async ({ page }) => {
+  test.skip(!SHOW_RECEIPTS, "receipts are off (lib/site.ts)");
   await page.goto("/how-it-works#proof");
   await expect(page.getByRole("dialog", { name: "Proof" })).toBeVisible();
 });
 
 test("launch notes: sections, testing empty state, and feedback with consent", async ({ page }) => {
+  test.skip(!SHOW_RECEIPTS, "receipts are off (lib/site.ts)");
   await page.goto("/launch-notes");
   for (const h of ["What we shipped", "Quality reports", "User testing", "Honest limits", "Send feedback"]) {
     await expect(page.getByRole("heading", { level: 2, name: h })).toBeVisible();

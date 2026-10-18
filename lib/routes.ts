@@ -1,6 +1,7 @@
 import { content } from "@/lib/content/load";
 import { GUIDES } from "@/lib/guides";
 import { formatRateShort, summarize } from "@/lib/rebates/summary";
+import { SHOW_RECEIPTS } from "@/lib/site";
 
 // SRS §5.1 route registry: one place for every page's title, description and indexing rule.
 // Feeds page metadata (FR-SEO-01), sitemap.xml (FR-SEO-02) and the route audit.
@@ -14,6 +15,15 @@ export type RouteInfo = {
 };
 
 const { business, rebates, styles } = content;
+
+/** Registered only while SHOW_RECEIPTS is on, so the sitemap, llms.txt and route tests skip it otherwise. */
+export const LAUNCH_NOTES_ROUTE: RouteInfo = {
+  path: "/launch-notes",
+  title: "Launch Notes: How This Site Was Built and Tested",
+  description:
+    "How this concept site was built: quality reports, user-test results, honest limits and how it works.",
+  index: true,
+};
 
 const STATIC_ROUTES: RouteInfo[] = [
   {
@@ -102,13 +112,7 @@ const STATIC_ROUTES: RouteInfo[] = [
     description: "Live estimates and bookings from this site.",
     index: false,
   },
-  {
-    path: "/launch-notes",
-    title: "Launch Notes: How This Site Was Built and Tested",
-    description:
-      "How this concept site was built: quality reports, user-test results, honest limits and how it works.",
-    index: true,
-  },
+  ...(SHOW_RECEIPTS ? [LAUNCH_NOTES_ROUTE] : []),
   {
     path: "/insights",
     title: "Growth Insights",

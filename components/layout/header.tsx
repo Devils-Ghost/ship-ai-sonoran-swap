@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { MenuIcon } from "lucide-react";
 import { content } from "@/lib/content/load";
-import { PRIMARY_CTA, PRIMARY_NAV } from "@/lib/site";
+import { PRIMARY_CTA, PRIMARY_NAV, SHOW_RECEIPTS } from "@/lib/site";
 import { ConceptBadge } from "./concept-badge";
 import { HeaderCta } from "./header-cta";
 import { HeaderShell } from "./header-shell";
@@ -41,7 +41,9 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <ProofDrawer className="inline-flex size-11 cursor-pointer items-center justify-center rounded-full text-ink hover:bg-sand" />
+          {SHOW_RECEIPTS ? (
+            <ProofDrawer className="inline-flex size-11 cursor-pointer items-center justify-center rounded-full text-ink hover:bg-sand" />
+          ) : null}
           <ConceptBadge />
         </div>
 
@@ -52,7 +54,7 @@ export function Header() {
         <div className="lg:hidden">
           {/* usePathname() is request data on dynamic routes, so Cache Components needs a boundary. */}
           <Suspense fallback={<MenuButtonFallback />}>
-            <MobileMenu links={PRIMARY_NAV} extra={[PROOF]} badge={<ConceptBadge />} />
+            <MobileMenu links={PRIMARY_NAV} extra={SHOW_RECEIPTS ? [PROOF] : []} badge={<ConceptBadge />} />
           </Suspense>
         </div>
       </div>

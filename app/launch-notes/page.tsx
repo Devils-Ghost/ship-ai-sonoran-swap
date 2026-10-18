@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { PrimaryCta } from "@/components/layout/cta-link";
 import { PageIntro } from "@/components/layout/page-intro";
 import { FeedbackForm } from "@/components/proof/feedback-form";
@@ -10,10 +11,11 @@ import {
 } from "@/components/proof/proof-sections";
 import { TestingSection } from "@/components/proof/testing-section";
 import { TimelineSection, timelineEntries } from "@/components/proof/timeline-section";
-import { ROUTES } from "@/lib/routes";
+import { LAUNCH_NOTES_ROUTE, ROUTES } from "@/lib/routes";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { SHOW_RECEIPTS } from "@/lib/site";
 
-export const metadata = pageMetadata("/launch-notes");
+export const metadata = pageMetadata(LAUNCH_NOTES_ROUTE);
 
 // FR-PROOF-03: the Proof drawer's content long-form, plus the about answer (CONTENT §2 FAQ 6; the concept
 // badge links to #about, SRS §3.6) and the feedback form (FR-FB).
@@ -51,6 +53,7 @@ const FEATURES: { name: string; href: string; text: string }[] = [
 ];
 
 export default function LaunchNotesPage() {
+  if (!SHOW_RECEIPTS) notFound();
   const live = ROUTES.filter((r) => r.index).length;
   return (
     <>

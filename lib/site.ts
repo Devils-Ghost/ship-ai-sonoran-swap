@@ -2,6 +2,12 @@
 
 export type NavLink = { label: string; href: string };
 
+/**
+ * FR-PROOF-01–03: the Proof drawer and /launch-notes are switched off for now. Their code stays in place;
+ * set this to true to bring back the header button, the menu row, the footer link and the page.
+ */
+export const SHOW_RECEIPTS = false;
+
 /** Header (desktop) and mobile menu: at most 6 items plus the CTA (QUALITY D3). */
 export const PRIMARY_NAV: NavLink[] = [
   { label: "How it works", href: "/how-it-works" },
@@ -37,7 +43,7 @@ export const FOOTER_NAV: { title: string; links: NavLink[] }[] = [
     links: [
       { label: "How it works", href: "/how-it-works" },
       { label: "Pricing", href: "/pricing" },
-      { label: "Launch notes", href: "/launch-notes" },
+      ...(SHOW_RECEIPTS ? [{ label: "Launch notes", href: "/launch-notes" }] : []),
       { label: "Insights", href: "/insights" },
     ],
   },

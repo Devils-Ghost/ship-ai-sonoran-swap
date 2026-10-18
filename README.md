@@ -18,7 +18,6 @@ Sonoran Swap is a concept business. No real services are offered. Rebate informa
 | Prep sheet | `/studio/prep` | Printable measurement and rebate sheet with the outlined map view |
 | Live board | `/live` | Projector board with real counts since a start time |
 | Growth insights | `/insights` | Funnel, click-through, headline test, sources and feature health from the site's own anonymous events |
-| Proof | header, `/launch-notes` | Build timeline from the commit history, Lighthouse reports, testing numbers, limits and privacy |
 
 Supporting pages: rebates by city, three landscape styles, a filterable low-water plant guide, how it works, pricing, three guides, privacy and accessibility.
 

@@ -3,6 +3,7 @@ import { PageIntro } from "@/components/layout/page-intro";
 import { StatementSection } from "@/components/layout/prose-page";
 import { content, isConcept } from "@/lib/content/load";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { SHOW_RECEIPTS } from "@/lib/site";
 
 export const metadata = pageMetadata("/privacy");
 
@@ -99,8 +100,8 @@ export default function PrivacyPage() {
           <StatementSection title="Questions">
             <p>
               Use the feedback form on our{" "}
-              <Link href="/launch-notes" className="link">
-                launch notes
+              <Link href={SHOW_RECEIPTS ? "/launch-notes" : "/accessibility"} className="link">
+                {SHOW_RECEIPTS ? "launch notes" : "accessibility"}
               </Link>{" "}
               page.
             </p>
