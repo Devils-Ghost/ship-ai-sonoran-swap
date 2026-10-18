@@ -5,24 +5,34 @@ import { cn } from "cn";
 import { Loader2Icon, SearchIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  GEOCODER_CREDIT,
+  geocodeUrl,
+  isProviderRefusal,
+  parseGeocode,
+  type AddressPick,
+  type Geocoder,
+} from "@/lib/geocode";
 
-// FR-EST-02: browser-only Mapbox geocoding, US + Phoenix metro, after 3 characters with a 250 ms debounce.
-// The address string goes only to Mapbox, never to our API (AGENTS §2.4).
-const PHOENIX_METRO_BBOX = "-112.65,33.15,-111.55,33.85";
+// FR-EST-02: browser-only geocoding, US + Phoenix metro, after 3 characters with a debounce. The address
+// string goes only to the geocoder, never to our API (AGENTS §2.4). Mapbox first; when it refuses
+// (bad token, allowance used up) the same query is retried on Photon and stays there (FR-EST-13).
 const MIN_CHARS = 3;
-const DEBOUNCE_MS = 250;
-
-export type AddressPick = { label: string; lng: number; lat: number; place: string | null };
+const DEBOUNCE_MS: Record<Geocoder, number> = { mapbox: 250, photon: 400 }; // Photon asks for fair use
 
 type Status = "idle" | "loading" | "results" | "empty" | "error";
 
-type Feature = {
-  id: string;
-  geometry: { coordinates: [number, number] };
-  properties: { full_address?: string; name?: string; context?: { place?: { name?: string } } };
-};
-
-export function AddressSearch({ token, onPick }: { token: string; onPick: (pick: AddressPick) => void }) {
+export function AddressSearch({
+  token,
+  onPick,
+  onFallback,
+}: {
+  token?: string;
+  onPick: (pick: AddressPick) => void;
+  /** Mapbox refused with this HTTP status and search moved to the backup geocoder. */
+  onFallback?: (status: number) => void;
+}) {
+  const [geocoder, setGeocoder] = useState<Geocoder>(token ? "mapbox" : "photon");
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [options, setOptions] = useState<AddressPick[]>([]);
@@ -44,25 +54,14 @@ export function AddressSearch({ token, onPick }: { token: string; onPick: (pick:
     const timer = setTimeout(async () => {
       setStatus("loading");
       try {
-        const url = new URL("https://api.mapbox.com/search/geocode/v6/forward");
-        url.search = new URLSearchParams({
-          q,
-          autocomplete: "true",
-          country: "us",
-          bbox: PHOENIX_METRO_BBOX,
-          types: "address",
-          limit: "5",
-          access_token: token,
-        }).toString();
-        const res = await fetch(url, { signal: controller.signal });
+        const res = await fetch(geocodeUrl(geocoder, q, token), { signal: controller.signal });
+        if (geocoder === "mapbox" && isProviderRefusal(res.status)) {
+          setGeocoder("photon"); // re-runs this effect with the same query
+          onFallback?.(res.status);
+          return;
+        }
         if (!res.ok) throw new Error(`geocode ${res.status}`);
-        const json = (await res.json()) as { features?: Feature[] };
-        const picks = (json.features ?? []).map((f) => ({
-          label: f.properties.full_address ?? f.properties.name ?? q,
-          lng: f.geometry.coordinates[0],
-          lat: f.geometry.coordinates[1],
-          place: f.properties.context?.place?.name ?? null,
-        }));
+        const picks = parseGeocode(geocoder, await res.json(), q);
         setOptions(picks);
         setActive(picks.length ? 0 : -1);
         setStatus(picks.length ? "results" : "empty");
@@ -70,12 +69,12 @@ export function AddressSearch({ token, onPick }: { token: string; onPick: (pick:
       } catch (err) {
         if ((err as Error).name !== "AbortError") setStatus("error");
       }
-    }, DEBOUNCE_MS);
+    }, DEBOUNCE_MS[geocoder]);
     return () => {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [query, token]);
+  }, [query, token, geocoder, onFallback]);
 
   const choose = (pick: AddressPick) => {
     skipNext.current = true;
@@ -171,6 +170,9 @@ export function AddressSearch({ token, onPick }: { token: string; onPick: (pick:
           : status === "empty"
             ? "No match in the Phoenix area."
             : "Your address stays in your browser. We only keep your city and lawn size."}
+        {GEOCODER_CREDIT[geocoder] && (
+          <span className="mt-0.5 block text-[0.75rem]">{GEOCODER_CREDIT[geocoder]}</span>
+        )}
       </p>
     </div>
   );

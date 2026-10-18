@@ -21,14 +21,14 @@ test("sample yard path shows a labeled before/after instantly and switches style
   await expect(result).toBeVisible();
   await expect(page.getByText("AI-generated sample yard. Not a real home.")).toBeVisible();
   await expect(page.getByText("AI concept rendering. Actual results vary.").first()).toBeVisible();
-  await expect(result.locator("img").first()).toHaveAttribute("src", /yard-2-sonoran-native\.jpg/);
+  await expect(result.locator("img[alt*='desert garden']")).toHaveAttribute(
+    "src",
+    /yard-2-sonoran-native\.jpg/,
+  );
 
   await page.getByRole("radio", { name: /Modern Desert/ }).click();
   await expect(
-    page
-      .getByRole("region", { name: /Modern Desert example/ })
-      .locator("img")
-      .first(),
+    page.getByRole("region", { name: /Modern Desert example/ }).locator("img[alt*='desert garden']"),
   ).toHaveAttribute("src", /yard-2-modern-desert\.jpg/);
   // FR-VIS-09: the palette comes from plants.json.
   await expect(page.getByRole("complementary", { name: "Modern Desert plant palette" })).toContainText(

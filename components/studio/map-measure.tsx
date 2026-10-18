@@ -9,20 +9,29 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { LARGE_LAWN_SQFT, MIN_SHAPE_SQFT, type AreaSummary } from "@/lib/estimate/area";
 import { isCityId, type CityId } from "@/lib/estimate/estimate";
 import { formatNumber, formatSqft } from "@/lib/utils/format";
-import { AddressSearch, type AddressPick } from "./address-search";
+import type { AddressPick } from "@/lib/geocode";
+import { AddressSearch } from "./address-search";
 import type { MapCanvasHandle } from "./map-canvas";
 
 export type MapResult = { sqft: number; shapeCount: number };
 
 const MAP_HEIGHT = "h-[60vh] min-h-80 lg:h-[560px]";
 
-// Mapbox GL is ~510 KB gzipped, so it loads only after an address is chosen or the visitor asks for it.
-const MapCanvas = dynamic(() => import("./map-canvas").then((m) => m.MapCanvas), {
+// Map libraries are ~250–510 KB gzipped, so one loads only after an address is chosen or the visitor asks.
+const loading = () => <Skeleton className={`${MAP_HEIGHT} w-full rounded-media`} />;
+const MapboxCanvas = dynamic(() => import("./map-canvas-mapbox").then((m) => m.MapboxCanvas), {
   ssr: false,
-  loading: () => <Skeleton className={`${MAP_HEIGHT} w-full rounded-media`} />,
+  loading,
+});
+const FreeMapCanvas = dynamic(() => import("./map-canvas-free").then((m) => m.FreeMapCanvas), {
+  ssr: false,
+  loading,
 });
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+
+/** FR-EST-13: Mapbox first; the free backup when there is no token or Mapbox refuses. */
+type Provider = "mapbox" | "free";
 
 export function MapMeasure({
   onChange,
@@ -32,7 +41,8 @@ export function MapMeasure({
   onCity: (city: CityId) => void;
 }) {
   const [showMap, setShowMap] = useState(false);
-  const [failed, setFailed] = useState(!TOKEN);
+  const [provider, setProvider] = useState<Provider>(TOKEN ? "mapbox" : "free");
+  const [failed, setFailed] = useState(false);
   const [target, setTarget] = useState<AddressPick | null>(null);
   const [summary, setSummary] = useState<AreaSummary | null>(null);
   const canvas = useRef<MapCanvasHandle>(null);
@@ -45,6 +55,16 @@ export function MapMeasure({
     },
     [onChange],
   );
+
+  // A refused geocode (bad token) means the map would be refused too, so skip straight to the backup.
+  // A 429 is only the search allowance; the map may still load.
+  const onGeocodeFallback = useCallback((status: number) => {
+    if (status !== 429) setProvider("free");
+  }, []);
+  const onMapError = useCallback(() => {
+    if (provider === "mapbox") setProvider("free");
+    else setFailed(true);
+  }, [provider]);
 
   const pick = (p: AddressPick) => {
     setTarget(p);
@@ -71,17 +91,30 @@ export function MapMeasure({
 
   return (
     <div className="flex flex-col gap-4">
-      {TOKEN && <AddressSearch token={TOKEN} onPick={pick} />}
+      <AddressSearch token={TOKEN} onPick={pick} onFallback={onGeocodeFallback} />
 
-      {showMap && TOKEN ? (
-        <MapCanvas
+      {showMap && provider === "mapbox" && TOKEN ? (
+        <MapboxCanvas
           ref={canvas}
           token={TOKEN}
           target={target}
           onSummary={onSummary}
-          onError={() => setFailed(true)}
+          onError={onMapError}
           className={MAP_HEIGHT}
         />
+      ) : showMap ? (
+        <div className="flex flex-col gap-2">
+          <FreeMapCanvas
+            ref={canvas}
+            target={target}
+            onSummary={onSummary}
+            onError={onMapError}
+            className={MAP_HEIGHT}
+          />
+          <p className="text-[0.8125rem] text-ink-muted">
+            Backup map: public aerial photos from the USGS. Close-up views can take a few seconds to sharpen.
+          </p>
+        </div>
       ) : (
         <div
           className={`${MAP_HEIGHT} flex flex-col items-center justify-center gap-4 rounded-media border border-line bg-sand p-6 text-center`}

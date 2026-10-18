@@ -1,5 +1,6 @@
 import { content } from "@/lib/content/load";
 import { GUIDES } from "@/lib/guides";
+import { formatRateShort, summarize } from "@/lib/rebates/summary";
 
 // SRS §5.1 route registry: one place for every page's title, description and indexing rule.
 // Feeds page metadata (FR-SEO-01), sitemap.xml (FR-SEO-02) and the route audit.
@@ -128,10 +129,22 @@ const STATIC_ROUTES: RouteInfo[] = [
   },
 ];
 
+/** SRS §4.5: meta descriptions ≤ 155 characters, cut at a word boundary. */
+function clip(text: string, max = 155): string {
+  if (text.length <= max) return text;
+  return `${text.slice(0, text.lastIndexOf(" ", max - 1))}…`;
+}
+
+// SRS §4.5 title patterns, built from the program data so amounts never drift from rebate-programs.json.
 const REBATE_ROUTES: RouteInfo[] = rebates.programs.map((p) => ({
   path: `/rebates/${p.id}`,
-  title: `${p.city} Grass Removal Rebate, Explained`,
-  description: `How the City of ${p.city}'s ${p.name.toLowerCase()} works: who qualifies, how it pays, documents and timeline.`,
+  title:
+    p.type === "per_sqft"
+      ? `${p.city} Grass Removal Rebate: ${formatRateShort(p.ratePerSqft)}/sq ft, Explained`
+      : p.type === "tiered"
+        ? `${p.city} Grass Removal Incentive: Tiers & Rules`
+        : `${p.city} Grass Removal Rebate: Program Status`,
+  description: clip(`${summarize(p).sentence} Who qualifies, what not to do, documents and timeline.`),
   index: true,
 }));
 

@@ -1,17 +1,17 @@
 "use client";
 
-import "mapbox-gl/dist/mapbox-gl.css";
-import mapboxgl from "mapbox-gl";
+import type mapboxgl from "mapbox-gl";
 import type { Feature, FeatureCollection, Polygon, Position } from "geojson";
 import { useEffect, useImperativeHandle, useRef, useState } from "react";
 import { cn } from "cn";
 import { CrosshairIcon, PencilIcon, Undo2Icon, XIcon } from "lucide-react";
 import { summarizeShapes, type AreaSummary } from "@/lib/estimate/area";
 import { formatSqft } from "@/lib/utils/format";
-import type { AddressPick } from "./address-search";
+import type { AddressPick } from "@/lib/geocode";
 
 // FR-EST-03/04/05/16: satellite map with an outline tool. Polygons live only in this component's memory;
-// only the total area leaves it (FR-EST-12, AGENTS §2.4).
+// only the total area leaves it (FR-EST-12, AGENTS §2.4). The map library is passed in as createMap so the
+// same tool runs on Mapbox or on the free MapLibre backup (FR-EST-13); both share the Mapbox GL v1 API.
 
 export type MapCanvasHandle = { deleteShape: (index: number) => void };
 
@@ -20,16 +20,23 @@ const CLOSE_PX = 14; // tap within this distance of the first point to close a s
 const HINT_MS = 10_000;
 const LOAD_TIMEOUT_MS = 20_000;
 
-type Props = {
+export type CreateMap = (options: {
+  container: HTMLElement;
+  center: [number, number];
+  zoom: number;
+}) => mapboxgl.Map;
+
+export type MapCanvasProps = {
   ref?: React.Ref<MapCanvasHandle>;
-  token: string;
   target: AddressPick | null;
   onSummary: (summary: AreaSummary, newlyIgnored: number) => void;
   onError: () => void;
   className?: string;
 };
 
-function token(name: string): string {
+type Props = MapCanvasProps & { createMap: CreateMap };
+
+function cssVar(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
@@ -38,9 +45,11 @@ function ring(points: Position[]): Position[] {
   return first ? [...points, first] : [];
 }
 
-export function MapCanvas({ ref, token: accessToken, target, onSummary, onError, className }: Props) {
+export function MapCanvas({ ref, createMap, target, onSummary, onError, className }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
+  // The drawing layers exist once the style has loaded; tiles may still be arriving (slow on the backup).
+  const ready = useRef(false);
   const shapes = useRef<Position[][]>([]); // closed shapes, without the repeated first point
   const draft = useRef<Position[]>([]);
   const drag = useRef<{ shape: number; vertex: number } | null>(null);
@@ -55,7 +64,7 @@ export function MapCanvas({ ref, token: accessToken, target, onSummary, onError,
 
   const render = () => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) return;
+    if (!map || !ready.current) return;
     const polys: Feature<Polygon>[] = shapes.current.map((pts, i) => ({
       type: "Feature",
       properties: { shape: i },
@@ -132,14 +141,10 @@ export function MapCanvas({ ref, token: accessToken, target, onSummary, onError,
     if (!container.current) return;
     let map: mapboxgl.Map;
     try {
-      mapboxgl.accessToken = accessToken;
-      map = new mapboxgl.Map({
+      map = createMap({
         container: container.current,
-        style: "mapbox://styles/mapbox/satellite-streets-v12",
         center: target ? [target.lng, target.lat] : PHOENIX,
         zoom: target ? 19 : 10,
-        preserveDrawingBuffer: true, // FR-EST-14: the prep sheet snapshots the canvas
-        attributionControl: true,
       });
     } catch {
       onError(); // WebGL unavailable
@@ -147,24 +152,23 @@ export function MapCanvas({ ref, token: accessToken, target, onSummary, onError,
     }
     mapRef.current = map;
     map.doubleClickZoom.disable();
-    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), "top-right");
 
     // FR-EST-13: give up only when the map can't work at all: the style itself fails (bad token,
-    // network) or nothing loads in time. A single failed tile mustn't take the whole map down.
-    let loaded = false;
-    map.on("error", (e) => {
-      const status = (e.error as { status?: number } | undefined)?.status;
-      if (!loaded && (status === 401 || status === 403 || !map.isStyleLoaded())) onError();
+    // allowance used up, network) or it doesn't load in time. A failed tile after that mustn't take the
+    // whole map down.
+    map.on("error", () => {
+      if (!ready.current) onError();
     });
     const loadTimer = setTimeout(() => {
-      if (!loaded) onError();
+      if (!ready.current) onError();
     }, LOAD_TIMEOUT_MS);
 
-    map.on("load", () => {
-      loaded = true;
-      const terracotta = token("--color-terracotta");
-      const paloVerde = token("--color-palo-verde");
-      const paper = token("--color-paper");
+    map.on("style.load", () => {
+      if (ready.current) return;
+      ready.current = true;
+      const terracotta = cssVar("--color-terracotta");
+      const paloVerde = cssVar("--color-palo-verde");
+      const paper = cssVar("--color-paper");
       const empty: FeatureCollection = { type: "FeatureCollection", features: [] };
       map.addSource("shapes", { type: "geojson", data: empty });
       map.addSource("draft", { type: "geojson", data: empty });
@@ -268,6 +272,7 @@ export function MapCanvas({ ref, token: accessToken, target, onSummary, onError,
       clearTimeout(loadTimer);
       map.remove();
       mapRef.current = null;
+      ready.current = false;
     };
     // The map is created once; target changes are handled by the fly-to effect below.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -295,7 +300,7 @@ export function MapCanvas({ ref, token: accessToken, target, onSummary, onError,
 
   return (
     <div className={cn("relative overflow-hidden rounded-media border border-line bg-sand", className)}>
-      {/* mapbox-gl.css makes its container position: relative, so it gets its own full-size element. */}
+      {/* The map CSS makes its container position: relative, so it gets its own full-size element. */}
       <div
         className="absolute inset-0"
         role="region"

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "cn";
 import { ChevronsLeftRightIcon } from "lucide-react";
@@ -21,6 +22,8 @@ type Props = {
   children?: React.ReactNode;
   className?: string;
   priority?: boolean;
+  /** next/image sizes for local images (e.g. the home hero). */
+  sizes?: string;
 };
 
 const STEP = 5;
@@ -34,6 +37,7 @@ export function CompareSlider({
   children,
   className,
   priority = false,
+  sizes = "(min-width: 1024px) 50vw, 100vw",
 }: Props) {
   const [pos, setPos] = useState(intro ? 85 : 50);
   const box = useRef<HTMLDivElement>(null);
@@ -92,24 +96,11 @@ export function CompareSlider({
       onPointerUp={() => (dragging.current = false)}
       onPointerCancel={() => (dragging.current = false)}
     >
-      {/* After fills the frame; Before is clipped from the left edge to the divider. */}
-      {/* eslint-disable-next-line @next/next/no-img-element -- renders may be data: URLs from the API */}
-      <img
-        src={after.src}
-        alt={after.alt}
-        draggable={false}
-        fetchPriority={priority ? "high" : undefined}
-        className="absolute inset-0 h-full w-full object-cover"
-      />
-      <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - shown}% 0 0)` }}>
-        {/* eslint-disable-next-line @next/next/no-img-element -- uploads are blob: URLs */}
-        <img
-          src={before.src}
-          alt={before.alt}
-          draggable={false}
-          fetchPriority={priority ? "high" : undefined}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
+      {/* Before fills the frame and After is revealed right of the divider. The full-frame layer never
+          changes size, so it is a stable LCP element even while the intro glide moves the divider (C2). */}
+      <Picture {...before} load={priority ? "preload" : "lazy"} sizes={sizes} />
+      <div className="absolute inset-0" style={{ clipPath: `inset(0 0 0 ${shown}%)` }}>
+        <Picture {...after} load={priority ? "eager" : "lazy"} sizes={sizes} />
       </div>
 
       {mode !== "after" && (
@@ -143,5 +134,39 @@ export function CompareSlider({
       )}
       {children}
     </div>
+  );
+}
+
+/** Local files go through next/image (AVIF/WebP, srcset); uploads and API renders are blob:/data: URLs. */
+// The before image fills the frame, so it is the LCP element: preload it and load the after image eagerly
+// without competing for the preload slot (next/image docs, Next 16 `preload`).
+function Picture({
+  src,
+  alt,
+  load,
+  sizes,
+}: {
+  src: string;
+  alt: string;
+  load: "preload" | "eager" | "lazy";
+  sizes: string;
+}) {
+  if (src.startsWith("/")) {
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes={sizes}
+        preload={load === "preload"}
+        loading={load === "preload" ? undefined : load}
+        draggable={false}
+        className="object-cover"
+      />
+    );
+  }
+  return (
+    // eslint-disable-next-line @next/next/no-img-element -- blob: and data: URLs can't be optimized
+    <img src={src} alt={alt} draggable={false} className="absolute inset-0 h-full w-full object-cover" />
   );
 }

@@ -19,3 +19,11 @@ export const sampleAfter = (id: SampleYardId, style: string) => `/samples/${id}-
 
 /** The pair shown as an example when a live preview isn't available (FR-VIS-05/12). */
 export const EXAMPLE_YARD: SampleYardId = "yard-1";
+
+/** Each style is shown on a different sample yard so pages don't repeat one house. */
+export const STYLE_SHOWCASE_YARD: Record<string, SampleYardId> = {
+  "sonoran-native": "yard-2",
+  "modern-desert": "yard-3",
+  "pollinator-garden": "yard-1",
+};
+export const showcaseYard = (style: string): SampleYardId => STYLE_SHOWCASE_YARD[style] ?? EXAMPLE_YARD;

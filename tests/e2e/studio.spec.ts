@@ -1,5 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
 
+// Requests to this host are "our server" for the privacy checks.
+const OUR_HOST = new URL(process.env.E2E_BASE_URL ?? "http://localhost").hostname;
+
 const results = (page: Page) => page.getByRole("region", { name: "Your results" });
 
 test("sample path shows the Phoenix result for 1,200 sq ft in under 2 s (§8 AC)", async ({ page }) => {
@@ -28,14 +31,12 @@ test("manual path computes boundary cases from SRS §7.5", async ({ page }) => {
     ["City of Tempe", "1200", "We don't have Tempe's program in our data yet"],
   ];
   for (const [cityName, area, expected] of cases) {
-    await city.click();
-    await page.getByRole("option", { name: cityName, exact: true }).click();
+    await city.selectOption({ label: cityName });
     await sqft.fill(area);
     await expect(results(page), `${cityName} ${area}`).toContainText(expected);
   }
   // Every result carries the approval warning (FR-REB-12) and, for programs, the source and date.
-  await city.click();
-  await page.getByRole("option", { name: "City of Phoenix", exact: true }).click();
+  await city.selectOption({ label: "City of Phoenix" });
   await sqft.fill("1200");
   await expect(results(page)).toContainText("Don't remove any grass until Phoenix approves");
   await expect(results(page)).toContainText("checked Oct 15, 2026");
@@ -59,11 +60,23 @@ test("no address or coordinates ever reach our server (§8 AC, AGENTS §2.4)", a
   const ourRequests: string[] = [];
   page.on("request", (req) => {
     const url = new URL(req.url());
-    if (url.origin === new URL(page.url() || "http://x").origin || url.pathname.startsWith("/api/")) {
+    if (url.hostname === OUR_HOST) {
       ourRequests.push(`${req.url()} ${req.postData() ?? ""}`);
     }
   });
-  // Fixture geocoder so the test never depends on Mapbox.
+  // Fixture geocoders so the test never depends on Mapbox or Photon (used when there is no token).
+  await page.route("https://photon.komoot.io/**", (route) =>
+    route.fulfill({
+      json: {
+        features: [
+          {
+            geometry: { coordinates: [-112.0773, 33.4486] },
+            properties: { housenumber: "200", street: "West Washington Street", city: "Phoenix" },
+          },
+        ],
+      },
+    }),
+  );
   await page.route("https://api.mapbox.com/search/geocode/**", (route) =>
     route.fulfill({
       json: {
@@ -82,22 +95,15 @@ test("no address or coordinates ever reach our server (§8 AC, AGENTS §2.4)", a
 
   await page.goto("/studio");
   const search = page.getByRole("combobox", { name: "Find your home" });
-  const unavailable = page.getByText("Map unavailable");
-  await expect(search.or(unavailable)).toBeVisible(); // wait for hydration before branching
-  if (await search.isVisible()) {
-    await search.fill("200 W Washington");
-    await page.getByRole("option", { name: /200 West Washington Street/ }).click();
-    await expect(search).toHaveValue(/200 West Washington Street/);
-  } else {
-    // FR-EST-13: without a map token the page explains and keeps the other paths.
-    await expect(unavailable).toBeVisible();
-  }
+  await search.fill("200 W Washington");
+  await page.getByRole("option", { name: /200 West Washington Street/ }).click();
+  await expect(search).toHaveValue(/200 West Washington Street/);
   await page.getByRole("radio", { name: "Try a sample yard" }).click();
   await expect(results(page)).toContainText("$2,400");
   await page.waitForResponse((r) => r.url().includes("/api/estimates"));
 
   const leaks = ourRequests.filter((r) =>
-    /washington|street|85003|-112\.07|33\.44|coordinates|lng|lat/i.test(r),
+    /washington|street|85003|-112\.07|33\.44|coordinates|\blng\b|\blat\b/i.test(r),
   );
   expect(leaks).toEqual([]);
 });
