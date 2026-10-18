@@ -1,0 +1,198 @@
+{
+  "lastReviewed": "2026-10-15",
+  "disclaimer": "Estimate only. Eligibility and payment are decided by each city. Sonoran Swap is not affiliated with any city.",
+  "programs": [
+    {
+      "id": "phoenix",
+      "city": "Phoenix",
+      "name": "Residential Grass Removal Incentive",
+      "status": "unknown",
+      "statusNote": "The city's page does not state current funding status. Applications are reviewed as funds allow; confirm before you start.",
+      "type": "per_sqft",
+      "ratePerSqft": 2.0,
+      "minimumSqft": 250,
+      "maximumAmount": null,
+      "caseByCaseAboveSqft": 5000,
+      "approval": {
+        "required": true,
+        "name": "Notice to Proceed (NTP)",
+        "reviewTime": "up to 3 weeks",
+        "completeWithin": "6 months from the NTP date"
+      },
+      "healthyGrassMinPercent": 75,
+      "eligibility": [
+        "You own the home (landlords may apply for rental properties).",
+        "You are a Phoenix Water Services customer.",
+        "The grass is alive and healthy at 75% density or more (bare soil and weeds under 25%)."
+      ],
+      "prohibitions": [
+        "Do not remove any grass before you receive the Notice to Proceed.",
+        "No water features or pools in the removal area.",
+        "No bare soil after the project.",
+        "Grass cannot be reinstalled while you own the property."
+      ],
+      "requirements": [
+        "Describe what will replace the grass; desert landscaping is recommended.",
+        "Plants in the right-of-way must come from the Low-Water-Use/Drought-Tolerant plant list.",
+        "Follow your HOA rules and Maricopa County Rule 310.01."
+      ],
+      "documents": [
+        "Aerial image showing the square footage",
+        "Two photos of the grass before removal",
+        "Project description form",
+        "IRS W-9",
+        "Affidavit of Lawful Presence with a copy of your ID",
+        "Rental Properties Form (rentals only)",
+        "After completion: at least two photos and a copy of the NTP"
+      ],
+      "howToApply": "Online through the myPHX311 portal only (no mail or email).",
+      "payment": "Check mailed after final approval, typically within 1 to 2 billing cycles.",
+      "sourceUrl": "https://www.phoenix.gov/administration/departments/waterservices/supply-conservation/save-water/conservation-incentives/residential-grass-incentives.html",
+      "lastVerified": "2026-10-15"
+    },
+    {
+      "id": "mesa",
+      "city": "Mesa",
+      "name": "Residential Grass-to-Xeriscape and Tree Bonus Incentive",
+      "status": "unknown",
+      "statusNote": "Funding is limited and first-come, first-served. Confirm availability with Mesa Water Conservation before you start.",
+      "type": "tiered",
+      "tiers": [
+        { "minSqft": 500, "maxSqft": 999, "amount": 1000 },
+        { "minSqft": 1000, "maxSqft": 1499, "amount": 1500 },
+        { "minSqft": 1500, "maxSqft": null, "amount": 2000 }
+      ],
+      "treeBonus": { "perTree": 50, "maxTrees": 2 },
+      "minimumSqft": 500,
+      "maximumAmount": 2100,
+      "approval": {
+        "required": true,
+        "name": "Pre-approval and inspection",
+        "reviewTime": null,
+        "completeWithin": "6 months after approval"
+      },
+      "healthyGrassMinPercent": 70,
+      "eligibility": [
+        "You currently own a single-family home and are a Mesa water customer.",
+        "About 70% healthy grass coverage (bare soil and weeds under 30% of the area).",
+        "Grass is not well- or flood-irrigated.",
+        "The home was not built within the past year.",
+        "One incentive per property every 3 years; only future projects qualify."
+      ],
+      "prohibitions": [
+        "Do not remove grass until Mesa inspects and approves.",
+        "Artificial turf or rock alone does not count.",
+        "No spray irrigation and no black plastic sheeting.",
+        "Concrete may cover no more than 25% of the area."
+      ],
+      "requirements": [
+        "Plants must reach at least 50% canopy coverage at maturity, from the ADWR low-water-use list.",
+        "Mulch at least 2 inches deep.",
+        "Tree bonus: new low-water trees, at least 1 gallon, planted in the ground after approval (not citrus, ash or ficus).",
+        "HOA approval may be required.",
+        "W-9 required after completion."
+      ],
+      "documents": [
+        "Application before starting",
+        "W-9 after completion"
+      ],
+      "howToApply": "Apply to Mesa's Environmental and Sustainability Department before starting. Questions: 480-644-3306 or conservation.info@mesaaz.gov.",
+      "payment": "Paid after completion and final approval.",
+      "sourceUrl": "https://mesaaz.gov/Xeriscape",
+      "lastVerified": "2026-10-15"
+    },
+    {
+      "id": "chandler",
+      "city": "Chandler",
+      "name": "Residential Grass Removal Rebate",
+      "status": "unknown",
+      "statusNote": "Rebates are first come, first served and depend on available funds. Confirm with the Water Conservation Office before you start.",
+      "type": "per_sqft",
+      "ratePerSqft": 1.5,
+      "roundingIncrementSqft": 10,
+      "minimumSqft": 500,
+      "minimumWaiver": "The minimum may be waived if all remaining grass on the property is removed.",
+      "maximumAmount": 2000,
+      "approval": {
+        "required": true,
+        "name": "Notice to Proceed (NtP)",
+        "reviewTime": "Staff verify the measurement, which may include an on-site inspection",
+        "completeWithin": "90 days after the NtP unless the Water Conservation Office approves otherwise"
+      },
+      "healthyGrassMinPercent": null,
+      "eligibility": [
+        "You own the property and have an active Chandler water utility account.",
+        "The grass is living and regularly irrigated.",
+        "Flood-irrigated areas and new construction are not eligible.",
+        "Work completed before January 1, 2026 is not eligible."
+      ],
+      "prohibitions": [
+        "Do not remove or overseed grass before the review is complete.",
+        "No artificial turf, black plastic sheeting, fountains or pools in the rebate area.",
+        "No bare soil in conversion areas."
+      ],
+      "requirements": [
+        "Plants from the Phoenix AMA Low-Water-Use/Drought-Tolerant Plant List, purchased from a nursery.",
+        "At least 50% canopy coverage of the landscapable area.",
+        "At least 50% of the total landscapable area must be non-grass after conversion.",
+        "Granite top dressing at least 2 inches deep.",
+        "Follow your HOA rules."
+      ],
+      "documents": [
+        "Pre-Grass-Removal Notice to Proceed Application with at least two before photos",
+        "After completion: Grass Removal Application with at least two photos of the finished landscape",
+        "Selected Plant List",
+        "W-9 if required"
+      ],
+      "howToApply": "Submit the Pre-Grass-Removal NtP application; questions: conserve@chandleraz.gov or 480-782-3580.",
+      "payment": "Credit to your utility account after final inspection.",
+      "sourceUrl": "https://www.chandleraz.gov/residents/water/water-conservation/rebate-and-incentive-programs/residential/rebate-policy",
+      "lastVerified": "2026-10-15"
+    },
+    {
+      "id": "scottsdale",
+      "city": "Scottsdale",
+      "name": "Residential Grass Removal Rebate",
+      "status": "closed",
+      "statusNote": "The program closed on Oct. 31, 2025, and is set to return with a new rebate season. Requirements are under review.",
+      "type": "status_only",
+      "lastSeasonMaximum": 5000,
+      "approval": {
+        "required": true,
+        "name": "Notice to Proceed after pre-inspection",
+        "reviewTime": null,
+        "completeWithin": null
+      },
+      "eligibility": [
+        "You receive water service from Scottsdale Water.",
+        "Removal already in progress or finished is not eligible."
+      ],
+      "prohibitions": [
+        "Do not begin removal until the program reopens and you receive a Notice to Proceed."
+      ],
+      "requirements": [],
+      "documents": [],
+      "howToApply": "Watch the city's residential rebates page or sign up for early notification of the 2026 launch.",
+      "payment": null,
+      "sourceUrl": "https://www.scottsdaleaz.gov/water/water-conservation/rebates/residential",
+      "lastVerified": "2026-10-15"
+    }
+  ],
+  "otherCities": {
+    "tempe": "Not in our data yet. Check Tempe's water conservation office.",
+    "gilbert": "Not in our data yet. Check Gilbert's water conservation office.",
+    "glendale": "Not in our data yet. Check Glendale's water conservation office.",
+    "other": "Not in our data yet. Check your water utility's conservation office."
+  },
+  "eligibilityQuestions": {
+    "default": [
+      { "id": "owner", "text": "Do you own the home?", "options": [ { "label": "Yes", "outcome": "pass" }, { "label": "No, I rent", "outcome": "fail", "reason": "Programs are for property owners. Ask your landlord; some cities let landlords apply." } ] },
+      { "id": "utility", "text": "Is your water bill from the City of {City}?", "options": [ { "label": "Yes", "outcome": "pass" }, { "label": "No", "outcome": "fail", "reason": "You must be a water customer of the city running the program." }, { "label": "Not sure", "outcome": "check", "reason": "Check the name on your water bill." } ] },
+      { "id": "healthy", "text": "Is the grass alive and green across most of the area?", "options": [ { "label": "Yes", "outcome": "pass" }, { "label": "Partly", "outcome": "check", "reason": "Programs require mostly healthy grass ({healthy}). Ask the city whether yours qualifies." }, { "label": "Mostly dead or bare", "outcome": "fail", "reason": "Programs pay to remove living grass." } ] },
+      { "id": "removed", "text": "Have you removed any of the grass yet?", "options": [ { "label": "No", "outcome": "pass" }, { "label": "Yes, some or all", "outcome": "fail", "reason": "Most programs only pay for grass removed after approval. Don't remove more. Contact the city before you continue." } ] },
+      { "id": "irrigation", "text": "Is the grass watered by flood irrigation or a private well?", "options": [ { "label": "No, sprinklers on city water", "outcome": "pass" }, { "label": "Yes", "outcome": "fail", "reason": "Flood- or well-irrigated grass isn't eligible in this program." }, { "label": "Not sure", "outcome": "check", "reason": "Ask the city how your yard is irrigated." } ], "programs": ["mesa", "chandler"] },
+      { "id": "newhome", "text": "Was the home built within the past year?", "options": [ { "label": "No", "outcome": "pass" }, { "label": "Yes", "outcome": "fail", "reason": "New construction isn't eligible in this program." } ], "programs": ["mesa", "chandler"] },
+      { "id": "size", "text": "Is the grass area at least {minimum} sq ft?", "options": [ { "label": "Yes", "outcome": "pass" }, { "label": "No", "outcome": "fail", "reason": "The program has a minimum of {minimum} sq ft." }, { "label": "Not sure", "outcome": "check", "reason": "Measure it in the studio first." } ] }
+    ]
+  }
+}
