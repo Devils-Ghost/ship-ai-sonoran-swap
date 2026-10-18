@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PrimaryCta } from "@/components/layout/cta-link";
+import { QuickEstimate } from "@/components/home/quick-estimate";
 import { BuildingNote } from "@/components/layout/page-intro";
 import { content } from "@/lib/content/load";
 import { pageMetadata } from "@/lib/seo/metadata";
@@ -11,7 +12,7 @@ export const metadata = pageMetadata("/");
 export default function Home() {
   return (
     <>
-      <section className="container-page pt-12 pb-16 lg:pt-20 lg:pb-24">
+      <section className="container-page grid gap-10 pt-12 pb-16 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-16 lg:pt-16 lg:pb-24">
         <div className="flex max-w-3xl flex-col gap-6">
           <p className="eyebrow">Phoenix · Mesa · Chandler</p>
           <h1>Phoenix will pay you to lose your lawn.</h1>
@@ -30,6 +31,8 @@ export default function Home() {
             <time dateTime={content.rebates.lastReviewed}>{formatDate(content.rebates.lastReviewed)}</time>
           </p>
         </div>
+        {/* FR-HOME-02. The before/after slider (FR-HOME-01) joins the hero later. */}
+        <QuickEstimate defaultSqft={content.business.sample.sqft} />
       </section>
       <BuildingNote />
     </>

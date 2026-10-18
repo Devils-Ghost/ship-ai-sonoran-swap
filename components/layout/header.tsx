@@ -2,10 +2,10 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { MenuIcon } from "lucide-react";
 import { ReceiptTextIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { content } from "@/lib/content/load";
 import { PRIMARY_CTA, PRIMARY_NAV } from "@/lib/site";
 import { ConceptBadge } from "./concept-badge";
+import { HeaderCta } from "./header-cta";
 import { HeaderShell } from "./header-shell";
 import { MobileMenu } from "./mobile-menu";
 import { Wordmark } from "./wordmark";
@@ -52,9 +52,9 @@ export function Header() {
           <ConceptBadge />
         </div>
 
-        <Button asChild size="sm" className="max-[359px]:px-3">
-          <Link href={PRIMARY_CTA.href}>{PRIMARY_CTA.label}</Link>
-        </Button>
+        <Suspense fallback={<span className="w-0" aria-hidden="true" />}>
+          <HeaderCta link={PRIMARY_CTA} />
+        </Suspense>
 
         <div className="lg:hidden">
           {/* usePathname() is request data on dynamic routes, so Cache Components needs a boundary. */}

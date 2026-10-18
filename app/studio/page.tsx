@@ -1,20 +1,20 @@
-import { SecondaryCta } from "@/components/layout/cta-link";
-import { BuildingNote, PageIntro } from "@/components/layout/page-intro";
+import { PageIntro } from "@/components/layout/page-intro";
+import { StudioRoot } from "@/components/studio/studio-app";
 import { pageMetadata } from "@/lib/seo/metadata";
 
 export const metadata = pageMetadata("/studio");
 
-// Copy: CONTENT §3. No breadcrumbs here (SRS §5.2). The studio itself ships in Phase 2.
+// SRS §6.2 / §8. Copy: CONTENT §3. No breadcrumbs here (SRS §5.2). Fully static; StudioRoot applies ?sqft&city&tier
+// on the client so the page needs no Suspense hole.
 export default function StudioPage() {
   return (
     <>
       <PageIntro
         title="Measure your lawn. See your rebate."
-        lead="Measure on the map, enter the square footage you know, or try a sample yard."
-      >
-        <SecondaryCta link={{ label: "Compare city rebates", href: "/rebates" }} />
-      </PageIntro>
-      <BuildingNote />
+        lead="Outline your lawn on a satellite map, enter the square footage you know, or try a sample yard."
+        className="pb-8 lg:pb-10"
+      />
+      <StudioRoot />
     </>
   );
 }

@@ -1,8 +1,9 @@
 import { cn } from "cn";
 import { SparklesIcon } from "lucide-react";
-import { content } from "@/lib/content/load";
+import business from "@/content/business.json";
 
-// AGENTS §2.7: every AI image carries the exact label from business.json.
+// AGENTS §2.7: every AI image carries the exact label from business.json (validated at build; read
+// directly so client components can use it).
 // "overlay" sits bottom-left over the image (DESIGN §6); "inline" is a caption below it.
 export function AiLabel({
   variant = "overlay",
@@ -11,7 +12,7 @@ export function AiLabel({
   variant?: "overlay" | "inline";
   className?: string;
 }) {
-  const label = content.business.disclosures.ai;
+  const label = business.disclosures.ai;
   if (variant === "inline") {
     return <p className={cn("text-[0.8125rem] text-ink-muted", className)}>{label}</p>;
   }
