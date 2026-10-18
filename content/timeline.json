@@ -1,6 +1,13 @@
 {
-  "generatedAt": "2026-10-18T02:20:00.907Z",
+  "generatedAt": "2026-10-18T02:50:06.766Z",
   "entries": [
+    {
+      "date": "2026-10-17T19:20:02-07:00",
+      "hash": "a2a41be",
+      "title": "Add public funnel and source analytics (FR-INS-01)",
+      "type": "feat",
+      "scope": "insights"
+    },
     {
       "date": "2026-10-17T18:59:06-07:00",
       "hash": "c2aa7f1",
