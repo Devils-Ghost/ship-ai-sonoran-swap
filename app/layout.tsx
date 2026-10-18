@@ -4,8 +4,11 @@ import { PageViews } from "@/components/analytics/page-views";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { SkipLink } from "@/components/layout/skip-link";
+import { JsonLd } from "@/components/shared/json-ld";
 import { content } from "@/lib/content/load";
 import { publicEnv } from "@/lib/env";
+import { websiteJsonLd } from "@/lib/seo/json-ld";
+import { ogImage } from "@/lib/seo/metadata";
 import "./globals.css";
 
 // DESIGN §3: Fraunces for display, Inter for body; swap to avoid invisible text. The opsz axis is
@@ -28,6 +31,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(publicEnv.siteUrl),
   title: `${business.name}: ${business.tagline}`,
   description: business.shortDescription,
+  openGraph: { images: [ogImage(business.tagline, business.oneLiner)] },
 };
 
 export const viewport: Viewport = {
@@ -38,6 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en-US" className={`${fraunces.variable} ${inter.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
+        <JsonLd data={websiteJsonLd()} />
         <SkipLink />
         <Header />
         <main id="main" tabIndex={-1} className="flex flex-1 flex-col outline-none">

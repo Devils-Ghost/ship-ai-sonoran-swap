@@ -6,7 +6,9 @@ import { notFound } from "next/navigation";
 import { ArrowUpRightIcon } from "lucide-react";
 import { PrimaryCta } from "@/components/layout/cta-link";
 import { PageIntro } from "@/components/layout/page-intro";
+import { JsonLd } from "@/components/shared/json-ld";
 import { GUIDES } from "@/lib/guides";
+import { articleJsonLd } from "@/lib/seo/json-ld";
 import { dynamicPageMetadata } from "@/lib/seo/metadata";
 import { formatDate } from "@/lib/utils/format";
 
@@ -62,6 +64,7 @@ export default async function GuidePage({ params }: PageProps<"/guides/[slug]">)
         </p>
       </PageIntro>
 
+      <JsonLd data={articleJsonLd(guide)} />
       <article className="container-page pb-12">
         <div className="max-w-[68ch]">
           <Body />

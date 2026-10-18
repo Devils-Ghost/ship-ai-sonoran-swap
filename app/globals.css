@@ -210,3 +210,23 @@
     }
   }
 }
+
+/* FR-PREP-02: the prep sheet prints on Letter/A4 with the site chrome removed (header and footer carry
+   print:hidden). Colors stay as designed for screen; print forces exact colors for the warning card. */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+  html,
+  body {
+    background: #ffffff;
+  }
+  nav[aria-label="Breadcrumb"] {
+    display: none !important;
+  }
+  .prep-sheet {
+    max-width: none;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

@@ -7,7 +7,7 @@ import { Wordmark } from "./wordmark";
 export function Footer() {
   const { business } = content;
   return (
-    <footer className="mt-auto bg-saguaro text-caliche">
+    <footer className="mt-auto bg-saguaro text-caliche print:hidden">
       <div className="container-page grid gap-12 py-16 lg:grid-cols-[1.2fr_2fr]">
         <div className="flex flex-col gap-4">
           <Wordmark name={business.name} />

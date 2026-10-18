@@ -8,7 +8,10 @@ const nextConfig: NextConfig = {
   // guides are MDX in content/guides (imported by app/guides/[slug]); pages stay .ts/.tsx only.
   pageExtensions: ["ts", "tsx"],
   // The gallery/mock image providers read public/samples from disk inside the render function.
-  outputFileTracingIncludes: { "/api/render": ["./public/samples/*.jpg"] },
+  outputFileTracingIncludes: {
+    "/api/render": ["./public/samples/*.jpg"],
+    "/api/og": ["./assets/og/*.woff"],
+  },
   partialPrefetching: true,
   turbopack: {
     rules: {

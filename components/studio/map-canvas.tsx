@@ -13,7 +13,11 @@ import type { AddressPick } from "@/lib/geocode";
 // only the total area leaves it (FR-EST-12, AGENTS §2.4). The map library is passed in as createMap so the
 // same tool runs on Mapbox or on the free MapLibre backup (FR-EST-13); both share the Mapbox GL v1 API.
 
-export type MapCanvasHandle = { deleteShape: (index: number) => void };
+export type MapCanvasHandle = {
+  deleteShape: (index: number) => void;
+  /** FR-EST-14: the current view with outlines as a JPEG data URL, or null if the canvas can't be read. */
+  snapshot: () => string | null;
+};
 
 const PHOENIX: [number, number] = [-112.07, 33.45];
 const CLOSE_PX = 14; // tap within this distance of the first point to close a shape
@@ -134,6 +138,14 @@ export function MapCanvas({ ref, createMap, target, onSummary, onError, classNam
       ).ignoredCount;
       render();
       publish();
+    },
+    snapshot() {
+      try {
+        // preserveDrawingBuffer is on for both engines, so the last frame is still readable.
+        return mapRef.current?.getCanvas().toDataURL("image/jpeg", 0.82) ?? null;
+      } catch {
+        return null; // a tainted canvas (tiles without CORS) can't be exported
+      }
     },
   }));
 

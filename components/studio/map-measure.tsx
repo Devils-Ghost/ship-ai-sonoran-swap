@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MapIcon, OctagonXIcon, TrashIcon, TriangleAlertIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,8 @@ import { isCityId, type CityId } from "@/lib/estimate/estimate";
 import { formatNumber, formatSqft } from "@/lib/utils/format";
 import type { AddressPick } from "@/lib/geocode";
 import { AddressSearch } from "./address-search";
+import { registerSnapshotSource } from "@/lib/studio/snapshot";
+import { track } from "@/lib/analytics/client";
 import type { MapCanvasHandle } from "./map-canvas";
 
 export type MapResult = { sqft: number; shapeCount: number };
@@ -47,6 +49,13 @@ export function MapMeasure({
   const [summary, setSummary] = useState<AreaSummary | null>(null);
   const canvas = useRef<MapCanvasHandle>(null);
 
+  // FR-EST-14: while the map is open, the prep sheet link can capture it.
+  useEffect(() => {
+    if (!showMap || failed) return;
+    registerSnapshotSource(() => canvas.current?.snapshot() ?? null);
+    return () => registerSnapshotSource(null);
+  }, [showMap, failed]);
+
   const onSummary = useCallback(
     (s: AreaSummary, newlyIgnored: number) => {
       setSummary(s);
@@ -62,6 +71,7 @@ export function MapMeasure({
     if (status !== 429) setProvider("free");
   }, []);
   const onMapError = useCallback(() => {
+    track("map_failed", { engine: provider });
     if (provider === "mapbox") setProvider("free");
     else setFailed(true);
   }, [provider]);

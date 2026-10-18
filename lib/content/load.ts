@@ -5,10 +5,22 @@ import pricing from "@/content/pricing.json";
 import rebates from "@/content/rebate-programs.json";
 import seoReport from "@/content/seo-report.json";
 import styles from "@/content/styles.json";
+import quality from "@/content/quality.json";
+import timeline from "@/content/timeline.json";
 import { validateContent, type ProgramId, type RebateProgram } from "./schema";
 
 // ARCH §5: validated at import, so a bad edit fails `next build` (and `pnpm validate:content`).
-export const content = validateContent({ business, rebates, pricing, plants, styles, decisions, seoReport });
+export const content = validateContent({
+  business,
+  rebates,
+  pricing,
+  plants,
+  styles,
+  decisions,
+  seoReport,
+  timeline,
+  quality,
+});
 
 export const isConcept = content.business.mode === "concept";
 

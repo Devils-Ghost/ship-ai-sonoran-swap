@@ -5,11 +5,13 @@ import plants from "@/content/plants.json";
 import pricing from "@/content/pricing.json";
 import rebates from "@/content/rebate-programs.json";
 import seoReport from "@/content/seo-report.json";
+import quality from "@/content/quality.json";
+import timeline from "@/content/timeline.json";
 import styles from "@/content/styles.json";
 import { validateContent, type RawContent } from "./schema";
 
 const seed = (): RawContent =>
-  structuredClone({ business, rebates, pricing, plants, styles, decisions, seoReport });
+  structuredClone({ business, rebates, pricing, plants, styles, decisions, seoReport, timeline, quality });
 
 type Path = [keyof RawContent, ...(string | number)[]];
 

@@ -127,4 +127,12 @@ test("a refused Mapbox map falls back to the free map, and outlining still works
   }
   await expect(page.getByText(/^Shape 1:/)).toBeVisible();
   await expect(page.getByText(/^Total:/)).toContainText("sq ft");
+
+  // FR-EST-14: the prep sheet gets the map view through sessionStorage, never through our server.
+  await page.getByRole("link", { name: "Print prep sheet" }).click();
+  await expect(page).toHaveURL(/\/studio\/prep\?city=/);
+  const snapshot = page.getByRole("img", { name: /Satellite view with the outlined grass/ });
+  await expect(snapshot).toBeVisible();
+  expect(await snapshot.getAttribute("src")).toMatch(/^data:image\/jpeg;base64,/);
+  expect(seen.ours.some((r) => r.includes("data:image"))).toBe(false);
 });

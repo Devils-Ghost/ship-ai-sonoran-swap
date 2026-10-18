@@ -310,7 +310,38 @@ export type ProgramId = (typeof PROGRAM_IDS)[number];
 export type Pricing = z.infer<typeof pricingSchema>;
 export type Plants = z.infer<typeof plantsSchema>;
 export type Styles = z.infer<typeof stylesSchema>;
+export const timelineSchema = z.strictObject({
+  generatedAt: z.iso.datetime({ offset: true }),
+  entries: z.array(
+    z.strictObject({
+      date: z.iso.datetime({ offset: true }),
+      hash: z.string().regex(/^[0-9a-f]{7,40}$/),
+      title: nonEmpty,
+      type: z.enum(["feat", "fix", "perf", "content"]),
+      scope: nonEmpty.nullable(),
+    }),
+  ),
+});
+
+const score = z.number().int().min(0).max(100).nullable();
+export const qualitySchema = z.strictObject({
+  reports: z.array(
+    z.strictObject({
+      file: z.string().regex(/^\/reports\/[\w.-]+\.html$/),
+      fetchedAt: z.iso.datetime(),
+      formFactor: z.enum(["mobile", "desktop"]),
+      host: nonEmpty,
+      path: z.string().startsWith("/"),
+      scores: z.strictObject({ performance: score, accessibility: score, bestPractices: score, seo: score }),
+      lcpMs: z.number().int().nonnegative(),
+      cls: z.number().nonnegative(),
+    }),
+  ),
+});
+
 export type Decisions = z.infer<typeof decisionsSchema>;
+export type Quality = z.infer<typeof qualitySchema>;
+export type Timeline = z.infer<typeof timelineSchema>;
 export type SeoReport = z.infer<typeof seoReportSchema>;
 
 export type Content = {
@@ -321,6 +352,8 @@ export type Content = {
   styles: Styles;
   decisions: Decisions;
   seoReport: SeoReport;
+  timeline: Timeline;
+  quality: Quality;
 };
 
 export type RawContent = Record<keyof Content, unknown>;
@@ -342,6 +375,8 @@ export function validateContent(raw: RawContent): Content {
   const styles = parse("styles.json", stylesSchema, raw.styles);
   const decisions = parse("decisions.json", decisionsSchema, raw.decisions);
   const seoReport = parse("seo-report.json", seoReportSchema, raw.seoReport);
+  const timeline = parse("timeline.json", timelineSchema, raw.timeline);
+  const quality = parse("quality.json", qualitySchema, raw.quality);
 
   if (business && rebates) {
     const ids = new Set(rebates.programs.map((p) => p.id));
@@ -378,9 +413,11 @@ export function validateContent(raw: RawContent): Content {
     !plants ||
     !styles ||
     !decisions ||
+    !timeline ||
+    !quality ||
     !seoReport
   ) {
     throw new Error(`Invalid content in content/*.json:\n${problems.map((p) => `  - ${p}`).join("\n")}`);
   }
-  return { business, rebates, pricing, plants, styles, decisions, seoReport };
+  return { business, rebates, pricing, plants, styles, decisions, seoReport, timeline, quality };
 }

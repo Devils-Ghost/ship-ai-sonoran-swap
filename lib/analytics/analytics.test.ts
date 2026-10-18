@@ -42,6 +42,7 @@ describe("client session (FR-ANL-02/05, FR-INS-13)", () => {
   beforeEach(() => {
     resetAnalyticsForTests();
     sessionStorage.clear();
+    localStorage.clear();
     Object.defineProperty(navigator, "sendBeacon", { value: beacon, configurable: true });
   });
   afterEach(() => {
@@ -55,6 +56,18 @@ describe("client session (FR-ANL-02/05, FR-INS-13)", () => {
     expect(s).toMatchObject({ source: "linkedin", variant: "b", team: true });
     expect(window.location.search).toBe("?v=b&style=modern-desert");
     expect(sessionStorage.getItem("ss_src")).toBe("linkedin");
+  });
+
+  it("the team flag survives new tabs (localStorage) and ?team=0 clears it", () => {
+    window.history.replaceState(null, "", "/?team=1");
+    expect(initAnalytics().team).toBe(true);
+    resetAnalyticsForTests();
+    sessionStorage.clear(); // a new tab
+    window.history.replaceState(null, "", "/");
+    expect(initAnalytics().team).toBe(true);
+    resetAnalyticsForTests();
+    window.history.replaceState(null, "", "/?team=0");
+    expect(initAnalytics().team).toBe(false);
   });
 
   it("utm_source is an alias; unknown sources become other", () => {

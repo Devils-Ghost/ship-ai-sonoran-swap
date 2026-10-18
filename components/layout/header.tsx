@@ -1,17 +1,17 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { MenuIcon } from "lucide-react";
-import { ReceiptTextIcon } from "lucide-react";
 import { content } from "@/lib/content/load";
 import { PRIMARY_CTA, PRIMARY_NAV } from "@/lib/site";
 import { ConceptBadge } from "./concept-badge";
 import { HeaderCta } from "./header-cta";
 import { HeaderShell } from "./header-shell";
+import { ProofDrawer } from "@/components/proof/proof-drawer";
 import { MobileMenu } from "./mobile-menu";
 import { Wordmark } from "./wordmark";
 
-// Until the Proof drawer ships, the Proof button opens the launch notes page.
-const PROOF = { label: "Proof", href: "/launch-notes" };
+// FR-PROOF-01: on phones the menu's "Proof" row opens the same drawer (see MobileMenu).
+const PROOF = { label: "Proof", href: "#proof" };
 
 export function Header() {
   return (
@@ -41,14 +41,7 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <Link
-            href={PROOF.href}
-            className="inline-flex size-11 items-center justify-center rounded-full text-ink hover:bg-sand"
-            aria-label={PROOF.label}
-            title={PROOF.label}
-          >
-            <ReceiptTextIcon className="size-5" aria-hidden="true" />
-          </Link>
+          <ProofDrawer className="inline-flex size-11 cursor-pointer items-center justify-center rounded-full text-ink hover:bg-sand" />
           <ConceptBadge />
         </div>
 

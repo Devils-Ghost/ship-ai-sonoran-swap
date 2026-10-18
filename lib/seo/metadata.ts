@@ -3,10 +3,22 @@ import { content } from "@/lib/content/load";
 import { findRoute, getRoute, type RouteInfo } from "@/lib/routes";
 
 // FR-SEO-01: title, description, canonical, Open Graph and Twitter card per route.
-// OG images arrive later (FR-SEO-04); until then the root defaults apply.
+
+/** FR-SEO-04: the share image for a page, rendered by /api/og. */
+export function ogImage(title: string, subtitle?: string) {
+  const q = new URLSearchParams({ title });
+  if (subtitle) q.set("subtitle", subtitle);
+  return { url: `/api/og?${q.toString()}`, width: 1200, height: 630, alt: title };
+}
+
 export function pageMetadata(pathOrRoute: string | RouteInfo): Metadata {
   const route = typeof pathOrRoute === "string" ? getRoute(pathOrRoute) : pathOrRoute;
   const siteName = content.business.name;
+  // The home page shares the tagline; every other page its own title.
+  const image = ogImage(
+    route.path === "/" ? content.business.tagline : route.title,
+    route.path === "/" ? content.business.oneLiner : route.description,
+  );
   return {
     title: route.path === "/" ? { absolute: route.title } : route.title,
     description: route.description,
@@ -19,11 +31,13 @@ export function pageMetadata(pathOrRoute: string | RouteInfo): Metadata {
       url: route.path,
       title: route.title,
       description: route.description,
+      images: [image],
     },
     twitter: {
       card: "summary_large_image",
       title: route.title,
       description: route.description,
+      images: [image.url],
     },
   };
 }

@@ -15,6 +15,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { testSessionId, track } from "@/lib/analytics/client";
 import { rebateBucket, sqftBucket } from "@/lib/analytics/whitelist";
 import { MAX_MANUAL_SQFT } from "@/lib/estimate/area";
+import { saveSnapshotForPrep } from "@/lib/studio/snapshot";
 import { pickParams } from "@/lib/utils/url";
 import { computeEstimate, isCityId, programFor, type CityId } from "@/lib/estimate/estimate";
 import { DEFAULT_TIER, TIERS, type TierId } from "@/lib/estimate/pricing";
@@ -138,7 +139,10 @@ function StudioApp({ params }: { params: URLSearchParams }) {
       <div className="flex flex-wrap gap-x-6 gap-y-2">
         <Link
           href={`/studio/prep?city=${city}&sqft=${sqft}&tier=${tier}`}
-          onClick={() => track("prep_sheet_opened", { city })}
+          onClick={() => {
+            saveSnapshotForPrep();
+            track("prep_sheet_opened", { city });
+          }}
           className="min-h-11 content-center font-semibold link"
         >
           Print prep sheet

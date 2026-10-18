@@ -25,6 +25,8 @@ export const EVENTS = {
   headline_variant: { v: "string" },
   cta_impression: { cta: "string", variant: "string" },
   page_view: { path: "string", variant: "string" },
+  // FR-INS-07 "map failure count" needs its own event; not in the FR-ANL-03 list, added for that panel.
+  map_failed: { engine: "string" },
 } as const satisfies Record<string, Record<string, PropType>>;
 
 export type EventName = keyof typeof EVENTS;

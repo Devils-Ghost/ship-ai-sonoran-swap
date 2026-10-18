@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "node scripts/ensure-local-content.mjs && next dev",
-    "build": "node scripts/ensure-local-content.mjs && pnpm validate:content && next build",
+    "build": "node scripts/ensure-local-content.mjs && pnpm validate:content && pnpm seo-report && next build",
     "start": "next start",
     "typecheck": "node scripts/ensure-local-content.mjs && next typegen && tsc --noEmit",
     "lint": "eslint . && prettier --check .",
@@ -19,6 +19,10 @@
     "validate:content": "tsx scripts/validate-content.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "timeline": "tsx scripts/timeline.ts",
+    "seo-report": "tsx scripts/seo-report.ts",
+    "quality": "tsx scripts/quality.ts",
+    "links": "tsx scripts/links.ts",
     "postinstall": "node scripts/ensure-local-content.mjs"
   },
   "dependencies": {

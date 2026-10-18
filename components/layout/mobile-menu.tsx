@@ -12,6 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { openProof } from "@/lib/proof/open";
 import type { NavLink } from "@/lib/site";
 
 // SRS §5.2 mobile: menu sheet with 48 px rows; the concept badge and Proof link live inside.
@@ -44,14 +45,27 @@ export function MobileMenu({
           <ul className="flex flex-col">
             {[...links, ...extra].map((link) => (
               <li key={link.href}>
-                <Link
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  aria-current={pathname === link.href ? "page" : undefined}
-                  className="flex min-h-12 items-center rounded-input px-3 text-lg font-medium text-ink hover:bg-sand aria-[current=page]:text-terracotta"
-                >
-                  {link.label}
-                </Link>
+                {link.href === "#proof" ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpen(false);
+                      openProof();
+                    }}
+                    className="flex min-h-12 w-full cursor-pointer items-center rounded-input px-3 text-lg font-medium text-ink hover:bg-sand"
+                  >
+                    {link.label}
+                  </button>
+                ) : (
+                  <Link
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    aria-current={pathname === link.href ? "page" : undefined}
+                    className="flex min-h-12 items-center rounded-input px-3 text-lg font-medium text-ink hover:bg-sand aria-[current=page]:text-terracotta"
+                  >
+                    {link.label}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>

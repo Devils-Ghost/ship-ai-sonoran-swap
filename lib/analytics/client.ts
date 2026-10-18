@@ -39,6 +39,23 @@ function write(key: string, value: string): void {
   }
 }
 
+function readLocal(key: string): string | null {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeLocal(key: string, value: string | null): void {
+  try {
+    if (value === null) window.localStorage.removeItem(key);
+    else window.localStorage.setItem(key, value);
+  } catch {
+    // Storage blocked: this visit counts as a normal one.
+  }
+}
+
 function referralSource(): string {
   try {
     if (!document.referrer) return "direct";
@@ -65,8 +82,11 @@ export function initAnalytics(): Session {
   if (urlVariant && !read(KEYS.v)) write(KEYS.v, urlVariant);
   const variant = normalizeVariant(read(KEYS.v)) ?? urlVariant;
 
-  if (params.get("team") === "1") write(KEYS.team, "1");
-  const team = read(KEYS.team) === "1";
+  // FR-INS-13 says sessionStorage, but that flag dies with the tab and every new demo tab would count as a
+  // visitor. It lives in localStorage instead (still no cookie, still this browser only); ?team=0 clears it.
+  if (params.get("team") === "1") writeLocal(KEYS.team, "1");
+  if (params.get("team") === "0") writeLocal(KEYS.team, null);
+  const team = readLocal(KEYS.team) === "1" || read(KEYS.team) === "1";
 
   let id = read(KEYS.sid);
   if (!id) {

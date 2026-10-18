@@ -21,7 +21,7 @@ export function HeaderShell({ children }: { children: React.ReactNode }) {
       <div ref={sentinel} className="pointer-events-none absolute top-0 h-6 w-px" aria-hidden="true" />
       <header
         data-scrolled={scrolled || undefined}
-        className="group/header sticky top-0 z-40 border-b border-transparent transition-[border-color,background-color] duration-200 data-scrolled:border-line data-scrolled:bg-caliche/95 data-scrolled:backdrop-blur-sm"
+        className="group/header sticky top-0 z-40 border-b border-transparent transition-[border-color,background-color] duration-200 data-scrolled:border-line data-scrolled:bg-caliche/95 data-scrolled:backdrop-blur-sm print:hidden"
       >
         {children}
       </header>
