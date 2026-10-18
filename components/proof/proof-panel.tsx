@@ -7,6 +7,7 @@ import { track } from "@/lib/analytics/client";
 import { PROOF_TABS, type ProofTab } from "@/lib/proof/content";
 import { HowItWorksSection, LimitsSection, PrivacySection, QualitySection } from "./proof-sections";
 import { TestingSection } from "./testing-section";
+import { TimelineSection, timelineEntries } from "./timeline-section";
 
 // FR-PROOF-02: loaded only when the drawer opens, so the report data never weighs on page loads.
 export default function ProofPanel({ tab, onTab }: { tab: ProofTab; onTab: (t: ProofTab) => void }) {
@@ -20,7 +21,8 @@ export default function ProofPanel({ tab, onTab }: { tab: ProofTab; onTab: (t: P
       className="flex min-h-0 flex-1 flex-col"
     >
       <TabsList className="mx-6 flex-wrap justify-start">
-        {PROOF_TABS.map((t) => (
+        {/* The Timeline tab only appears when the build produced one. */}
+        {PROOF_TABS.filter((t) => t.id !== "timeline" || timelineEntries.length > 0).map((t) => (
           <TabsTrigger key={t.id} value={t.id}>
             {t.label}
           </TabsTrigger>
@@ -29,6 +31,9 @@ export default function ProofPanel({ tab, onTab }: { tab: ProofTab; onTab: (t: P
       <div className="min-h-0 flex-1 overflow-y-auto px-6 pt-5 pb-8">
         <TabsContent value="quality">
           <QualitySection />
+        </TabsContent>
+        <TabsContent value="timeline">
+          <TimelineSection />
         </TabsContent>
         <TabsContent value="testing">
           <TestingSection />

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "node scripts/ensure-local-content.mjs && next dev",
-    "build": "node scripts/ensure-local-content.mjs && pnpm validate:content && pnpm seo-report && next build",
+    "build": "node scripts/ensure-local-content.mjs && pnpm validate:content && pnpm seo-report && pnpm timeline && next build",
     "start": "next start",
     "typecheck": "node scripts/ensure-local-content.mjs && next typegen && tsc --noEmit",
     "lint": "eslint . && prettier --check .",
@@ -23,7 +23,8 @@
     "quality": "tsx scripts/quality.ts",
     "links": "tsx scripts/links.ts",
     "shots": "tsx scripts/shots.ts",
-    "postinstall": "node scripts/ensure-local-content.mjs"
+    "postinstall": "node scripts/ensure-local-content.mjs",
+    "timeline": "tsx scripts/timeline.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

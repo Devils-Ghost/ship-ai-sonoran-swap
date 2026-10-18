@@ -5,6 +5,7 @@ import business from "@/content/business.json";
 
 export const PROOF_TABS = [
   { id: "quality", label: "Quality" },
+  { id: "timeline", label: "Timeline" },
   { id: "testing", label: "Testing" },
   { id: "how", label: "How it works" },
   { id: "limits", label: "Limits" },

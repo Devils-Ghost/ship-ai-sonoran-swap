@@ -9,6 +9,7 @@ import {
   QualitySection,
 } from "@/components/proof/proof-sections";
 import { TestingSection } from "@/components/proof/testing-section";
+import { TimelineSection, timelineEntries } from "@/components/proof/timeline-section";
 import { ROUTES } from "@/lib/routes";
 import { pageMetadata } from "@/lib/seo/metadata";
 
@@ -98,6 +99,12 @@ export default function LaunchNotesPage() {
           <Block id="quality" title="Quality reports">
             <QualitySection />
           </Block>
+
+          {timelineEntries.length > 0 ? (
+            <Block id="timeline" title="Build timeline">
+              <TimelineSection />
+            </Block>
+          ) : null}
 
           <Block id="testing" title="User testing">
             <TestingSection />
