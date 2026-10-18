@@ -50,6 +50,7 @@ export function CompareSlider({
   }, [priority]);
   const box = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
+  const touched = useRef(false); // a grab during the intro glide stops it from overriding the finger
 
   useEffect(() => {
     if (!intro) return;
@@ -58,6 +59,7 @@ export function CompareSlider({
     let frame = 0;
     const tick = (now: number) => {
       const p = reduce ? 1 : Math.min(1, (now - t0) / 600);
+      if (touched.current) return;
       setPos(85 - 35 * (1 - (1 - p) ** 3));
       if (p < 1) frame = requestAnimationFrame(tick);
     };
@@ -84,6 +86,7 @@ export function CompareSlider({
               : null;
     if (next === null) return;
     e.preventDefault();
+    touched.current = true;
     setPos(Math.min(100, Math.max(0, Math.round(next))));
   };
 
@@ -92,11 +95,17 @@ export function CompareSlider({
   return (
     <div
       ref={box}
-      className={cn("relative w-full overflow-hidden rounded-media bg-sand select-none", className)}
+      // touch-pan-y: the page still scrolls vertically, but a sideways finger drag stays with the slider.
+      // Without it the browser claims the drag as a pan and cancels the pointer after a few pixels.
+      className={cn(
+        "relative w-full touch-pan-y overflow-hidden rounded-media bg-sand select-none",
+        className,
+      )}
       style={{ aspectRatio: aspect }}
       onPointerDown={(e) => {
         if (mode !== "compare") return;
         dragging.current = true;
+        touched.current = true;
         e.currentTarget.setPointerCapture(e.pointerId);
         moveTo(e.clientX);
       }}
